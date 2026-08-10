@@ -1,0 +1,642 @@
+<!doctype html>
+<html lang="en" class="ui">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ui — kitchen sink</title>
+<link rel="stylesheet" href="../ui.css" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%23476349'/%3E%3Cpath d='M4 11.5 L8 4.5 L12 11.5' stroke='white' fill='none' stroke-width='1.6'/%3E%3C/svg%3E" />
+<style>
+  /* demo-only scaffolding — nothing here belongs in the library */
+  body { margin: 0; }
+  .demo-main { padding-block: var(--ui-space-6) var(--ui-space-7); }
+  .demo-section { border-top: 1px solid var(--ui-border); margin-top: var(--ui-space-6); padding-top: var(--ui-space-5); }
+  .demo-section:first-of-type { border-top: 0; margin-top: 0; padding-top: 0; }
+  .demo-section > header { margin-bottom: var(--ui-space-4); }
+  .demo-swatches { display: grid; gap: var(--ui-space-2); grid-template-columns: repeat(auto-fit, minmax(132px, 1fr)); }
+  .demo-swatch { border: 1px solid var(--ui-border); border-radius: var(--ui-radius-md); overflow: hidden; }
+  .demo-swatch i { display: block; height: 44px; }
+  .demo-swatch span { display: block; font-family: var(--ui-font-mono); font-size: var(--ui-text-2xs); padding: 5px 7px; color: var(--ui-fg-muted); border-top: 1px solid var(--ui-border); }
+  .demo-icons { display: grid; gap: var(--ui-space-2); grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
+  .demo-icon { align-items: center; border: 1px solid var(--ui-border); border-radius: var(--ui-radius-md); color: var(--ui-fg-muted); display: flex; flex-direction: column; font-family: var(--ui-font-mono); font-size: 10px; gap: 6px; padding: 10px 4px; text-align: center; }
+  .demo-icon .icon { --ui-icon-size: 22px; color: var(--ui-fg); }
+</style>
+</head>
+<body>
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+<!-- Phosphor Icons (regular), MIT (c) 2023 Phosphor Icons - see icons/LICENSE -->
+<symbol id="ph-arrow-clockwise" viewBox="0 0 256 256" fill="currentColor"><path d="M240,56v48a8,8,0,0,1-8,8H184a8,8,0,0,1,0-16H211.4L184.81,71.64l-.25-.24a80,80,0,1,0-1.67,114.78,8,8,0,0,1,11,11.63A95.44,95.44,0,0,1,128,224h-1.32A96,96,0,1,1,195.75,60L224,85.8V56a8,8,0,1,1,16,0Z"/></symbol>
+<symbol id="ph-caret-down" viewBox="0 0 256 256" fill="currentColor"><path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"/></symbol>
+<symbol id="ph-caret-right" viewBox="0 0 256 256" fill="currentColor"><path d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z"/></symbol>
+<symbol id="ph-chart-line" viewBox="0 0 256 256" fill="currentColor"><path d="M232,208a8,8,0,0,1-8,8H32a8,8,0,0,1-8-8V48a8,8,0,0,1,16,0v94.37L90.73,98a8,8,0,0,1,10.07-.38l58.81,44.11L218.73,90a8,8,0,1,1,10.54,12l-64,56a8,8,0,0,1-10.07.38L96.39,114.29,40,163.63V200H224A8,8,0,0,1,232,208Z"/></symbol>
+<symbol id="ph-check" viewBox="0 0 256 256" fill="currentColor"><path d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z"/></symbol>
+<symbol id="ph-check-circle" viewBox="0 0 256 256" fill="currentColor"><path d="M173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></symbol>
+<symbol id="ph-circle" viewBox="0 0 256 256" fill="currentColor"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Z"/></symbol>
+<symbol id="ph-circle-half" viewBox="0 0 256 256" fill="currentColor"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm8,16.37a86.4,86.4,0,0,1,16,3V212.67a86.4,86.4,0,0,1-16,3Zm32,9.26a87.81,87.81,0,0,1,16,10.54V195.83a87.81,87.81,0,0,1-16,10.54ZM40,128a88.11,88.11,0,0,1,80-87.63V215.63A88.11,88.11,0,0,1,40,128Zm160,50.54V77.46a87.82,87.82,0,0,1,0,101.08Z"/></symbol>
+<symbol id="ph-copy" viewBox="0 0 256 256" fill="currentColor"><path d="M216,32H88a8,8,0,0,0-8,8V80H40a8,8,0,0,0-8,8V216a8,8,0,0,0,8,8H168a8,8,0,0,0,8-8V176h40a8,8,0,0,0,8-8V40A8,8,0,0,0,216,32ZM160,208H48V96H160Zm48-48H176V88a8,8,0,0,0-8-8H96V48H208Z"/></symbol>
+<symbol id="ph-dots-three" viewBox="0 0 256 256" fill="currentColor"><path d="M140,128a12,12,0,1,1-12-12A12,12,0,0,1,140,128Zm56-12a12,12,0,1,0,12,12A12,12,0,0,0,196,116ZM60,116a12,12,0,1,0,12,12A12,12,0,0,0,60,116Z"/></symbol>
+<symbol id="ph-gear" viewBox="0 0 256 256" fill="currentColor"><path d="M128,80a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Zm88-29.84q.06-2.16,0-4.32l14.92-18.64a8,8,0,0,0,1.48-7.06,107.21,107.21,0,0,0-10.88-26.25,8,8,0,0,0-6-3.93l-23.72-2.64q-1.48-1.56-3-3L186,40.54a8,8,0,0,0-3.94-6,107.71,107.71,0,0,0-26.25-10.87,8,8,0,0,0-7.06,1.49L130.16,40Q128,40,125.84,40L107.2,25.11a8,8,0,0,0-7.06-1.48A107.6,107.6,0,0,0,73.89,34.51a8,8,0,0,0-3.93,6L67.32,64.27q-1.56,1.49-3,3L40.54,70a8,8,0,0,0-6,3.94,107.71,107.71,0,0,0-10.87,26.25,8,8,0,0,0,1.49,7.06L40,125.84Q40,128,40,130.16L25.11,148.8a8,8,0,0,0-1.48,7.06,107.21,107.21,0,0,0,10.88,26.25,8,8,0,0,0,6,3.93l23.72,2.64q1.49,1.56,3,3L70,215.46a8,8,0,0,0,3.94,6,107.71,107.71,0,0,0,26.25,10.87,8,8,0,0,0,7.06-1.49L125.84,216q2.16.06,4.32,0l18.64,14.92a8,8,0,0,0,7.06,1.48,107.21,107.21,0,0,0,26.25-10.88,8,8,0,0,0,3.93-6l2.64-23.72q1.56-1.48,3-3L215.46,186a8,8,0,0,0,6-3.94,107.71,107.71,0,0,0,10.87-26.25,8,8,0,0,0-1.49-7.06Zm-16.1-6.5a73.93,73.93,0,0,1,0,8.68,8,8,0,0,0,1.74,5.48l14.19,17.73a91.57,91.57,0,0,1-6.23,15L187,173.11a8,8,0,0,0-5.1,2.64,74.11,74.11,0,0,1-6.14,6.14,8,8,0,0,0-2.64,5.1l-2.51,22.58a91.32,91.32,0,0,1-15,6.23l-17.74-14.19a8,8,0,0,0-5-1.75h-.48a73.93,73.93,0,0,1-8.68,0,8,8,0,0,0-5.48,1.74L100.45,215.8a91.57,91.57,0,0,1-15-6.23L82.89,187a8,8,0,0,0-2.64-5.1,74.11,74.11,0,0,1-6.14-6.14,8,8,0,0,0-5.1-2.64L46.43,170.6a91.32,91.32,0,0,1-6.23-15l14.19-17.74a8,8,0,0,0,1.74-5.48,73.93,73.93,0,0,1,0-8.68,8,8,0,0,0-1.74-5.48L40.2,100.45a91.57,91.57,0,0,1,6.23-15L69,82.89a8,8,0,0,0,5.1-2.64,74.11,74.11,0,0,1,6.14-6.14A8,8,0,0,0,82.89,69L85.4,46.43a91.32,91.32,0,0,1,15-6.23l17.74,14.19a8,8,0,0,0,5.48,1.74,73.93,73.93,0,0,1,8.68,0,8,8,0,0,0,5.48-1.74L155.55,40.2a91.57,91.57,0,0,1,15,6.23L173.11,69a8,8,0,0,0,2.64,5.1,74.11,74.11,0,0,1,6.14,6.14,8,8,0,0,0,5.1,2.64l22.58,2.51a91.32,91.32,0,0,1,6.23,15l-14.19,17.74A8,8,0,0,0,199.87,123.66Z"/></symbol>
+<symbol id="ph-info" viewBox="0 0 256 256" fill="currentColor"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm16-40a8,8,0,0,1-8,8,16,16,0,0,1-16-16V128a8,8,0,0,1,0-16,16,16,0,0,1,16,16v40A8,8,0,0,1,144,176ZM112,84a12,12,0,1,1,12,12A12,12,0,0,1,112,84Z"/></symbol>
+<symbol id="ph-list" viewBox="0 0 256 256" fill="currentColor"><path d="M224,128a8,8,0,0,1-8,8H40a8,8,0,0,1,0-16H216A8,8,0,0,1,224,128ZM40,72H216a8,8,0,0,0,0-16H40a8,8,0,0,0,0,16ZM216,184H40a8,8,0,0,0,0,16H216a8,8,0,0,0,0-16Z"/></symbol>
+<symbol id="ph-microphone" viewBox="0 0 256 256" fill="currentColor"><path d="M128,176a48.05,48.05,0,0,0,48-48V64a48,48,0,0,0-96,0v64A48.05,48.05,0,0,0,128,176ZM96,64a32,32,0,0,1,64,0v64a32,32,0,0,1-64,0Zm40,143.6V240a8,8,0,0,1-16,0V207.6A80.11,80.11,0,0,1,48,128a8,8,0,0,1,16,0,64,64,0,0,0,128,0,8,8,0,0,1,16,0A80.11,80.11,0,0,1,136,207.6Z"/></symbol>
+<symbol id="ph-microphone-slash" viewBox="0 0 256 256" fill="currentColor"><path d="M213.92,218.62l-160-176A8,8,0,0,0,42.08,53.38L80,95.09V128a48,48,0,0,0,69.11,43.12l11.1,12.2A63.41,63.41,0,0,1,128,192a64.07,64.07,0,0,1-64-64,8,8,0,0,0-16,0,80.11,80.11,0,0,0,72,79.6V240a8,8,0,0,0,16,0V207.59a78.83,78.83,0,0,0,35.16-12.22l30.92,34a8,8,0,1,0,11.84-10.76ZM128,160a32,32,0,0,1-32-32V112.69l41.66,45.82A32,32,0,0,1,128,160Zm57.52-3.91A63.32,63.32,0,0,0,192,128a8,8,0,0,1,16,0,79.16,79.16,0,0,1-8.11,35.12,8,8,0,0,1-7.19,4.49,7.88,7.88,0,0,1-3.51-.82A8,8,0,0,1,185.52,156.09ZM84,44.87A48,48,0,0,1,176,64v64a49.19,49.19,0,0,1-.26,5,8,8,0,0,1-8,7.17,8.13,8.13,0,0,1-.84,0,8,8,0,0,1-7.12-8.79c.11-1.1.17-2.24.17-3.36V64A32,32,0,0,0,98.64,51.25,8,8,0,1,1,84,44.87Z"/></symbol>
+<symbol id="ph-moon" viewBox="0 0 256 256" fill="currentColor"><path d="M233.54,142.23a8,8,0,0,0-8-2,88.08,88.08,0,0,1-109.8-109.8,8,8,0,0,0-10-10,104.84,104.84,0,0,0-52.91,37A104,104,0,0,0,136,224a103.09,103.09,0,0,0,62.52-20.88,104.84,104.84,0,0,0,37-52.91A8,8,0,0,0,233.54,142.23ZM188.9,190.34A88,88,0,0,1,65.66,67.11a89,89,0,0,1,31.4-26A106,106,0,0,0,96,56,104.11,104.11,0,0,0,200,160a106,106,0,0,0,14.92-1.06A89,89,0,0,1,188.9,190.34Z"/></symbol>
+<symbol id="ph-pause" viewBox="0 0 256 256" fill="currentColor"><path d="M200,32H160a16,16,0,0,0-16,16V208a16,16,0,0,0,16,16h40a16,16,0,0,0,16-16V48A16,16,0,0,0,200,32Zm0,176H160V48h40ZM96,32H56A16,16,0,0,0,40,48V208a16,16,0,0,0,16,16H96a16,16,0,0,0,16-16V48A16,16,0,0,0,96,32Zm0,176H56V48H96Z"/></symbol>
+<symbol id="ph-play" viewBox="0 0 256 256" fill="currentColor"><path d="M232.4,114.49,88.32,26.35a16,16,0,0,0-16.2-.3A15.86,15.86,0,0,0,64,39.87V216.13A15.94,15.94,0,0,0,80,232a16.07,16.07,0,0,0,8.36-2.35L232.4,141.51a15.81,15.81,0,0,0,0-27ZM80,215.94V40l143.83,88Z"/></symbol>
+<symbol id="ph-pulse" viewBox="0 0 256 256" fill="currentColor"><path d="M240,128a8,8,0,0,1-8,8H204.94l-37.78,75.58A8,8,0,0,1,160,216h-.4a8,8,0,0,1-7.08-5.14L95.35,60.76,63.28,131.31A8,8,0,0,1,56,136H24a8,8,0,0,1,0-16H50.85L88.72,36.69a8,8,0,0,1,14.76.46l57.51,151,31.85-63.71A8,8,0,0,1,200,120h32A8,8,0,0,1,240,128Z"/></symbol>
+<symbol id="ph-sliders-horizontal" viewBox="0 0 256 256" fill="currentColor"><path d="M40,88H73a32,32,0,0,0,62,0h81a8,8,0,0,0,0-16H135a32,32,0,0,0-62,0H40a8,8,0,0,0,0,16Zm64-24A16,16,0,1,1,88,80,16,16,0,0,1,104,64ZM216,168H199a32,32,0,0,0-62,0H40a8,8,0,0,0,0,16h97a32,32,0,0,0,62,0h17a8,8,0,0,0,0-16Zm-48,24a16,16,0,1,1,16-16A16,16,0,0,1,168,192Z"/></symbol>
+<symbol id="ph-speaker-high" viewBox="0 0 256 256" fill="currentColor"><path d="M155.51,24.81a8,8,0,0,0-8.42.88L77.25,80H32A16,16,0,0,0,16,96v64a16,16,0,0,0,16,16H77.25l69.84,54.31A8,8,0,0,0,160,224V32A8,8,0,0,0,155.51,24.81ZM32,96H72v64H32ZM144,207.64,88,164.09V91.91l56-43.55Zm54-106.08a40,40,0,0,1,0,52.88,8,8,0,0,1-12-10.58,24,24,0,0,0,0-31.72,8,8,0,0,1,12-10.58ZM248,128a79.9,79.9,0,0,1-20.37,53.34,8,8,0,0,1-11.92-10.67,64,64,0,0,0,0-85.33,8,8,0,1,1,11.92-10.67A79.83,79.83,0,0,1,248,128Z"/></symbol>
+<symbol id="ph-speaker-slash" viewBox="0 0 256 256" fill="currentColor"><path d="M53.92,34.62A8,8,0,1,0,42.08,45.38L73.55,80H32A16,16,0,0,0,16,96v64a16,16,0,0,0,16,16H77.25l69.84,54.31A8,8,0,0,0,160,224V175.09l42.08,46.29a8,8,0,1,0,11.84-10.76ZM32,96H72v64H32ZM144,207.64,88,164.09V95.89l56,61.6Zm42-63.77a24,24,0,0,0,0-31.72,8,8,0,1,1,12-10.57,40,40,0,0,1,0,52.88,8,8,0,0,1-12-10.59Zm-80.16-76a8,8,0,0,1,1.4-11.23l39.85-31A8,8,0,0,1,160,32v74.83a8,8,0,0,1-16,0V48.36l-26.94,21A8,8,0,0,1,105.84,67.91ZM248,128a79.9,79.9,0,0,1-20.37,53.34,8,8,0,0,1-11.92-10.67,64,64,0,0,0,0-85.33,8,8,0,1,1,11.92-10.67A79.83,79.83,0,0,1,248,128Z"/></symbol>
+<symbol id="ph-sun" viewBox="0 0 256 256" fill="currentColor"><path d="M120,40V16a8,8,0,0,1,16,0V40a8,8,0,0,1-16,0Zm72,88a64,64,0,1,1-64-64A64.07,64.07,0,0,1,192,128Zm-16,0a48,48,0,1,0-48,48A48.05,48.05,0,0,0,176,128ZM58.34,69.66A8,8,0,0,0,69.66,58.34l-16-16A8,8,0,0,0,42.34,53.66Zm0,116.68-16,16a8,8,0,0,0,11.32,11.32l16-16a8,8,0,0,0-11.32-11.32ZM192,72a8,8,0,0,0,5.66-2.34l16-16a8,8,0,0,0-11.32-11.32l-16,16A8,8,0,0,0,192,72Zm5.66,114.34a8,8,0,0,0-11.32,11.32l16,16a8,8,0,0,0,11.32-11.32ZM48,128a8,8,0,0,0-8-8H16a8,8,0,0,0,0,16H40A8,8,0,0,0,48,128Zm80,80a8,8,0,0,0-8,8v24a8,8,0,0,0,16,0V216A8,8,0,0,0,128,208Zm112-88H216a8,8,0,0,0,0,16h24a8,8,0,0,0,0-16Z"/></symbol>
+<symbol id="ph-terminal-window" viewBox="0 0 256 256" fill="currentColor"><path d="M128,128a8,8,0,0,1-3,6.25l-40,32a8,8,0,1,1-10-12.5L107.19,128,75,102.25a8,8,0,1,1,10-12.5l40,32A8,8,0,0,1,128,128Zm48,24H136a8,8,0,0,0,0,16h40a8,8,0,0,0,0-16Zm56-96V200a16,16,0,0,1-16,16H40a16,16,0,0,1-16-16V56A16,16,0,0,1,40,40H216A16,16,0,0,1,232,56ZM216,200V56H40V200H216Z"/></symbol>
+<symbol id="ph-trash" viewBox="0 0 256 256" fill="currentColor"><path d="M216,48H176V40a24,24,0,0,0-24-24H104A24,24,0,0,0,80,40v8H40a8,8,0,0,0,0,16h8V208a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V64h8a8,8,0,0,0,0-16ZM96,40a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8v8H96Zm96,168H64V64H192ZM112,104v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm48,0v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Z"/></symbol>
+<symbol id="ph-warning" viewBox="0 0 256 256" fill="currentColor"><path d="M236.8,188.09,149.35,36.22h0a24.76,24.76,0,0,0-42.7,0L19.2,188.09a23.51,23.51,0,0,0,0,23.72A24.35,24.35,0,0,0,40.55,224h174.9a24.35,24.35,0,0,0,21.33-12.19A23.51,23.51,0,0,0,236.8,188.09ZM222.93,203.8a8.5,8.5,0,0,1-7.48,4.2H40.55a8.5,8.5,0,0,1-7.48-4.2,7.59,7.59,0,0,1,0-7.72L120.52,44.21a8.75,8.75,0,0,1,15,0l87.45,151.87A7.59,7.59,0,0,1,222.93,203.8ZM120,144V104a8,8,0,0,1,16,0v40a8,8,0,0,1-16,0Zm20,36a12,12,0,1,1-12-12A12,12,0,0,1,140,180Z"/></symbol>
+<symbol id="ph-waveform" viewBox="0 0 256 256" fill="currentColor"><path d="M56,96v64a8,8,0,0,1-16,0V96a8,8,0,0,1,16,0ZM88,24a8,8,0,0,0-8,8V224a8,8,0,0,0,16,0V32A8,8,0,0,0,88,24Zm40,32a8,8,0,0,0-8,8V192a8,8,0,0,0,16,0V64A8,8,0,0,0,128,56Zm40,32a8,8,0,0,0-8,8v64a8,8,0,0,0,16,0V96A8,8,0,0,0,168,88Zm40-16a8,8,0,0,0-8,8v96a8,8,0,0,0,16,0V80A8,8,0,0,0,208,72Z"/></symbol>
+<symbol id="ph-x" viewBox="0 0 256 256" fill="currentColor"><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"/></symbol>
+</svg>
+
+<header class="appbar">
+  <h1 class="appbar-title">
+    <svg class="icon" aria-hidden="true"><use href="#ph-waveform" /></svg>
+    ui <small>· semantic components, pure CSS</small>
+  </h1>
+  <nav class="appbar-nav" aria-label="sections">
+    <a class="pill is-active" href="#components" aria-current="page">components</a>
+    <a class="pill" href="#instrument">instrument</a>
+    <a class="pill" href="#icons">icons</a>
+  </nav>
+  <span class="spacer"></span>
+  <span class="pill pill-ok"><i class="dot dot-ok dot-pulse"></i>live</span>
+  <span class="badge badge-accent" id="tick">0</span>
+  <div class="segmented" role="group" aria-label="theme">
+    <button type="button" data-theme-set="light" aria-pressed="false" title="light">
+      <svg class="icon icon-sm" aria-hidden="true"><use href="#ph-sun" /></svg>light
+    </button>
+    <button type="button" data-theme-set="auto" aria-pressed="true" title="follow the system">
+      <svg class="icon icon-sm" aria-hidden="true"><use href="#ph-circle-half" /></svg>auto
+    </button>
+    <button type="button" data-theme-set="dark" aria-pressed="false" title="dark">
+      <svg class="icon icon-sm" aria-hidden="true"><use href="#ph-moon" /></svg>dark
+    </button>
+  </div>
+</header>
+
+<div class="strip strip-ok" id="live-strip">
+  <span class="strip-tag">wire</span>
+  <span class="strip-msg" id="live-strip-msg">connected · 8 channels · seq 1041</span>
+  <span class="badge badge-ok">ok</span>
+</div>
+
+<main class="demo-main" data-container>
+
+  <section class="demo-section">
+    <header class="stack">
+      <p class="eyebrow">ui.css</p>
+      <h2 class="h1">One stylesheet, two moods.</h2>
+      <p class="lead">Semantic classes on custom properties. Light is white and green; dark is
+        black and gold. No Tailwind required — and no Tailwind broken.</p>
+      <div class="row">
+        <button class="btn btn-primary" type="button">
+          <svg class="icon" aria-hidden="true"><use href="#ph-play" /></svg>Get started
+        </button>
+        <a class="btn" href="../README.md">Read the contract</a>
+        <span class="kbd">⌘</span><span class="kbd">K</span>
+      </div>
+    </header>
+  </section>
+
+  <section class="demo-section" id="palette">
+    <header><p class="eyebrow">tokens</p><h3 class="h2">Palette</h3></header>
+    <div class="demo-swatches">
+      <div class="demo-swatch"><i style="background: var(--ui-bg)"></i><span>--ui-bg</span></div>
+      <div class="demo-swatch"><i style="background: var(--ui-surface)"></i><span>--ui-surface</span></div>
+      <div class="demo-swatch"><i style="background: var(--ui-sunken)"></i><span>--ui-sunken</span></div>
+      <div class="demo-swatch"><i style="background: var(--ui-border-strong)"></i><span>--ui-border-strong</span></div>
+      <div class="demo-swatch"><i style="background: var(--ui-accent)"></i><span>--ui-accent</span></div>
+      <div class="demo-swatch"><i style="background: var(--ui-ok)"></i><span>--ui-ok</span></div>
+      <div class="demo-swatch"><i style="background: var(--ui-warn)"></i><span>--ui-warn</span></div>
+      <div class="demo-swatch"><i style="background: var(--ui-warn-ink)"></i><span>--ui-warn-ink</span></div>
+      <div class="demo-swatch"><i style="background: var(--ui-danger)"></i><span>--ui-danger</span></div>
+      <div class="demo-swatch"><i style="background: var(--ui-info)"></i><span>--ui-info</span></div>
+      <div class="demo-swatch"><i style="background: var(--ui-fg)"></i><span>--ui-fg</span></div>
+    </div>
+  </section>
+
+  <section class="demo-section" id="components">
+    <header><p class="eyebrow">controls</p><h3 class="h2">Buttons, pills, badges, chips</h3></header>
+    <div data-grid style="--ui-grid-min: 340px">
+
+      <div class="card">
+        <div class="card-head"><h4 class="h3">Buttons</h4><span class="spacer"></span><span class="badge">7</span></div>
+        <div class="card-body stack">
+          <div class="row">
+            <button class="btn btn-primary" type="button">Primary</button>
+            <button class="btn" type="button">Default</button>
+            <button class="btn btn-quiet" type="button">Quiet</button>
+            <button class="btn btn-ghost" type="button">Ghost</button>
+            <button class="btn btn-danger" type="button">
+              <svg class="icon" aria-hidden="true"><use href="#ph-trash" /></svg>Danger
+            </button>
+          </div>
+          <div class="row">
+            <button class="btn btn-outline" type="button">Outline</button>
+            <button class="btn btn-outline-accent" type="button">
+              <svg class="icon" aria-hidden="true"><use href="#ph-check" /></svg>Accept
+            </button>
+            <button class="btn btn-outline-info" type="button">
+              <svg class="icon" aria-hidden="true"><use href="#ph-info" /></svg>Details
+            </button>
+          </div>
+          <div class="row">
+            <button class="btn btn-sm" type="button">Small</button>
+            <button class="btn" type="button">Medium</button>
+            <button class="btn btn-lg" type="button">Large</button>
+            <button class="btn btn-icon tip" type="button" data-ui-tip="refresh" aria-label="refresh">
+              <svg class="icon" aria-hidden="true"><use href="#ph-arrow-clockwise" /></svg>
+            </button>
+            <button class="btn" type="button" disabled>Disabled</button>
+          </div>
+          <div class="row">
+            <div class="btn-group" data-demo-latch>
+              <button class="btn btn-sm is-on" type="button">live</button>
+              <button class="btn btn-sm" type="button">scrub</button>
+              <button class="btn btn-sm" type="button">frozen</button>
+            </div>
+            <button class="btn btn-sm" type="button" data-demo-toggle-on>
+              <svg class="icon" aria-hidden="true"><use href="#ph-pause" /></svg>pause
+            </button>
+          </div>
+        </div>
+        <div class="card-foot"><span class="hint">latched state is <code class="code">.is-on</code></span></div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h4 class="h3">Pills &amp; badges</h4></div>
+        <div class="card-body stack">
+          <div class="row">
+            <span class="pill">neutral</span>
+            <span class="pill pill-accent">accent</span>
+            <span class="pill pill-ok"><i class="dot dot-ok"></i>connected</span>
+            <span class="pill pill-warn">3 gaps</span>
+            <span class="pill pill-danger"><i class="dot dot-danger"></i>wire down</span>
+            <span class="pill pill-info">fixture</span>
+          </div>
+          <div class="row">
+            <span class="badge">12</span>
+            <span class="badge badge-accent">new</span>
+            <span class="badge badge-ok">pass</span>
+            <span class="badge badge-warn">deg</span>
+            <span class="badge badge-danger">4</span>
+            <span class="badge badge-info">v2</span>
+          </div>
+          <div class="chip-row">
+            <span class="chip">wpm <b>172</b></span>
+            <span class="chip chip-ok">eot p50 <b>412ms</b></span>
+            <span class="chip chip-warn">drift <b>+38ms</b></span>
+            <span class="chip chip-danger">drops <b>2</b></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h4 class="h3">Form</h4></div>
+        <div class="card-body stack">
+          <div class="field">
+            <label class="label" for="d-name">Session label</label>
+            <input class="input" id="d-name" type="text" placeholder="kitchen table, evening" />
+          </div>
+          <div class="row" style="align-items: flex-end">
+            <div class="field">
+              <label class="label" for="d-speed">Speed</label>
+              <input class="input input-mono input-num" id="d-speed" type="text" value="1.15" />
+            </div>
+            <div class="field" style="flex: 1">
+              <label class="label" for="d-voice">Voice</label>
+              <select class="select" id="d-voice">
+                <option>af_heart</option>
+                <option>am_michael</option>
+                <option>bf_emma</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label class="label" for="d-prompt">Prompt <span class="faint">— .input-lg</span></label>
+            <input class="input input-lg" id="d-prompt" type="text" value="say the quiet part" />
+          </div>
+          <div class="field">
+            <span class="label">Toolbar row <span class="faint">— .input-sm, .select-sm</span></span>
+            <div class="row">
+              <input class="input input-sm input-mono" aria-label="trace filter" type="text" value="ears" style="width: 11ch" />
+              <select class="select select-sm" aria-label="device">
+                <option>built-in mic</option>
+                <option>usb interface</option>
+              </select>
+              <select class="select select-sm" aria-label="rate">
+                <option>16 kHz</option>
+                <option>24 kHz</option>
+                <option>48 kHz</option>
+              </select>
+              <button class="btn btn-sm" type="button">apply</button>
+            </div>
+            <span class="hint">The small input takes the same scale; each select stops at its longest option plus the caret gutter.</span>
+          </div>
+          <div class="field">
+            <label class="label" for="d-note">Note</label>
+            <textarea class="textarea" id="d-note" placeholder="What did you hear?"></textarea>
+            <span class="hint">Markdown is not interpreted.</span>
+          </div>
+          <div class="field">
+            <label class="label" for="d-bad">Invalid</label>
+            <input class="input" id="d-bad" type="text" value="not-a-number" aria-invalid="true" />
+            <span class="hint" style="color: var(--ui-danger)">Expected an integer.</span>
+          </div>
+          <div class="row">
+            <label class="toggle"><input type="checkbox" checked /><span class="toggle-label">follow tail</span></label>
+            <label class="toggle"><input type="checkbox" /><span class="toggle-label">show ghosts</span></label>
+            <label class="toggle"><input type="checkbox" disabled /><span class="toggle-label">locked</span></label>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head"><h4 class="h3">Notices</h4></div>
+        <div class="card-body stack">
+          <div class="notice notice-info">
+            <svg class="icon" aria-hidden="true"><use href="#ph-info" /></svg>
+            <span>Replaying a fixture. Nothing you click reaches the live loop.</span>
+          </div>
+          <div class="notice notice-ok">
+            <svg class="icon" aria-hidden="true"><use href="#ph-check-circle" /></svg>
+            <span>Contract satisfied — every sequence number accounted for.</span>
+          </div>
+          <div class="notice notice-warn">
+            <svg class="icon" aria-hidden="true"><use href="#ph-warning" /></svg>
+            <span>3 gaps in the <code class="code">ears</code> channel.</span>
+          </div>
+          <div class="notice notice-danger">
+            <svg class="icon" aria-hidden="true" style="color: var(--ui-danger)"><use href="#ph-x" /></svg>
+            <span>Wire closed after 1 attempt. The loop is not running.</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="demo-section" id="instrument">
+    <header><p class="eyebrow">instrument</p><h3 class="h2">Panels, readouts, transcripts</h3></header>
+    <div data-grid style="--ui-grid-min: 340px">
+
+      <div class="panel" style="--ui-panel-accent: var(--ui-info)">
+        <div class="panel-head">
+          <h4 class="panel-name">ears</h4><span class="panel-sub">transcription</span>
+          <span class="spacer"></span>
+          <span class="badge">418</span>
+          <button class="btn btn-ghost btn-sm" type="button" data-demo-toggle-on>pause</button>
+        </div>
+        <div class="panel-body">
+          <div class="transcript">
+            <div class="transcript-turn transcript-turn-self">
+              <span class="transcript-who">owner · 00:12.4</span>
+              <p class="transcript-text">
+                <span class="word-stable">set the kitchen light to</span>
+                <span class="word-tentative">forty</span>
+                <span class="word-ghost">fourteen</span>
+              </p>
+            </div>
+            <div class="transcript-turn transcript-turn-agent">
+              <span class="transcript-who">ra · 00:13.9</span>
+              <p class="transcript-text word-stable">Kitchen light at forty percent.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" style="--ui-panel-accent: var(--ui-accent)">
+        <div class="panel-head">
+          <h4 class="panel-name">mouth</h4><span class="panel-sub">playback</span>
+          <span class="spacer"></span>
+          <span class="pill pill-ok">speaking</span>
+        </div>
+        <div class="panel-body stack">
+          <div class="row" style="gap: var(--ui-space-4)">
+            <button class="orb" id="orb" type="button" aria-pressed="false" aria-label="microphone open">
+              <span class="orb-ring"></span><span class="orb-slash"></span>
+            </button>
+            <div class="metric">
+              <span class="metric-value" id="orb-metric">172</span>
+              <span class="metric-label">words / minute</span>
+            </div>
+            <div class="metric">
+              <span class="metric-value metric-delta-up">−38<span class="faint" style="font-size: var(--ui-text-sm)">ms</span></span>
+              <span class="metric-label">first-audio</span>
+            </div>
+          </div>
+          <div class="field">
+            <label class="label" for="d-buf">Buffer</label>
+            <div class="meter" id="d-buf" style="--ui-meter-value: 62%"><span></span></div>
+          </div>
+          <div class="meter meter-warn" style="--ui-meter-value: 88%"><span></span></div>
+          <div class="meter meter-danger" style="--ui-meter-value: 97%"><span></span></div>
+        </div>
+      </div>
+
+      <div class="panel panel-wide">
+        <div class="panel-head">
+          <h4 class="panel-name">wire</h4><span class="panel-sub">event mirror</span>
+          <span class="spacer"></span>
+          <span class="chip">seq <b id="seq">1041</b></span>
+        </div>
+        <div class="panel-body">
+          <pre class="readout"><span class="readout-t">00:12.401</span> <span class="readout-key">ears.partial</span>  <b>"set the kitchen light to"</b>
+<span class="readout-t">00:12.688</span> <span class="readout-key">eot.head</span>      p=0.41 head=prosody
+<span class="readout-t">00:13.002</span> <span class="readout-key">ears.final</span>    <b>"set the kitchen light to forty"</b>
+<span class="readout-t">00:13.117</span> <span class="readout-key">policy.speak</span>  allow reason=turn-yielded
+<span class="readout-t">00:13.904</span> <span class="readout-key">play.start</span>    voice=af_heart speed=1.15</pre>
+        </div>
+      </div>
+
+      <div class="card panel-wide">
+        <div class="card-head">
+          <h4 class="h3">Voice roster</h4>
+          <span class="spacer"></span>
+          <label class="toggle"><input type="checkbox" checked /><span class="toggle-label">English only</span></label>
+        </div>
+        <div class="table-wrap">
+          <table class="table-hover" data-table>
+            <thead>
+              <tr><th>voice</th><th>locale</th><th class="table-num">wpm</th><th class="table-num">warm</th><th>state</th></tr>
+            </thead>
+            <tbody>
+              <tr><td class="table-mono">af_heart</td><td>en-US</td><td class="table-num">172</td><td class="table-num">0.4 s</td><td><span class="pill pill-ok"><i class="dot dot-ok"></i>resident</span></td></tr>
+              <tr><td class="table-mono">am_michael</td><td>en-US</td><td class="table-num">164</td><td class="table-num">1.9 s</td><td><span class="pill">cold</span></td></tr>
+              <tr><td class="table-mono">bf_emma</td><td>en-GB</td><td class="table-num">158</td><td class="table-num">2.1 s</td><td><span class="pill pill-warn">evicted</span></td></tr>
+              <tr><td class="table-mono">bm_george</td><td>en-GB</td><td class="table-num">151</td><td class="table-num">—</td><td><span class="pill pill-danger">missing</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card-foot">
+          <span class="hint">28 voices advertised · 4 shown</span>
+          <span class="spacer"></span>
+          <button class="btn btn-sm btn-quiet" type="button">
+            <svg class="icon" aria-hidden="true"><use href="#ph-copy" /></svg>copy table
+          </button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head"><h4 class="panel-name">led</h4><span class="panel-sub">room ledger</span></div>
+        <div class="panel-body"><p class="empty">nothing on the wire yet</p></div>
+      </div>
+
+      <!-- the head IS the document heading: no .panel-name, no local margin reset -->
+      <section class="panel panel-wide" style="--ui-panel-accent: var(--ui-accent)">
+        <header class="panel-head">
+          <h4 class="h3">Voices</h4>
+          <span class="panel-sub">click a row to audition</span>
+          <span class="spacer"></span>
+          <span class="badge">28</span>
+        </header>
+        <div class="panel-body">
+          <div class="list" id="voice-list" role="listbox" aria-label="voices">
+            <button class="listrow is-current" type="button" role="option" aria-selected="true">
+              <span class="listrow-name">af_heart</span>
+              <span class="listrow-meta"><span class="badge badge-ok">resident</span>en-US · 172 wpm</span>
+              <span class="listrow-actions">
+                <span class="btn btn-outline-accent btn-sm">
+                  <svg class="icon" aria-hidden="true"><use href="#ph-play" /></svg>audition
+                </span>
+                <span class="btn btn-ghost btn-sm btn-icon" aria-hidden="true">
+                  <svg class="icon" aria-hidden="true"><use href="#ph-dots-three" /></svg>
+                </span>
+              </span>
+            </button>
+            <button class="listrow is-busy" type="button" role="option" aria-selected="false">
+              <span class="listrow-name">am_michael</span>
+              <span class="listrow-meta"><span class="badge">warming</span>en-US · 164 wpm</span>
+              <span class="listrow-actions">
+                <span class="btn btn-outline btn-sm">
+                  <svg class="icon" aria-hidden="true"><use href="#ph-play" /></svg>audition
+                </span>
+              </span>
+            </button>
+            <button class="listrow is-warned" type="button" role="option" aria-selected="false">
+              <span class="listrow-name">bf_emma</span>
+              <span class="listrow-meta"><span class="badge badge-warn">evicted</span>en-GB · 158 wpm</span>
+              <span class="listrow-actions">
+                <span class="btn btn-outline btn-sm">
+                  <svg class="icon" aria-hidden="true"><use href="#ph-arrow-clockwise" /></svg>rewarm
+                </span>
+              </span>
+            </button>
+            <button class="listrow" type="button" role="option" aria-selected="false">
+              <span class="listrow-name">bm_george</span>
+              <span class="listrow-meta">en-GB · 151 wpm</span>
+              <span class="listrow-actions">
+                <span class="btn btn-outline btn-sm">
+                  <svg class="icon" aria-hidden="true"><use href="#ph-play" /></svg>audition
+                </span>
+              </span>
+            </button>
+            <button class="listrow" type="button" role="option" aria-selected="false" aria-disabled="true">
+              <span class="listrow-name">jf_alpha</span>
+              <span class="listrow-meta">ja-JP · not on the English shelves</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <div class="card panel-wide">
+        <div class="card-head"><h4 class="h3">Strips</h4>
+          <span class="spacer"></span>
+          <span class="hint">chrome, not content — these go full-bleed under the appbar</span>
+        </div>
+        <div class="strip"><span class="strip-tag">wire</span><span class="strip-msg">waiting for the stream…</span></div>
+        <div class="strip strip-ok"><span class="strip-tag">wire</span><span class="strip-msg">connected · 8 channels</span></div>
+        <div class="strip strip-info"><span class="strip-tag">source</span><span class="strip-msg">replaying fixture kitchen-evening.jsonl</span></div>
+        <div class="strip strip-accent"><span class="strip-tag">mode</span><span class="strip-msg">bridge · Claude has the floor</span></div>
+        <div class="strip strip-warn"><span class="strip-tag">gaps</span><span class="strip-msg">3 missing sequence numbers on ears</span></div>
+        <div class="strip strip-danger"><span class="strip-tag">wire</span><span class="strip-msg">closed after 1 attempt — the loop is not running</span></div>
+      </div>
+
+      <div class="card panel-wide">
+        <div class="card-head"><h4 class="h3">The hidden attribute</h4>
+          <span class="spacer"></span>
+          <button class="btn btn-sm" type="button" id="hide-toggle" aria-pressed="false">hide them</button>
+        </div>
+        <div class="card-body stack">
+          <p class="muted">A base-layer guard makes <code class="code">[hidden]</code> outrank every
+            component <code class="code">display</code> rule, so a flex pill, a grid panel and a
+            full-bleed strip all vanish without a utility class.</p>
+          <div class="row" id="hide-subjects">
+            <span class="pill pill-accent">a pill</span>
+            <span class="pill pill-ok">and another</span>
+          </div>
+          <div class="panel" id="hide-panel">
+            <div class="panel-head"><span class="panel-name">a panel</span></div>
+            <div class="panel-body muted">display: grid at rest.</div>
+          </div>
+          <div class="strip strip-info" id="hide-strip">
+            <span class="strip-tag">strip</span><span class="strip-msg">display: flex at rest.</span>
+          </div>
+          <p class="hint">Statically hidden, and never rendered:
+            <span class="pill" hidden>you cannot see me</span>
+            <span class="strip" hidden><span class="strip-msg">nor me</span></span>
+          </p>
+        </div>
+      </div>
+
+      <div class="card card-hoverable">
+        <div class="card-body stack">
+          <p class="eyebrow">shortcuts</p>
+          <div class="row"><span class="kbd">Space</span><span class="muted">mute the mic</span></div>
+          <div class="row"><span class="kbd">J</span><span class="kbd">K</span><span class="muted">step the cursor</span></div>
+          <div class="row"><span class="kbd">⌘</span><span class="kbd">⇧</span><span class="kbd">L</span><span class="muted">jump to live</span></div>
+          <hr class="hr" style="margin: var(--ui-space-2) 0" />
+          <p class="muted">A hoverable card lifts on <code class="code">.card-hoverable</code>.
+            See the <a class="link" href="../README.md">README</a> for the theming contract.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="demo-section" id="icons">
+    <header><p class="eyebrow">icons</p><h3 class="h2">Phosphor subset</h3>
+      <p class="muted">28 regular-weight glyphs, vendored. MIT © Phosphor Icons.</p></header>
+    <div class="demo-icons" id="icon-grid"></div>
+  </section>
+
+</main>
+
+<script>
+"use strict";
+
+/* ── theme: an explicit choice writes data-theme; "auto" removes it and lets
+   prefers-color-scheme decide. Persisted so a reload keeps the choice. ── */
+const THEME_KEY = "ui-theme";
+
+function applyTheme(mode) {
+  if (mode === "auto") {
+    document.documentElement.removeAttribute("data-theme");
+    localStorage.removeItem(THEME_KEY);
+  } else {
+    document.documentElement.dataset.theme = mode;
+    localStorage.setItem(THEME_KEY, mode);
+  }
+  for (const b of document.querySelectorAll("[data-theme-set]")) {
+    b.setAttribute("aria-pressed", String(b.dataset.themeSet === mode));
+  }
+}
+
+for (const b of document.querySelectorAll("[data-theme-set]")) {
+  b.addEventListener("click", () => applyTheme(b.dataset.themeSet));
+}
+applyTheme(localStorage.getItem(THEME_KEY) || "auto");
+
+/* ── latched buttons ── */
+for (const group of document.querySelectorAll("[data-demo-latch]")) {
+  group.addEventListener("click", (e) => {
+    const btn = e.target.closest(".btn");
+    if (!btn) return;
+    for (const b of group.children) b.classList.toggle("is-on", b === btn);
+  });
+}
+
+for (const b of document.querySelectorAll("[data-demo-toggle-on]")) {
+  b.addEventListener("click", () => {
+    const on = b.classList.toggle("is-on");
+    const label = b.lastChild;
+    if (label && label.nodeType === Node.TEXT_NODE) label.nodeValue = on ? "resume" : "pause";
+  });
+}
+
+/* ── the orb: one click, three states (open → muted → open) ── */
+const orb = document.getElementById("orb");
+orb.addEventListener("click", () => {
+  const muted = orb.classList.toggle("is-muted");
+  orb.setAttribute("aria-pressed", String(muted));
+  orb.setAttribute("aria-label", muted ? "microphone muted" : "microphone open");
+});
+
+/* ── a little live data so the panels are not still lifes ── */
+const tick = document.getElementById("tick");
+const seq = document.getElementById("seq");
+const metric = document.getElementById("orb-metric");
+const buf = document.getElementById("d-buf");
+let n = 0;
+setInterval(() => {
+  n += 1;
+  tick.textContent = n;
+  seq.textContent = 1041 + n;
+  metric.textContent = 165 + Math.round(Math.sin(n / 3) * 9);
+  buf.style.setProperty("--ui-meter-value", 45 + Math.round(Math.abs(Math.sin(n / 5)) * 45) + "%");
+}, 1200);
+
+/* ── the list: one current row, arrow keys move it ── */
+const list = document.getElementById("voice-list");
+function selectRow(row) {
+  for (const r of list.children) {
+    const on = r === row;
+    r.classList.toggle("is-current", on);
+    r.setAttribute("aria-selected", String(on));
+  }
+}
+list.addEventListener("click", (e) => {
+  const row = e.target.closest(".listrow");
+  if (row && row.getAttribute("aria-disabled") !== "true") selectRow(row);
+});
+list.addEventListener("keydown", (e) => {
+  if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
+  e.preventDefault();
+  const rows = [...list.children].filter((r) => r.getAttribute("aria-disabled") !== "true");
+  const i = rows.indexOf(document.activeElement);
+  const next = rows[(i + (e.key === "ArrowDown" ? 1 : rows.length - 1)) % rows.length];
+  next.focus();
+  selectRow(next);
+});
+
+/* ── [hidden] beats a component's own display, with nothing but the attribute ── */
+const hideToggle = document.getElementById("hide-toggle");
+const hideSubjects = [
+  ...document.getElementById("hide-subjects").children,
+  document.getElementById("hide-panel"),
+  document.getElementById("hide-strip"),
+];
+hideToggle.addEventListener("click", () => {
+  const on = hideToggle.getAttribute("aria-pressed") !== "true";
+  hideToggle.setAttribute("aria-pressed", String(on));
+  hideToggle.textContent = on ? "show them" : "hide them";
+  for (const el of hideSubjects) el.hidden = on;
+});
+
+/* ── the strip cycles its moods, since a mood is the whole point ── */
+const strip = document.getElementById("live-strip");
+const stripMsg = document.getElementById("live-strip-msg");
+const MOODS = [
+  ["strip-ok", "connected · 8 channels"],
+  ["strip-info", "replaying fixture kitchen-evening.jsonl"],
+  ["strip-warn", "3 missing sequence numbers on ears"],
+  ["strip-danger", "closed after 1 attempt — the loop is not running"],
+];
+let mood = 0;
+setInterval(() => {
+  mood = (mood + 1) % MOODS.length;
+  const [cls, msg] = MOODS[mood];
+  strip.className = "strip " + cls;
+  stripMsg.textContent = msg + " · seq " + (1041 + n);
+}, 3600);
+
+/* ── icon gallery, read straight out of the inline sprite ── */
+const grid = document.getElementById("icon-grid");
+for (const sym of document.querySelectorAll("symbol[id^='ph-']")) {
+  const name = sym.id.slice(3);
+  const cell = document.createElement("div");
+  cell.className = "demo-icon";
+  cell.innerHTML = '<svg class="icon" aria-hidden="true"><use href="#' + sym.id + '"></use></svg>';
+  cell.appendChild(document.createTextNode(name));
+  grid.appendChild(cell);
+}
+</script>
+</body>
+</html>

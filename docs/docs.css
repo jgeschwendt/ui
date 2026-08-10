@@ -1,0 +1,320 @@
+/* docs-only scaffolding — the reference page's own furniture, nothing here
+   belongs in the library. Every colour is a ui token, so the page follows the
+   theme it documents. */
+
+body {
+  margin: 0;
+}
+
+.doc-shell {
+  align-items: start;
+  display: grid;
+  gap: var(--ui-space-6);
+  grid-template-columns: 190px minmax(0, 1fr);
+  padding-block: var(--ui-space-5) var(--ui-space-7);
+}
+
+@media (max-width: 860px) {
+  .doc-shell {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .doc-nav {
+    position: static;
+    max-height: none;
+  }
+}
+
+/* ── the index rail ── */
+
+.doc-nav {
+  max-height: calc(100vh - var(--ui-space-7) * 2);
+  overflow-y: auto;
+  position: sticky;
+  top: var(--ui-space-4);
+}
+
+.doc-nav h2 {
+  color: var(--ui-fg-faint);
+  font-size: var(--ui-text-2xs);
+  font-weight: var(--ui-weight-bold);
+  letter-spacing: var(--ui-tracking-caps);
+  margin: var(--ui-space-4) 0 var(--ui-space-2);
+  text-transform: uppercase;
+}
+
+.doc-nav h2:first-child {
+  margin-top: 0;
+}
+
+.doc-nav a {
+  border-radius: var(--ui-radius-sm);
+  color: var(--ui-fg-muted);
+  display: block;
+  font-size: var(--ui-text-sm);
+  padding: 3px var(--ui-space-2);
+  text-decoration: none;
+}
+
+.doc-nav a:hover {
+  background: var(--ui-sunken);
+  color: var(--ui-fg);
+}
+
+.doc-nav a[aria-current="true"] {
+  background: var(--ui-accent-soft);
+  color: var(--ui-accent-soft-fg);
+  font-weight: var(--ui-weight-medium);
+}
+
+/* ── a section: header, examples, tables ── */
+
+.doc-section {
+  border-top: 1px solid var(--ui-border);
+  margin-top: var(--ui-space-6);
+  padding-top: var(--ui-space-5);
+  scroll-margin-top: var(--ui-space-4);
+}
+
+.doc-section:first-of-type {
+  border-top: 0;
+  margin-top: 0;
+  padding-top: 0;
+}
+
+.doc-section > header {
+  margin-bottom: var(--ui-space-4);
+}
+
+.doc-section > header .lead {
+  max-width: 68ch;
+}
+
+.doc-section p,
+.doc-section > .doc-note {
+  max-width: 68ch;
+}
+
+.doc-note {
+  color: var(--ui-fg-muted);
+  font-size: var(--ui-text-md);
+  line-height: var(--ui-leading-body);
+  margin: var(--ui-space-4) 0 0;
+}
+
+/* A .readout is a component with padding and no margin — the library keeps
+   spacing in the layout, not in the box. In this page's flow the rhythm is the
+   caller's, and it matches .doc-note's, so two stacked readouts (and a readout
+   under a paragraph) breathe like everything else here. */
+.doc-section > .readout {
+  margin-top: var(--ui-space-4);
+}
+
+.doc-h3 {
+  color: var(--ui-fg);
+  font-size: var(--ui-text-lg);
+  font-weight: var(--ui-weight-bold);
+  letter-spacing: var(--ui-tracking-tight);
+  margin: var(--ui-space-5) 0 var(--ui-space-2);
+}
+
+/* ── example: live above, markup below ── */
+
+.doc-ex {
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius-md);
+  margin: var(--ui-space-4) 0 0;
+  overflow: hidden;
+}
+
+.doc-ex-cap {
+  align-items: center;
+  background: var(--ui-surface);
+  border-bottom: 1px solid var(--ui-border);
+  color: var(--ui-fg-muted);
+  display: flex;
+  font-family: var(--ui-font-mono);
+  font-size: var(--ui-text-2xs);
+  gap: var(--ui-space-2);
+  letter-spacing: var(--ui-tracking-caps);
+  padding: 6px var(--ui-space-2);
+  text-transform: uppercase;
+}
+
+.doc-ex-live {
+  background: var(--ui-bg);
+  display: flow-root;
+  padding: var(--ui-space-4);
+}
+
+.doc-ex-live > .row,
+.doc-ex-live > .stack {
+  margin: 0;
+}
+
+.doc-src {
+  border-top: 1px solid var(--ui-border);
+}
+
+.doc-src-bar {
+  align-items: center;
+  background: var(--ui-sunken);
+  display: flex;
+  gap: var(--ui-space-2);
+  padding: 4px var(--ui-space-2) 4px var(--ui-space-2);
+}
+
+.doc-src-bar span {
+  color: var(--ui-fg-faint);
+  font-family: var(--ui-font-mono);
+  font-size: var(--ui-text-2xs);
+}
+
+.doc-src pre {
+  background: var(--ui-sunken);
+  border-top: 1px solid var(--ui-border);
+  color: var(--ui-fg);
+  font-family: var(--ui-font-mono);
+  font-size: var(--ui-text-xs);
+  line-height: 1.6;
+  margin: 0;
+  overflow-x: auto;
+  padding: var(--ui-space-3);
+  tab-size: 2;
+}
+
+.doc-src[hidden] {
+  display: none;
+}
+
+/* ── swatches, for the palette ── */
+
+.doc-swatches {
+  display: grid;
+  gap: var(--ui-space-2);
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+}
+
+.doc-swatch {
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius-md);
+  overflow: hidden;
+}
+
+.doc-swatch i {
+  display: block;
+  height: 40px;
+}
+
+.doc-swatch span {
+  border-top: 1px solid var(--ui-border);
+  color: var(--ui-fg-muted);
+  display: block;
+  font-family: var(--ui-font-mono);
+  font-size: var(--ui-text-2xs);
+  padding: 5px 7px;
+}
+
+/* ── the token reference table ── */
+
+/* One flat scroller: long shadow and font-stack values are allowed to be as
+   long as they are, and take the horizontal scrollbar rather than wrapping the
+   table into columns that no longer line up. */
+.doc-tokref {
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius-md);
+  margin-top: var(--ui-space-3);
+  overflow-x: auto;
+}
+
+.doc-tokref [data-table] {
+  margin-top: 0;
+}
+
+.doc-tokref th[scope="row"] {
+  font-weight: var(--ui-weight-normal);
+  text-align: left;
+  white-space: nowrap;
+}
+
+.doc-tokref .doc-tokref-family th {
+  background: var(--ui-sunken);
+  color: var(--ui-fg-muted);
+  font-size: var(--ui-text-2xs);
+  letter-spacing: var(--ui-tracking-caps);
+  position: sticky;
+  text-align: left;
+  text-transform: uppercase;
+  top: 0;
+}
+
+.doc-tokref td {
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+/* Dimmed, not blanked: the value is real, it is simply the light one again. */
+.doc-tokref td.is-same {
+  opacity: 0.55;
+}
+
+/* The chip carries that theme's own background so a translucent tint is read
+   over the surface it will actually sit on. */
+.doc-tokref-chip {
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius-sm);
+  display: inline-block;
+  height: 18px;
+  margin-right: var(--ui-space-2);
+  overflow: hidden;
+  vertical-align: -4px;
+  width: 30px;
+}
+
+.doc-tokref-chip i {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+.doc-tokref-error td {
+  color: var(--ui-danger);
+}
+
+/* ── icon gallery ── */
+
+.doc-icons {
+  display: grid;
+  gap: var(--ui-space-2);
+  grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+}
+
+.doc-icon {
+  align-items: center;
+  border: 1px solid var(--ui-border);
+  border-radius: var(--ui-radius-md);
+  color: var(--ui-fg-muted);
+  display: flex;
+  flex-direction: column;
+  font-family: var(--ui-font-mono);
+  font-size: 10px;
+  gap: 6px;
+  padding: 10px 4px;
+  text-align: center;
+}
+
+.doc-icon .icon {
+  --ui-icon-size: 22px;
+  color: var(--ui-fg);
+}
+
+/* ── the class table reads better tight ── */
+
+.doc-section [data-table] {
+  margin-top: var(--ui-space-3);
+}
+
+.doc-section [data-table] td code,
+.doc-section [data-table] th code {
+  white-space: nowrap;
+}

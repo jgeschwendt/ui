@@ -1,0 +1,1332 @@
+<!doctype html>
+<html lang="en" class="ui">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ui — reference</title>
+<link rel="stylesheet" href="../ui.css" />
+<link rel="stylesheet" href="docs.css" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%23476349'/%3E%3Cpath d='M4 11.5 L8 4.5 L12 11.5' stroke='white' fill='none' stroke-width='1.6'/%3E%3C/svg%3E" />
+</head>
+<body data-page="docs">
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+<!-- Phosphor Icons (regular), MIT (c) 2023 Phosphor Icons - see icons/LICENSE -->
+<symbol id="ph-arrow-clockwise" viewBox="0 0 256 256" fill="currentColor"><path d="M240,56v48a8,8,0,0,1-8,8H184a8,8,0,0,1,0-16H211.4L184.81,71.64l-.25-.24a80,80,0,1,0-1.67,114.78,8,8,0,0,1,11,11.63A95.44,95.44,0,0,1,128,224h-1.32A96,96,0,1,1,195.75,60L224,85.8V56a8,8,0,1,1,16,0Z"/></symbol>
+<symbol id="ph-caret-down" viewBox="0 0 256 256" fill="currentColor"><path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"/></symbol>
+<symbol id="ph-caret-right" viewBox="0 0 256 256" fill="currentColor"><path d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z"/></symbol>
+<symbol id="ph-chart-line" viewBox="0 0 256 256" fill="currentColor"><path d="M232,208a8,8,0,0,1-8,8H32a8,8,0,0,1-8-8V48a8,8,0,0,1,16,0v94.37L90.73,98a8,8,0,0,1,10.07-.38l58.81,44.11L218.73,90a8,8,0,1,1,10.54,12l-64,56a8,8,0,0,1-10.07.38L96.39,114.29,40,163.63V200H224A8,8,0,0,1,232,208Z"/></symbol>
+<symbol id="ph-check" viewBox="0 0 256 256" fill="currentColor"><path d="M229.66,77.66l-128,128a8,8,0,0,1-11.32,0l-56-56a8,8,0,0,1,11.32-11.32L96,188.69,218.34,66.34a8,8,0,0,1,11.32,11.32Z"/></symbol>
+<symbol id="ph-check-circle" viewBox="0 0 256 256" fill="currentColor"><path d="M173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34ZM232,128A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"/></symbol>
+<symbol id="ph-circle" viewBox="0 0 256 256" fill="currentColor"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Z"/></symbol>
+<symbol id="ph-circle-half" viewBox="0 0 256 256" fill="currentColor"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm8,16.37a86.4,86.4,0,0,1,16,3V212.67a86.4,86.4,0,0,1-16,3Zm32,9.26a87.81,87.81,0,0,1,16,10.54V195.83a87.81,87.81,0,0,1-16,10.54ZM40,128a88.11,88.11,0,0,1,80-87.63V215.63A88.11,88.11,0,0,1,40,128Zm160,50.54V77.46a87.82,87.82,0,0,1,0,101.08Z"/></symbol>
+<symbol id="ph-copy" viewBox="0 0 256 256" fill="currentColor"><path d="M216,32H88a8,8,0,0,0-8,8V80H40a8,8,0,0,0-8,8V216a8,8,0,0,0,8,8H168a8,8,0,0,0,8-8V176h40a8,8,0,0,0,8-8V40A8,8,0,0,0,216,32ZM160,208H48V96H160Zm48-48H176V88a8,8,0,0,0-8-8H96V48H208Z"/></symbol>
+<symbol id="ph-dots-three" viewBox="0 0 256 256" fill="currentColor"><path d="M140,128a12,12,0,1,1-12-12A12,12,0,0,1,140,128Zm56-12a12,12,0,1,0,12,12A12,12,0,0,0,196,116ZM60,116a12,12,0,1,0,12,12A12,12,0,0,0,60,116Z"/></symbol>
+<symbol id="ph-gear" viewBox="0 0 256 256" fill="currentColor"><path d="M128,80a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Zm88-29.84q.06-2.16,0-4.32l14.92-18.64a8,8,0,0,0,1.48-7.06,107.21,107.21,0,0,0-10.88-26.25,8,8,0,0,0-6-3.93l-23.72-2.64q-1.48-1.56-3-3L186,40.54a8,8,0,0,0-3.94-6,107.71,107.71,0,0,0-26.25-10.87,8,8,0,0,0-7.06,1.49L130.16,40Q128,40,125.84,40L107.2,25.11a8,8,0,0,0-7.06-1.48A107.6,107.6,0,0,0,73.89,34.51a8,8,0,0,0-3.93,6L67.32,64.27q-1.56,1.49-3,3L40.54,70a8,8,0,0,0-6,3.94,107.71,107.71,0,0,0-10.87,26.25,8,8,0,0,0,1.49,7.06L40,125.84Q40,128,40,130.16L25.11,148.8a8,8,0,0,0-1.48,7.06,107.21,107.21,0,0,0,10.88,26.25,8,8,0,0,0,6,3.93l23.72,2.64q1.49,1.56,3,3L70,215.46a8,8,0,0,0,3.94,6,107.71,107.71,0,0,0,26.25,10.87,8,8,0,0,0,7.06-1.49L125.84,216q2.16.06,4.32,0l18.64,14.92a8,8,0,0,0,7.06,1.48,107.21,107.21,0,0,0,26.25-10.88,8,8,0,0,0,3.93-6l2.64-23.72q1.56-1.48,3-3L215.46,186a8,8,0,0,0,6-3.94,107.71,107.71,0,0,0,10.87-26.25,8,8,0,0,0-1.49-7.06Zm-16.1-6.5a73.93,73.93,0,0,1,0,8.68,8,8,0,0,0,1.74,5.48l14.19,17.73a91.57,91.57,0,0,1-6.23,15L187,173.11a8,8,0,0,0-5.1,2.64,74.11,74.11,0,0,1-6.14,6.14,8,8,0,0,0-2.64,5.1l-2.51,22.58a91.32,91.32,0,0,1-15,6.23l-17.74-14.19a8,8,0,0,0-5-1.75h-.48a73.93,73.93,0,0,1-8.68,0,8,8,0,0,0-5.48,1.74L100.45,215.8a91.57,91.57,0,0,1-15-6.23L82.89,187a8,8,0,0,0-2.64-5.1,74.11,74.11,0,0,1-6.14-6.14,8,8,0,0,0-5.1-2.64L46.43,170.6a91.32,91.32,0,0,1-6.23-15l14.19-17.74a8,8,0,0,0,1.74-5.48,73.93,73.93,0,0,1,0-8.68,8,8,0,0,0-1.74-5.48L40.2,100.45a91.57,91.57,0,0,1,6.23-15L69,82.89a8,8,0,0,0,5.1-2.64,74.11,74.11,0,0,1,6.14-6.14A8,8,0,0,0,82.89,69L85.4,46.43a91.32,91.32,0,0,1,15-6.23l17.74,14.19a8,8,0,0,0,5.48,1.74,73.93,73.93,0,0,1,8.68,0,8,8,0,0,0,5.48-1.74L155.55,40.2a91.57,91.57,0,0,1,15,6.23L173.11,69a8,8,0,0,0,2.64,5.1,74.11,74.11,0,0,1,6.14,6.14,8,8,0,0,0,5.1,2.64l22.58,2.51a91.32,91.32,0,0,1,6.23,15l-14.19,17.74A8,8,0,0,0,199.87,123.66Z"/></symbol>
+<symbol id="ph-info" viewBox="0 0 256 256" fill="currentColor"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm16-40a8,8,0,0,1-8,8,16,16,0,0,1-16-16V128a8,8,0,0,1,0-16,16,16,0,0,1,16,16v40A8,8,0,0,1,144,176ZM112,84a12,12,0,1,1,12,12A12,12,0,0,1,112,84Z"/></symbol>
+<symbol id="ph-list" viewBox="0 0 256 256" fill="currentColor"><path d="M224,128a8,8,0,0,1-8,8H40a8,8,0,0,1,0-16H216A8,8,0,0,1,224,128ZM40,72H216a8,8,0,0,0,0-16H40a8,8,0,0,0,0,16ZM216,184H40a8,8,0,0,0,0,16H216a8,8,0,0,0,0-16Z"/></symbol>
+<symbol id="ph-microphone" viewBox="0 0 256 256" fill="currentColor"><path d="M128,176a48.05,48.05,0,0,0,48-48V64a48,48,0,0,0-96,0v64A48.05,48.05,0,0,0,128,176ZM96,64a32,32,0,0,1,64,0v64a32,32,0,0,1-64,0Zm40,143.6V240a8,8,0,0,1-16,0V207.6A80.11,80.11,0,0,1,48,128a8,8,0,0,1,16,0,64,64,0,0,0,128,0,8,8,0,0,1,16,0A80.11,80.11,0,0,1,136,207.6Z"/></symbol>
+<symbol id="ph-microphone-slash" viewBox="0 0 256 256" fill="currentColor"><path d="M213.92,218.62l-160-176A8,8,0,0,0,42.08,53.38L80,95.09V128a48,48,0,0,0,69.11,43.12l11.1,12.2A63.41,63.41,0,0,1,128,192a64.07,64.07,0,0,1-64-64,8,8,0,0,0-16,0,80.11,80.11,0,0,0,72,79.6V240a8,8,0,0,0,16,0V207.59a78.83,78.83,0,0,0,35.16-12.22l30.92,34a8,8,0,1,0,11.84-10.76ZM128,160a32,32,0,0,1-32-32V112.69l41.66,45.82A32,32,0,0,1,128,160Zm57.52-3.91A63.32,63.32,0,0,0,192,128a8,8,0,0,1,16,0,79.16,79.16,0,0,1-8.11,35.12,8,8,0,0,1-7.19,4.49,7.88,7.88,0,0,1-3.51-.82A8,8,0,0,1,185.52,156.09ZM84,44.87A48,48,0,0,1,176,64v64a49.19,49.19,0,0,1-.26,5,8,8,0,0,1-8,7.17,8.13,8.13,0,0,1-.84,0,8,8,0,0,1-7.12-8.79c.11-1.1.17-2.24.17-3.36V64A32,32,0,0,0,98.64,51.25,8,8,0,1,1,84,44.87Z"/></symbol>
+<symbol id="ph-moon" viewBox="0 0 256 256" fill="currentColor"><path d="M233.54,142.23a8,8,0,0,0-8-2,88.08,88.08,0,0,1-109.8-109.8,8,8,0,0,0-10-10,104.84,104.84,0,0,0-52.91,37A104,104,0,0,0,136,224a103.09,103.09,0,0,0,62.52-20.88,104.84,104.84,0,0,0,37-52.91A8,8,0,0,0,233.54,142.23ZM188.9,190.34A88,88,0,0,1,65.66,67.11a89,89,0,0,1,31.4-26A106,106,0,0,0,96,56,104.11,104.11,0,0,0,200,160a106,106,0,0,0,14.92-1.06A89,89,0,0,1,188.9,190.34Z"/></symbol>
+<symbol id="ph-pause" viewBox="0 0 256 256" fill="currentColor"><path d="M200,32H160a16,16,0,0,0-16,16V208a16,16,0,0,0,16,16h40a16,16,0,0,0,16-16V48A16,16,0,0,0,200,32Zm0,176H160V48h40ZM96,32H56A16,16,0,0,0,40,48V208a16,16,0,0,0,16,16H96a16,16,0,0,0,16-16V48A16,16,0,0,0,96,32Zm0,176H56V48H96Z"/></symbol>
+<symbol id="ph-play" viewBox="0 0 256 256" fill="currentColor"><path d="M232.4,114.49,88.32,26.35a16,16,0,0,0-16.2-.3A15.86,15.86,0,0,0,64,39.87V216.13A15.94,15.94,0,0,0,80,232a16.07,16.07,0,0,0,8.36-2.35L232.4,141.51a15.81,15.81,0,0,0,0-27ZM80,215.94V40l143.83,88Z"/></symbol>
+<symbol id="ph-pulse" viewBox="0 0 256 256" fill="currentColor"><path d="M240,128a8,8,0,0,1-8,8H204.94l-37.78,75.58A8,8,0,0,1,160,216h-.4a8,8,0,0,1-7.08-5.14L95.35,60.76,63.28,131.31A8,8,0,0,1,56,136H24a8,8,0,0,1,0-16H50.85L88.72,36.69a8,8,0,0,1,14.76.46l57.51,151,31.85-63.71A8,8,0,0,1,200,120h32A8,8,0,0,1,240,128Z"/></symbol>
+<symbol id="ph-sliders-horizontal" viewBox="0 0 256 256" fill="currentColor"><path d="M40,88H73a32,32,0,0,0,62,0h81a8,8,0,0,0,0-16H135a32,32,0,0,0-62,0H40a8,8,0,0,0,0,16Zm64-24A16,16,0,1,1,88,80,16,16,0,0,1,104,64ZM216,168H199a32,32,0,0,0-62,0H40a8,8,0,0,0,0,16h97a32,32,0,0,0,62,0h17a8,8,0,0,0,0-16Zm-48,24a16,16,0,1,1,16-16A16,16,0,0,1,168,192Z"/></symbol>
+<symbol id="ph-speaker-high" viewBox="0 0 256 256" fill="currentColor"><path d="M155.51,24.81a8,8,0,0,0-8.42.88L77.25,80H32A16,16,0,0,0,16,96v64a16,16,0,0,0,16,16H77.25l69.84,54.31A8,8,0,0,0,160,224V32A8,8,0,0,0,155.51,24.81ZM32,96H72v64H32ZM144,207.64,88,164.09V91.91l56-43.55Zm54-106.08a40,40,0,0,1,0,52.88,8,8,0,0,1-12-10.58,24,24,0,0,0,0-31.72,8,8,0,0,1,12-10.58ZM248,128a79.9,79.9,0,0,1-20.37,53.34,8,8,0,0,1-11.92-10.67,64,64,0,0,0,0-85.33,8,8,0,1,1,11.92-10.67A79.83,79.83,0,0,1,248,128Z"/></symbol>
+<symbol id="ph-speaker-slash" viewBox="0 0 256 256" fill="currentColor"><path d="M53.92,34.62A8,8,0,1,0,42.08,45.38L73.55,80H32A16,16,0,0,0,16,96v64a16,16,0,0,0,16,16H77.25l69.84,54.31A8,8,0,0,0,160,224V175.09l42.08,46.29a8,8,0,1,0,11.84-10.76ZM32,96H72v64H32ZM144,207.64,88,164.09V95.89l56,61.6Zm42-63.77a24,24,0,0,0,0-31.72,8,8,0,1,1,12-10.57,40,40,0,0,1,0,52.88,8,8,0,0,1-12-10.59Zm-80.16-76a8,8,0,0,1,1.4-11.23l39.85-31A8,8,0,0,1,160,32v74.83a8,8,0,0,1-16,0V48.36l-26.94,21A8,8,0,0,1,105.84,67.91ZM248,128a79.9,79.9,0,0,1-20.37,53.34,8,8,0,0,1-11.92-10.67,64,64,0,0,0,0-85.33,8,8,0,1,1,11.92-10.67A79.83,79.83,0,0,1,248,128Z"/></symbol>
+<symbol id="ph-sun" viewBox="0 0 256 256" fill="currentColor"><path d="M120,40V16a8,8,0,0,1,16,0V40a8,8,0,0,1-16,0Zm72,88a64,64,0,1,1-64-64A64.07,64.07,0,0,1,192,128Zm-16,0a48,48,0,1,0-48,48A48.05,48.05,0,0,0,176,128ZM58.34,69.66A8,8,0,0,0,69.66,58.34l-16-16A8,8,0,0,0,42.34,53.66Zm0,116.68-16,16a8,8,0,0,0,11.32,11.32l16-16a8,8,0,0,0-11.32-11.32ZM192,72a8,8,0,0,0,5.66-2.34l16-16a8,8,0,0,0-11.32-11.32l-16,16A8,8,0,0,0,192,72Zm5.66,114.34a8,8,0,0,0-11.32,11.32l16,16a8,8,0,0,0,11.32-11.32ZM48,128a8,8,0,0,0-8-8H16a8,8,0,0,0,0,16H40A8,8,0,0,0,48,128Zm80,80a8,8,0,0,0-8,8v24a8,8,0,0,0,16,0V216A8,8,0,0,0,128,208Zm112-88H216a8,8,0,0,0,0,16h24a8,8,0,0,0,0-16Z"/></symbol>
+<symbol id="ph-terminal-window" viewBox="0 0 256 256" fill="currentColor"><path d="M128,128a8,8,0,0,1-3,6.25l-40,32a8,8,0,1,1-10-12.5L107.19,128,75,102.25a8,8,0,1,1,10-12.5l40,32A8,8,0,0,1,128,128Zm48,24H136a8,8,0,0,0,0,16h40a8,8,0,0,0,0-16Zm56-96V200a16,16,0,0,1-16,16H40a16,16,0,0,1-16-16V56A16,16,0,0,1,40,40H216A16,16,0,0,1,232,56ZM216,200V56H40V200H216Z"/></symbol>
+<symbol id="ph-trash" viewBox="0 0 256 256" fill="currentColor"><path d="M216,48H176V40a24,24,0,0,0-24-24H104A24,24,0,0,0,80,40v8H40a8,8,0,0,0,0,16h8V208a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V64h8a8,8,0,0,0,0-16ZM96,40a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8v8H96Zm96,168H64V64H192ZM112,104v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm48,0v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Z"/></symbol>
+<symbol id="ph-warning" viewBox="0 0 256 256" fill="currentColor"><path d="M236.8,188.09,149.35,36.22h0a24.76,24.76,0,0,0-42.7,0L19.2,188.09a23.51,23.51,0,0,0,0,23.72A24.35,24.35,0,0,0,40.55,224h174.9a24.35,24.35,0,0,0,21.33-12.19A23.51,23.51,0,0,0,236.8,188.09ZM222.93,203.8a8.5,8.5,0,0,1-7.48,4.2H40.55a8.5,8.5,0,0,1-7.48-4.2,7.59,7.59,0,0,1,0-7.72L120.52,44.21a8.75,8.75,0,0,1,15,0l87.45,151.87A7.59,7.59,0,0,1,222.93,203.8ZM120,144V104a8,8,0,0,1,16,0v40a8,8,0,0,1-16,0Zm20,36a12,12,0,1,1-12-12A12,12,0,0,1,140,180Z"/></symbol>
+<symbol id="ph-waveform" viewBox="0 0 256 256" fill="currentColor"><path d="M56,96v64a8,8,0,0,1-16,0V96a8,8,0,0,1,16,0ZM88,24a8,8,0,0,0-8,8V224a8,8,0,0,0,16,0V32A8,8,0,0,0,88,24Zm40,32a8,8,0,0,0-8,8V192a8,8,0,0,0,16,0V64A8,8,0,0,0,128,56Zm40,32a8,8,0,0,0-8,8v64a8,8,0,0,0,16,0V96A8,8,0,0,0,168,88Zm40-16a8,8,0,0,0-8,8v96a8,8,0,0,0,16,0V80A8,8,0,0,0,208,72Z"/></symbol>
+<symbol id="ph-x" viewBox="0 0 256 256" fill="currentColor"><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"/></symbol>
+</svg>
+
+<header class="appbar">
+  <h1 class="appbar-title">
+    <svg class="icon" aria-hidden="true"><use href="#ph-waveform" /></svg>
+    ui <small>· reference</small>
+  </h1>
+  <nav class="appbar-nav" aria-label="pages">
+    <a class="pill is-active" href="./" aria-current="page">docs</a>
+    <a class="pill" href="../demo/">kitchen sink</a>
+  </nav>
+  <span class="spacer"></span>
+  <div class="segmented" role="group" aria-label="theme">
+    <button type="button" data-theme-set="light" aria-pressed="false" title="light">
+      <svg class="icon icon-sm" aria-hidden="true"><use href="#ph-sun" /></svg>light
+    </button>
+    <button type="button" data-theme-set="auto" aria-pressed="true" title="follow the system">
+      <svg class="icon icon-sm" aria-hidden="true"><use href="#ph-circle-half" /></svg>auto
+    </button>
+    <button type="button" data-theme-set="dark" aria-pressed="false" title="dark">
+      <svg class="icon icon-sm" aria-hidden="true"><use href="#ph-moon" /></svg>dark
+    </button>
+  </div>
+</header>
+
+<div class="strip strip-accent">
+  <span class="strip-tag">read me first</span>
+  <span class="strip-msg">every example on this page is rendered by <code class="code">ui.css</code> itself — the markup pane under each one is that example's own DOM, read back out.</span>
+</div>
+
+<div class="doc-shell" data-container>
+
+<nav class="doc-nav" aria-label="components">
+  <h2>foundation</h2>
+  <a href="#tokens">tokens</a>
+  <a href="#token-reference">token reference</a>
+  <a href="#theming">theming</a>
+  <a href="#type">type</a>
+  <a href="#layout">layout</a>
+  <h2>controls</h2>
+  <a href="#button">button</a>
+  <a href="#form">form</a>
+  <a href="#toggle">toggle</a>
+  <h2>status</h2>
+  <a href="#pill">pill · badge · chip · dot</a>
+  <a href="#notice">notice</a>
+  <a href="#strip">strip</a>
+  <a href="#meter">meter</a>
+  <a href="#metric">metric · readout</a>
+  <a href="#orb">orb</a>
+  <h2>surfaces</h2>
+  <a href="#card">card</a>
+  <a href="#panel">panel</a>
+  <a href="#appbar">appbar</a>
+  <h2>collections</h2>
+  <a href="#list">list · listrow</a>
+  <a href="#table">table</a>
+  <a href="#transcript">transcript</a>
+  <h2>details</h2>
+  <a href="#icon">icon</a>
+  <a href="#misc">code · kbd · tip · empty</a>
+  <h2>the page itself</h2>
+  <a href="#wrapping">wrapping (visor)</a>
+</nav>
+
+<main>
+
+<!-- ══════════════════════════════════════════════════════════ tokens ── -->
+<section class="doc-section" id="tokens" data-component="tokens">
+  <header class="stack">
+    <p class="eyebrow">foundation</p>
+    <h2 class="h1">Tokens</h2>
+    <p class="lead">Every colour, size and duration in the library is a custom property on
+      <code class="code">:root</code>. Nothing else is configuration — retinting the library
+      means overriding tokens, never rules.</p>
+  </header>
+
+  <h3 class="doc-h3">Palette</h3>
+  <figure class="doc-ex" data-example="tokens-palette">
+    <figcaption class="doc-ex-cap">the roles, in the theme you are reading</figcaption>
+    <div class="doc-ex-live" data-live>
+      <div class="doc-swatches">
+        <div class="doc-swatch" data-token="--ui-bg"><i style="background: var(--ui-bg)"></i><span>--ui-bg</span></div>
+        <div class="doc-swatch" data-token="--ui-surface"><i style="background: var(--ui-surface)"></i><span>--ui-surface</span></div>
+        <div class="doc-swatch" data-token="--ui-sunken"><i style="background: var(--ui-sunken)"></i><span>--ui-sunken</span></div>
+        <div class="doc-swatch" data-token="--ui-border"><i style="background: var(--ui-border)"></i><span>--ui-border</span></div>
+        <div class="doc-swatch" data-token="--ui-border-strong"><i style="background: var(--ui-border-strong)"></i><span>--ui-border-strong</span></div>
+        <div class="doc-swatch" data-token="--ui-fg"><i style="background: var(--ui-fg)"></i><span>--ui-fg</span></div>
+        <div class="doc-swatch" data-token="--ui-fg-muted"><i style="background: var(--ui-fg-muted)"></i><span>--ui-fg-muted</span></div>
+        <div class="doc-swatch" data-token="--ui-fg-faint"><i style="background: var(--ui-fg-faint)"></i><span>--ui-fg-faint</span></div>
+        <div class="doc-swatch" data-token="--ui-accent"><i style="background: var(--ui-accent)"></i><span>--ui-accent</span></div>
+        <div class="doc-swatch" data-token="--ui-accent-soft"><i style="background: var(--ui-accent-soft)"></i><span>--ui-accent-soft</span></div>
+        <div class="doc-swatch" data-token="--ui-ok"><i style="background: var(--ui-ok)"></i><span>--ui-ok</span></div>
+        <div class="doc-swatch" data-token="--ui-warn"><i style="background: var(--ui-warn)"></i><span>--ui-warn</span></div>
+        <div class="doc-swatch" data-token="--ui-warn-ink"><i style="background: var(--ui-warn-ink)"></i><span>--ui-warn-ink</span></div>
+        <div class="doc-swatch" data-token="--ui-danger"><i style="background: var(--ui-danger)"></i><span>--ui-danger</span></div>
+        <div class="doc-swatch" data-token="--ui-info"><i style="background: var(--ui-info)"></i><span>--ui-info</span></div>
+      </div>
+    </div>
+  </figure>
+
+  <h3 class="doc-h3">The token contract</h3>
+  <p class="doc-note">Light is the ground truth: every token has its definition on bare
+    <code class="code">:root</code>, and the dark blocks only reassign. A token defined
+    <em>only</em> inside a dark block is undefined for a light viewer.</p>
+  <table data-table>
+    <thead><tr><th>group</th><th>tokens</th><th>light → dark</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="table-mono">surfaces</td>
+        <td><code class="code">--ui-bg</code> <code class="code">--ui-surface</code> <code class="code">--ui-surface-raised</code> <code class="code">--ui-sunken</code> <code class="code">--ui-border</code> <code class="code">--ui-border-strong</code></td>
+        <td><code class="code">#ffffff</code> → <code class="code">#08090a</code></td>
+      </tr>
+      <tr>
+        <td class="table-mono">ink</td>
+        <td><code class="code">--ui-fg</code> <code class="code">--ui-fg-muted</code> <code class="code">--ui-fg-faint</code> <code class="code">--ui-fg-inverse</code></td>
+        <td><code class="code">#141c15</code> → <code class="code">#ece7db</code></td>
+      </tr>
+      <tr>
+        <td class="table-mono">accent</td>
+        <td><code class="code">--ui-accent</code> <code class="code">-hover</code> <code class="code">-active</code> <code class="code">-fg</code> <code class="code">-soft</code> <code class="code">-soft-fg</code> <code class="code">-ring</code></td>
+        <td>sage <code class="code">#476349</code> → brass <code class="code">#cfa14d</code></td>
+      </tr>
+      <tr>
+        <td class="table-mono">status</td>
+        <td><code class="code">--ui-ok</code> <code class="code">--ui-warn</code> <code class="code">--ui-warn-ink</code> <code class="code">--ui-danger</code> <code class="code">--ui-info</code>, each with a <code class="code">-soft</code></td>
+        <td>five hues, and only five</td>
+      </tr>
+      <tr>
+        <td class="table-mono">type</td>
+        <td><code class="code">--ui-font-sans</code> <code class="code">--ui-font-mono</code> <code class="code">--ui-text-2xs…2xl</code> <code class="code">--ui-weight-*</code> <code class="code">--ui-leading-*</code> <code class="code">--ui-tracking-*</code></td>
+        <td>identical in both</td>
+      </tr>
+      <tr>
+        <td class="table-mono">metrics</td>
+        <td><code class="code">--ui-space-1…7</code> (4·8·12·16·24·32·48px), <code class="code">--ui-radius-sm|md|lg|full</code></td>
+        <td>identical in both</td>
+      </tr>
+      <tr>
+        <td class="table-mono">depth</td>
+        <td><code class="code">--ui-shadow-sm|md|lg</code> <code class="code">--ui-glow</code></td>
+        <td><code class="code">--ui-glow: none</code> → a brass halo</td>
+      </tr>
+      <tr>
+        <td class="table-mono">motion</td>
+        <td><code class="code">--ui-fast</code> (110ms) <code class="code">--ui-slow</code> (240ms) <code class="code">--ui-ease</code></td>
+        <td>identical in both</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3 class="doc-h3">Per-component hooks</h3>
+  <p class="doc-note">Set these inline or in a wrapper rule; they are the only knobs a component
+    reads that the palette does not supply.</p>
+  <table data-table>
+    <thead><tr><th>property</th><th>read by</th><th>default</th></tr></thead>
+    <tbody>
+      <tr data-token="--ui-container"><td class="table-mono">--ui-container</td><td><code class="code">[data-container]</code> max width</td><td class="table-num">100rem</td></tr>
+      <tr data-token="--ui-grid-min"><td class="table-mono">--ui-grid-min</td><td><code class="code">[data-grid]</code> column floor</td><td class="table-num">280px</td></tr>
+      <tr data-token="--ui-icon-size"><td class="table-mono">--ui-icon-size</td><td><code class="code">.icon</code></td><td class="table-num">1.15em</td></tr>
+      <tr data-token="--ui-meter-value"><td class="table-mono">--ui-meter-value</td><td><code class="code">.meter</code> fill</td><td class="table-num">a percentage</td></tr>
+      <tr data-token="--ui-orb-size"><td class="table-mono">--ui-orb-size</td><td><code class="code">.orb</code></td><td class="table-num">34px</td></tr>
+      <tr data-token="--ui-panel-accent"><td class="table-mono">--ui-panel-accent</td><td><code class="code">.panel</code> head rail and name</td><td class="table-num">--ui-accent</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ═════════════════════════════════════════════════ token reference ── -->
+<section class="doc-section" id="token-reference" data-component="token-reference">
+  <header class="stack">
+    <p class="eyebrow">foundation</p>
+    <h2 class="h1">Token reference</h2>
+    <p class="lead">Every <code class="code">--ui-*</code> custom property the library defines,
+      one row each, light beside dark. The rows are parsed out of
+      <code class="code">ui.css</code> when this page loads — the same stylesheet the page is
+      wearing — so the reference cannot drift from the tokens it documents.</p>
+  </header>
+
+  <p class="doc-note">Swatches are painted from the parsed literal, not through
+    <code class="code">var()</code>: the light column stays light while you read this in dark.
+    A dark cell shown dim is a token the dark blocks never reassign — the light value
+    <em>is</em> the dark value.</p>
+
+  <div class="doc-tokref" data-token-reference>
+    <table data-table>
+      <thead>
+        <tr><th scope="col">token</th><th scope="col">light</th><th scope="col">dark</th></tr>
+      </thead>
+      <tbody>
+        <tr><td colspan="3">reading <code class="code">ui.css</code>…</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="doc-note" id="token-reference-count"></p>
+</section>
+
+<!-- ═════════════════════════════════════════════════════════ theming ── -->
+<section class="doc-section" id="theming" data-component="theming">
+  <header class="stack">
+    <p class="eyebrow">foundation</p>
+    <h2 class="h1">Theming</h2>
+    <p class="lead">Light is white and green; dark is black and gold. Both are first-class, and a
+      manual toggle wins over the system in <em>both</em> directions.</p>
+  </header>
+
+  <table data-table>
+    <thead><tr><th>selector</th><th>wins over</th></tr></thead>
+    <tbody>
+      <tr><td class="table-mono">:root</td><td>— light is the ground truth; every token is defined here</td></tr>
+      <tr><td class="table-mono">@media (prefers-color-scheme: dark) :root:not([data-theme="light"])</td><td>the system default</td></tr>
+      <tr><td class="table-mono">:root[data-theme="dark"]</td><td>a light system</td></tr>
+      <tr><td class="table-mono">:root[data-theme="light"]</td><td>a dark system</td></tr>
+    </tbody>
+  </table>
+
+  <p class="doc-note">That is the whole contract. The toggle in this page's appbar is exactly it —
+    three buttons writing (or removing) one attribute:</p>
+  <pre class="readout">document.documentElement.dataset.theme = "dark";   <span class="readout-key">// explicit</span>
+document.documentElement.removeAttribute("data-theme");  <span class="readout-key">// back to the system</span></pre>
+
+  <p class="doc-note"><code class="code">color-scheme</code> is set alongside, so native form
+    controls, scrollbars and <code class="code">Highlight</code> follow.</p>
+
+  <h3 class="doc-h3">Retheming</h3>
+  <p class="doc-note">Override tokens, not rules. Anything under <code class="code">--ui-accent*</code>
+    retints the whole library:</p>
+  <pre class="readout">:root { --ui-accent: #7c3aed; --ui-accent-soft: #f1eafe; --ui-accent-soft-fg: #5b21b6; }</pre>
+
+  <h3 class="doc-h3">Bring your own hues, in our shape</h3>
+  <p class="doc-note">The library ships five semantic hues and that is the whole vocabulary, on
+    purpose: once <code class="code">--ui-danger</code> means "series 4", nothing on the page can
+    mean <em>danger</em> any more. Declare your own tokens under your own prefix and feed them to the
+    <code class="code">--ui-*</code> hooks.</p>
+  <figure class="doc-ex" data-example="theming-own-hues">
+    <figcaption class="doc-ex-cap">three panels, three hues that are not the library's</figcaption>
+    <div class="doc-ex-live" data-live>
+      <div data-grid style="--ui-grid-min: 190px">
+        <div class="panel" style="--ui-panel-accent: #4f7fb8">
+          <div class="panel-head"><span class="panel-name">ears</span></div>
+          <div class="panel-body muted">--plot-ears</div>
+        </div>
+        <div class="panel" style="--ui-panel-accent: #8a6ab0">
+          <div class="panel-head"><span class="panel-name">mouth</span></div>
+          <div class="panel-body muted">--plot-mouth</div>
+        </div>
+        <div class="panel" style="--ui-panel-accent: #b08a4f">
+          <div class="panel-head"><span class="panel-name">wire</span></div>
+          <div class="panel-body muted">--plot-wire</div>
+        </div>
+      </div>
+    </div>
+  </figure>
+  <p class="doc-note">Two rules keep it honest: never redefine a <code class="code">--ui-*</code>
+    token to mean something non-semantic, and check your hues against <code class="code">--ui-bg</code>
+    in <em>both</em> themes — the library's contrast measurements say nothing about colours it has
+    never seen.</p>
+
+  <h3 class="doc-h3">Two rules that bite</h3>
+  <p class="doc-note"><strong>On <code class="code">&lt;html&gt;</code>, <code class="code">&lt;body&gt;</code>
+    stays transparent.</strong> CSS propagates the root element's background to the canvas, which
+    paints the viewport correctly but leaves the computed background of <em>both</em> elements at
+    <code class="code">rgba(0, 0, 0, 0)</code>. Anything reading <code class="code">body</code>'s
+    background — a nested scroll container, a screenshot tool, an embedded widget — sees nothing. Put
+    <code class="code">.ui</code> on <code class="code">&lt;body&gt;</code> instead, or set
+    <code class="code">body { background: var(--ui-bg); }</code> alongside it.</p>
+  <p class="doc-note"><strong><code class="code">[hidden]</code> is guarded in the base layer</strong>
+    — <code class="code">:where([hidden]:not([hidden="until-found"])) { display: none !important; }</code>
+    — because components set <code class="code">display</code> and a component class beats the UA's
+    rule. Without the guard, <code class="code">el.hidden = true</code> silently does nothing on a
+    pill, a panel or a strip.</p>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════ type ── -->
+<section class="doc-section" id="type" data-component="type">
+  <header class="stack">
+    <p class="eyebrow">foundation</p>
+    <h2 class="h1">Type</h2>
+    <p class="lead">Class-based, not element-based: the heading level is the document's business,
+      the size is the design's.</p>
+  </header>
+
+  <figure class="doc-ex" data-example="type-scale">
+    <figcaption class="doc-ex-cap">the whole scale</figcaption>
+    <div class="doc-ex-live" data-live>
+      <div class="stack">
+        <p class="eyebrow">eyebrow</p>
+        <h3 class="h1">Heading one</h3>
+        <h4 class="h2">Heading two</h4>
+        <h5 class="h3">Heading three</h5>
+        <p class="lead">A lead paragraph carries the sentence a section opens on.</p>
+        <p>Body copy is the default — no class needed inside <code class="code">.ui</code>.</p>
+        <p class="muted">Muted copy steps back one notch.</p>
+        <p class="faint">Faint copy steps back two, and must not carry meaning alone.</p>
+        <p class="mono">mono 00:12.401 · seq 1041</p>
+        <p><a class="link" href="#type">A link</a> inside a sentence.</p>
+      </div>
+    </div>
+  </figure>
+
+  <table data-table>
+    <thead><tr><th>class</th><th>is</th></tr></thead>
+    <tbody>
+      <tr data-class="h1"><td class="table-mono">.h1 .h2 .h3</td><td>the display scale, independent of <code class="code">h1…h6</code></td></tr>
+      <tr data-class="eyebrow"><td class="table-mono">.eyebrow</td><td>small caps label above a heading</td></tr>
+      <tr data-class="lead"><td class="table-mono">.lead</td><td>the opening sentence, one step up from body</td></tr>
+      <tr data-class="muted"><td class="table-mono">.muted</td><td><code class="code">--ui-fg-muted</code> — still AA</td></tr>
+      <tr data-class="faint"><td class="table-mono">.faint</td><td><code class="code">--ui-fg-faint</code> — decoration, never the only carrier</td></tr>
+      <tr data-class="mono"><td class="table-mono">.mono</td><td>the mono stack at body size</td></tr>
+      <tr data-class="link"><td class="table-mono">.link</td><td>an accented, underlined anchor</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════ layout ── -->
+<section class="doc-section" id="layout" data-component="layout">
+  <header class="stack">
+    <p class="eyebrow">foundation</p>
+    <h2 class="h1">Layout</h2>
+    <p class="lead">A handful of primitives, no grid system. Anything more specific than these belongs to
+      the page, not the library.</p>
+  </header>
+
+  <figure class="doc-ex" data-example="layout-primitives">
+    <figcaption class="doc-ex-cap">row, stack, data-grid, spacer, rule</figcaption>
+    <div class="doc-ex-live" data-live>
+      <div class="stack">
+        <div class="row">
+          <span class="pill">a row</span>
+          <span class="pill">wraps</span>
+          <span class="spacer"></span>
+          <span class="badge">a spacer pushed this</span>
+        </div>
+        <hr class="hr" />
+        <div data-grid style="--ui-grid-min: 160px">
+          <div class="card"><div class="card-body muted">grid cell</div></div>
+          <div class="card"><div class="card-body muted">grid cell</div></div>
+          <div class="card"><div class="card-body muted">grid cell</div></div>
+        </div>
+      </div>
+    </div>
+  </figure>
+
+  <table data-table>
+    <thead><tr><th>class</th><th>is</th></tr></thead>
+    <tbody>
+      <tr data-class="row"><td class="table-mono">.row</td><td>wrapping flex row, centred cross-axis</td></tr>
+      <tr data-class="stack"><td class="table-mono">.stack</td><td>vertical flow with one gap</td></tr>
+      <tr data-class="spacer"><td class="table-mono">.spacer</td><td><code class="code">flex: 1</code> — pushes what follows to the end</td></tr>
+      <tr data-class="hr"><td class="table-mono">.hr</td><td>a one-token rule</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="h3" id="layout-attributes">Layout primitives (attributes)</h3>
+
+  <p class="doc-note">Three names — <code class="code">grid</code>,
+    <code class="code">container</code>, <code class="code">table</code> — are also names Tailwind
+    claims as utilities. Rather than rename them or prefix the library, they are carried as
+    <strong>data attributes</strong>: Tailwind never emits an attribute selector, so the collision is
+    impossible by construction, the names survive, and specificity is unchanged
+    (<code class="code">0,1,0</code> either way). The rule: <em>a layout primitive Tailwind also
+    claims is an attribute; a component is a class.</em></p>
+
+  <table data-table>
+    <thead><tr><th>attribute</th><th>is</th></tr></thead>
+    <tbody>
+      <tr data-class="[data-container]"><td class="table-mono">[data-container]</td><td>centred, max <code class="code">--ui-container</code>, gutters</td></tr>
+      <tr data-class="[data-grid]"><td class="table-mono">[data-grid]</td><td><code class="code">auto-fit</code> columns with a <code class="code">--ui-grid-min</code> floor</td></tr>
+      <tr data-class="[data-table]"><td class="table-mono">[data-table]</td><td>the table skin — documented under <a class="link" href="#table">Table</a></td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════ button ── -->
+<section class="doc-section" id="button" data-component="button">
+  <header class="stack">
+    <p class="eyebrow">controls</p>
+    <h2 class="h1">Button</h2>
+    <p class="lead">One base class and a modifier for the job. Sizes are orthogonal to variants,
+      and a latched button is <code class="code">.is-on</code> — never a second variant class.</p>
+  </header>
+
+  <figure class="doc-ex" data-example="button-variants">
+    <figcaption class="doc-ex-cap">variants</figcaption>
+    <div class="doc-ex-live" data-live>
+      <div class="row">
+        <button class="btn btn-primary" type="button">Primary</button>
+        <button class="btn" type="button">Default</button>
+        <button class="btn btn-quiet" type="button">Quiet</button>
+        <button class="btn btn-ghost" type="button">Ghost</button>
+        <button class="btn btn-danger" type="button">
+          <svg class="icon" aria-hidden="true"><use href="#ph-trash" /></svg>Danger
+        </button>
+      </div>
+    </div>
+  </figure>
+
+  <figure class="doc-ex" data-example="button-outline">
+    <figcaption class="doc-ex-cap">outline</figcaption>
+    <div class="doc-ex-live" data-live>
+      <div class="row">
+        <button class="btn btn-outline" type="button">Outline</button>
+        <button class="btn btn-outline-accent" type="button">
+          <svg class="icon" aria-hidden="true"><use href="#ph-check" /></svg>Accept
+        </button>
+        <button class="btn btn-outline-info" type="button">
+          <svg class="icon" aria-hidden="true"><use href="#ph-info" /></svg>Details
+        </button>
+      </div>
+    </div>
+  </figure>
+
+  <figure class="doc-ex" data-example="button-sizes">
+    <figcaption class="doc-ex-cap">sizes, icon-only, disabled</figcaption>
+    <div class="doc-ex-live" data-live>
+      <div class="row">
+        <button class="btn btn-sm" type="button">Small</button>
+        <button class="btn" type="button">Medium</button>
+        <button class="btn btn-lg" type="button">Large</button>
+        <button class="btn btn-icon tip" type="button" data-ui-tip="refresh" aria-label="refresh">
+          <svg class="icon" aria-hidden="true"><use href="#ph-arrow-clockwise" /></svg>
+        </button>
+        <button class="btn" type="button" disabled>Disabled</button>
+      </div>
+    </div>
+  </figure>
+
+  <figure class="doc-ex" data-example="button-group">
+    <figcaption class="doc-ex-cap">group, latched — click one</figcaption>
+    <div class="doc-ex-live" data-live data-doc-latch>
+      <div class="btn-group">
+        <button class="btn btn-sm is-on" type="button">live</button>
+        <button class="btn btn-sm" type="button">scrub</button>
+        <button class="btn btn-sm" type="button">frozen</button>
+      </div>
+    </div>
+  </figure>
+
+  <table data-table>
+    <thead><tr><th>class</th><th>is</th></tr></thead>
+    <tbody>
+      <tr data-class="btn"><td class="table-mono">.btn</td><td>the base — always present</td></tr>
+      <tr data-class="btn-primary"><td class="table-mono">.btn-primary</td><td>filled accent; one per view</td></tr>
+      <tr data-class="btn-danger"><td class="table-mono">.btn-danger</td><td>filled danger, for a destructive commit</td></tr>
+      <tr data-class="btn-ghost"><td class="table-mono">.btn-ghost</td><td>transparent until hover — for a row’s own actions</td></tr>
+      <tr data-class="btn-quiet"><td class="table-mono">.btn-quiet</td><td>sunken fill, muted ink — the toolbar default</td></tr>
+      <tr data-class="btn-outline"><td class="table-mono">.btn-outline</td><td>+ <code class="code">-accent</code> <code class="code">-info</code></td></tr>
+      <tr data-class="btn-sm"><td class="table-mono">.btn-sm .btn-lg</td><td>sizes; combine with any variant</td></tr>
+      <tr data-class="btn-icon"><td class="table-mono">.btn-icon</td><td>square; needs an <code class="code">aria-label</code></td></tr>
+      <tr data-class="btn-group"><td class="table-mono">.btn-group</td><td>joins buttons into one control</td></tr>
+      <tr data-class="is-on"><td class="table-mono">.is-on</td><td>latched. Not <code class="code">aria-pressed</code> as well — one fact, one carrier</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════ form ── -->
+<section class="doc-section" id="form" data-component="form">
+  <header class="stack">
+    <p class="eyebrow">controls</p>
+    <h2 class="h1">Inputs &amp; selects</h2>
+    <p class="lead">A field is a label, a control and an optional hint. Validity is
+      <code class="code">aria-invalid</code>, because the attribute already exists.</p>
+    <p class="lead">On iOS only, every control here is floored at 16px — Safari zooms the
+      viewport in on a focused field under that and never zooms back out — so the compact
+      sizes below stay compact everywhere the zoom cannot happen.</p>
+  </header>
+
+  <figure class="doc-ex" data-example="form-field">
+    <figcaption class="doc-ex-cap">field, hint, invalid</figcaption>
+    <div class="doc-ex-live" data-live>
+      <div class="stack">
+        <div class="field">
+          <label class="label" for="f-label">Session label</label>
+          <input class="input" id="f-label" type="text" placeholder="kitchen table, evening" />
+          <span class="hint">Shown in the ledger and nowhere else.</span>
+        </div>
+        <div class="field">
+          <label class="label" for="f-bad">Speed</label>
+          <input class="input" id="f-bad" type="text" value="not-a-number" aria-invalid="true" />
+          <span class="hint" style="color: var(--ui-danger)">Expected a number.</span>
+        </div>
+      </div>
+    </div>
+  </figure>
+
+  <figure class="doc-ex" data-example="form-sizes">
+    <figcaption class="doc-ex-cap">sizes and the mono/numeric inputs</figcaption>
+    <div class="doc-ex-live" data-live>
+      <div class="stack">
+        <input class="input input-lg" type="text" value="large — a prompt line" aria-label="large" />
+        <input class="input" type="text" value="medium — the default" aria-label="medium" />
+        <div class="row">
+          <input class="input input-sm input-mono" type="text" value="ears" aria-label="filter" style="width: 11ch" />
+          <input class="input input-sm input-mono input-num" type="text" value="1.15" aria-label="speed" style="width: 7ch" />
+          <select class="select select-sm" aria-label="rate">
+            <option>16 kHz</option>
+            <option>24 kHz</option>
+            <option>48 kHz</option>
+          </select>
+          <button class="btn btn-sm" type="button">apply</button>
+        </div>
+      </div>
+    </div>
+  </figure>
+
+  <figure class="doc-ex" data-example="form-select-textarea">
+    <figcaption class="doc-ex-cap">select and textarea</figcaption>
+    <div class="doc-ex-live" data-live>
+      <div class="row" style="align-items: flex-start">
+        <div class="field" style="flex: 1">
+          <label class="label" for="f-voice">Voice</label>
+          <select class="select" id="f-voice">
+            <option>af_heart</option>
+            <option>am_michael</option>
+            <option>bf_emma</option>
+          </select>
+        </div>
+        <div class="field" style="flex: 2">
+          <label class="label" for="f-note">Note</label>
+          <textarea class="textarea" id="f-note" placeholder="What did you hear?"></textarea>
+        </div>
+      </div>
+    </div>
+  </figure>
+
+  <table data-table>
+    <thead><tr><th>class</th><th>is</th></tr></thead>
+    <tbody>
+      <tr data-class="field"><td class="table-mono">.field</td><td>the label / control / hint stack</td></tr>
+      <tr data-class="label"><td class="table-mono">.label</td><td>the control's name</td></tr>
+      <tr data-class="hint"><td class="table-mono">.hint</td><td>the sentence under it</td></tr>
+      <tr data-class="input"><td class="table-mono">.input</td><td>+ <code class="code">-sm</code> <code class="code">-lg</code> <code class="code">-mono</code> <code class="code">-num</code> (tabular, right-aligned) <code class="code">-invalid</code></td></tr>
+      <tr data-class="select"><td class="table-mono">.select</td><td>+ <code class="code">-sm</code>; caret drawn, gutter reserved</td></tr>
+      <tr data-class="textarea"><td class="table-mono">.textarea</td><td>the same skin, resizable</td></tr>
+      <tr data-class="aria-invalid"><td class="table-mono">[aria-invalid]</td><td>the danger ring — prefer it to <code class="code">.input-invalid</code></td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════ toggle ── -->
+<section class="doc-section" id="toggle" data-component="toggle">
+  <header class="stack">
+    <p class="eyebrow">controls</p>
+    <h2 class="h1">Toggle &amp; segmented</h2>
+    <p class="lead">A toggle wraps a real checkbox, so it is focusable, form-serialisable and
+      keyboard-operable with no script at all.</p>
+  </header>
+
+  <figure class="doc-ex" data-example="toggle-checkbox">
+    <figcaption class="doc-ex-cap">toggle</figcaption>
+    <div class="doc-ex-live" data-live>
+      <div class="row">
+        <label class="toggle"><input type="checkbox" checked /><span class="toggle-label">follow tail</span></label>
+        <label class="toggle"><input type="checkbox" /><span class="toggle-label">show ghosts</span></label>
+        <label class="toggle"><input type="checkbox" disabled /><span class="toggle-label">locked</span></label>
+      </div>
+    </div>
+  </figure>
+
+  <figure class="doc-ex" data-example="toggle-segmented">
+    <figcaption class="doc-ex-cap">segmented — exclusive choice, <code class="code">aria-pressed</code> carries it</figcaption>
+    <div class="doc-ex-live" data-live>
+      <div class="segmented" role="group" aria-label="source">
+        <button type="button" aria-pressed="true">live</button>
+        <button type="button" aria-pressed="false">fixture</button>
+        <button type="button" aria-pressed="false">ledger</button>
+      </div>
+    </div>
+  </figure>
+
+  <p class="doc-note">The appbar's theme control is a segmented group — its three buttons are the
+    entire theming API.</p>
+</section>
+
+<!-- ═══════════════════════════════════════════ pill · badge · chip ── -->
+<section class="doc-section" id="pill" data-component="pill">
+  <header class="stack">
+    <p class="eyebrow">status</p>
+    <h2 class="h1">Pill, badge, chip, dot</h2>
+    <p class="lead">Four shapes for four jobs. A <strong>pill</strong> is a state, a
+      <strong>badge</strong> is a count or a tag, a <strong>chip</strong> is a labelled value, a
+      <strong>dot</strong> is a light.</p>
+  </header>
+
+  <figure class="doc-ex" data-example="pill-moods">
+    <figcaption class="doc-ex-cap">pill — a state, with or without a dot</figcaption>
+    <div class="doc-ex-live" data-live>
+      <div class="row">
+        <span class="pill">neutral</span>
+        <span class="pill pill-accent">accent</span>
+        <span class="pill pill-ok"><i class="dot dot-ok"></i>connected</span>
+        <span class="pill pill-warn">3 gaps</span>
+        <span class="pill pill-danger"><i class="dot dot-danger"></i>wire down</span>
+        <span class="pill pill-info">fixture</span>
+        <span class="pill is-active">active</span>
+      </div>
+    </div>
+  </figure>
+
+  <figure class="doc-ex" data-example="badge-moods">
+    <figcaption class="doc-ex-cap">badge — a count or a tag</figcaption>
+    <div class="doc-ex-live" data-live>
+      <div class="row">
+        <span class="badge">12</span>
+        <span class="badge badge-accent">new</span>
+        <span class="badge badge-ok">pass</span>
+        <span class="badge badge-warn">deg</span>
+        <span class="badge badge-danger">4</span>
+        <span class="badge badge-info">v2</span>
+      </div>
+    </div>
+  </figure>
+
+  <figure class="doc-ex" data-example="chip-values">
+    <figcaption class="doc-ex-cap">chip — a label and its value, the value in <code class="code">&lt;b&gt;</code></figcaption>
+    <div class="doc-ex-live" data-live>
+      <div class="chip-row">
+        <span class="chip">wpm <b>172</b></span>
+        <span class="chip chip-ok">eot p50 <b>412ms</b></span>
+        <span class="chip chip-warn">drift <b>+38ms</b></span>
+        <span class="chip chip-danger">drops <b>2</b></span>
+      </div>
+    </div>
+  </figure>
+
+  <figure class="doc-ex" data-example="dot-lights">
+    <figcaption class="doc-ex-cap">dot — a light, pulsing while live</figcaption>
+    <div class="doc-ex-live" data-live>
+      <div class="row">
+        <span><i class="dot"></i> idle</span>
+        <span><i class="dot dot-ok dot-pulse"></i> live</span>
+        <span><i class="dot dot-warn"></i> degraded</span>
+        <span><i class="dot dot-danger"></i> down</span>
+        <span><i class="dot dot-info"></i> replay</span>
+      </div>
+    </div>
+  </figure>
+
+  <table data-table>
+    <thead><tr><th>class</th><th>moods</th><th>use for</th></tr></thead>
+    <tbody>
+      <tr data-class="pill"><td class="table-mono">.pill</td><td class="table-mono">-accent -danger -info -ok -warn</td><td>a state; <code class="code">.is-active</code> for the current one</td></tr>
+      <tr data-class="badge"><td class="table-mono">.badge</td><td class="table-mono">-accent -danger -info -ok -warn</td><td>a count or a short tag</td></tr>
+      <tr data-class="chip"><td class="table-mono">.chip</td><td class="table-mono">-danger -ok -warn</td><td>a labelled value; <code class="code">.chip-row</code> groups them</td></tr>
+      <tr data-class="dot"><td class="table-mono">.dot</td><td class="table-mono">-danger -info -ok -warn</td><td>a light; <code class="code">.dot-pulse</code> while live</td></tr>
+    </tbody>
+  </table>
+  <p class="doc-note"><code class="code">.dot-pulse</code> stops under
+    <code class="code">prefers-reduced-motion</code>, so the dot must never be the only carrier of
+    "live" — pair it with a word, as every example above does.</p>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════ notice ── -->
+<section class="doc-section" id="notice" data-component="notice">
+  <header class="stack">
+    <p class="eyebrow">status</p>
+    <h2 class="h1">Notice</h2>
+    <p class="lead">Boxed, rounded, wraps, lives inside a layout. A notice is <em>content</em>;
+      the bar across the top of the window is a <a class="link" href="#strip">strip</a>.</p>
+  </header>
+
+  <figure class="doc-ex" data-example="notice-moods">
+    <figcaption class="doc-ex-cap">the four moods, each with its glyph</figcaption>
+    <div class="doc-ex-live" data-live>
+      <div class="stack">
+        <div class="notice notice-info">
+          <svg class="icon" aria-hidden="true"><use href="#ph-info" /></svg>
+          <span>Replaying a fixture. Nothing you click reaches the live loop.</span>
+        </div>
+        <div class="notice notice-ok">
+          <svg class="icon" aria-hidden="true"><use href="#ph-check-circle" /></svg>
+          <span>Contract satisfied — every sequence number accounted for.</span>
+        </div>
+        <div class="notice notice-warn">
+          <svg class="icon" aria-hidden="true"><use href="#ph-warning" /></svg>
+          <span>3 gaps in the <code class="code">ears</code> channel.</span>
+        </div>
+        <div class="notice notice-danger">
+          <svg class="icon" aria-hidden="true" style="color: var(--ui-danger)"><use href="#ph-x" /></svg>
+          <span>Wire closed after 1 attempt. The loop is not running.</span>
+        </div>
+      </div>
+    </div>
+  </figure>
+
+  <table data-table>
+    <thead><tr><th>class</th><th>is</th></tr></thead>
+    <tbody>
+      <tr data-class="notice"><td class="table-mono">.notice</td><td>neutral box; an icon and a <code class="code">&lt;span&gt;</code> inside</td></tr>
+      <tr data-class="notice-ok"><td class="table-mono">+ -danger -info -ok -warn</td><td>tint, border and rail</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ strip ── -->
+<section class="doc-section" id="strip" data-component="strip">
+  <header class="stack">
+    <p class="eyebrow">status</p>
+    <h2 class="h1">Strip</h2>
+    <p class="lead">Chrome: full-bleed, one line, small mono. It belongs directly under
+      <code class="code">.appbar</code> as a sibling — <em>outside</em>
+      <code class="code">[data-container]</code>, so it spans the viewport.</p>
+  </header>
+
+  <figure class="doc-ex" data-example="strip-moods">
+    <figcaption class="doc-ex-cap">every mood (boxed here only so the page can show them together)</figcaption>
+    <div class="doc-ex-live" data-live>
+      <div class="strip"><span class="strip-tag">wire</span><span class="strip-msg">waiting for the stream…</span></div>
+      <div class="strip strip-ok"><span class="strip-tag">wire</span><span class="strip-msg">connected · 8 channels</span></div>
+      <div class="strip strip-info"><span class="strip-tag">source</span><span class="strip-msg">replaying fixture kitchen-evening.jsonl</span></div>
+      <div class="strip strip-accent"><span class="strip-tag">mode</span><span class="strip-msg">bridge · Claude has the floor</span></div>
+      <div class="strip strip-warn"><span class="strip-tag">gaps</span><span class="strip-msg">3 missing sequence numbers on ears</span></div>
+      <div class="strip strip-danger"><span class="strip-tag">wire</span><span class="strip-msg">closed after 1 attempt — the loop is not running</span></div>
+    </div>
+  </figure>
+
+  <p class="doc-note"><strong>A strip does not survive
+    <code class="code">el.className = "strip-warn"</code>.</strong> Wholesale assignment drops
+    <code class="code">.strip</code> itself, and a mood modifier alone styles nothing, so the
+    bar collapses to unstyled text. Toggle the mood class:</p>
+  <pre class="readout">strip.classList.remove("strip-ok", "strip-warn");
+strip.classList.add("strip-danger");</pre>
+
+  <table data-table>
+    <thead><tr><th>class</th><th>is</th></tr></thead>
+    <tbody>
+      <tr data-class="strip"><td class="table-mono">.strip</td><td>the bar; <code class="code">display: flex</code></td></tr>
+      <tr data-class="strip-tag"><td class="table-mono">.strip-tag</td><td>the channel name at the left</td></tr>
+      <tr data-class="strip-msg"><td class="table-mono">.strip-msg</td><td>the sentence; truncates rather than wraps</td></tr>
+      <tr data-class="strip-ok"><td class="table-mono">+ -accent -danger -info -ok -warn</td><td>the mood</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ meter ── -->
+<section class="doc-section" id="meter" data-component="meter">
+  <header class="stack">
+    <p class="eyebrow">status</p>
+    <h2 class="h1">Meter</h2>
+    <p class="lead">One track, one fill, one custom property. The value is CSS, not a width
+      attribute, so a page can drive it from a rule as easily as from script.</p>
+  </header>
+
+  <figure class="doc-ex" data-example="meter-levels">
+    <figcaption class="doc-ex-cap">the first one is live</figcaption>
+    <div class="doc-ex-live" data-live data-doc-meter>
+      <div class="stack">
+        <div class="meter" style="--ui-meter-value: 62%"><span></span></div>
+        <div class="meter meter-warn" style="--ui-meter-value: 88%"><span></span></div>
+        <div class="meter meter-danger" style="--ui-meter-value: 97%"><span></span></div>
+      </div>
+    </div>
+  </figure>
+
+  <p class="doc-note">The single child <code class="code">&lt;span&gt;</code> is the fill and is
+    required — the track cannot paint itself and animate at once. Set the value with
+    <code class="code">el.style.setProperty("--ui-meter-value", pct + "%")</code>.</p>
+
+  <table data-table>
+    <thead><tr><th>class</th><th>is</th></tr></thead>
+    <tbody>
+      <tr data-class="meter"><td class="table-mono">.meter</td><td>the track; accent fill</td></tr>
+      <tr data-class="meter-warn"><td class="table-mono">+ -warn -danger</td><td>the fill's mood</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ══════════════════════════════════════════════ metric · readout ── -->
+<section class="doc-section" id="metric" data-component="metric">
+  <header class="stack">
+    <p class="eyebrow">status</p>
+    <h2 class="h1">Metric &amp; readout</h2>
+    <p class="lead">A metric is one number a human reads at a glance. A readout is a log a human
+      reads a line at a time — mono, pre-wrapped, with keys and timestamps tinted.</p>
+  </header>
+
+  <figure class="doc-ex" data-example="metric-tiles">
+    <figcaption class="doc-ex-cap">metric — value, label, and a delta that says which way is good</figcaption>
+    <div class="doc-ex-live" data-live>
+      <div class="row" style="gap: var(--ui-space-5)">
+        <div class="metric">
+          <span class="metric-value">172</span>
+          <span class="metric-label">words / minute</span>
+        </div>
+        <div class="metric">
+          <span class="metric-value metric-delta-up">−38ms</span>
+          <span class="metric-label">first-audio</span>
+        </div>
+        <div class="metric">
+          <span class="metric-value metric-delta-down">+2</span>
+          <span class="metric-label">dropped frames</span>
+        </div>
+      </div>
+    </div>
+  </figure>
+
+  <p class="doc-note"><code class="code">-delta-up</code> means <em>better</em>, not
+    <em>larger</em>: latency falling by 38 ms is an up-delta. The direction is the judgement, which is
+    the only thing a colour can usefully carry.</p>
+
+  <figure class="doc-ex" data-example="readout-log">
+    <figcaption class="doc-ex-cap">readout — a wire log</figcaption>
+    <div class="doc-ex-live" data-live>
+      <pre class="readout"><span class="readout-t">00:12.401</span> <span class="readout-key">ears.partial</span>  <b>"set the kitchen light to"</b>
+<span class="readout-t">00:12.688</span> <span class="readout-key">eot.head</span>      p=0.41 head=prosody
+<span class="readout-t">00:13.002</span> <span class="readout-key">ears.final</span>    <b>"set the kitchen light to forty"</b>
+<span class="readout-t">00:13.117</span> <span class="readout-key">policy.speak</span>  allow reason=turn-yielded</pre>
+    </div>
+  </figure>
+
+  <table data-table>
+    <thead><tr><th>class</th><th>is</th></tr></thead>
+    <tbody>
+      <tr data-class="metric"><td class="table-mono">.metric</td><td>the tile</td></tr>
+      <tr data-class="metric-value"><td class="table-mono">.metric-value</td><td>the number, tabular</td></tr>
+      <tr data-class="metric-label"><td class="table-mono">.metric-label</td><td>what it counts</td></tr>
+      <tr data-class="metric-delta-up"><td class="table-mono">.metric-delta-up / -down</td><td>better / worse, not larger / smaller</td></tr>
+      <tr data-class="readout"><td class="table-mono">.readout</td><td>a <code class="code">&lt;pre&gt;</code>; keeps its own newlines</td></tr>
+      <tr data-class="readout-key"><td class="table-mono">.readout-key</td><td>the event name</td></tr>
+      <tr data-class="readout-t"><td class="table-mono">.readout-t</td><td>the timestamp</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ═════════════════════════════════════════════════════════════ orb ── -->
+<section class="doc-section" id="orb" data-component="orb">
+  <header class="stack">
+    <p class="eyebrow">status</p>
+    <h2 class="h1">Orb</h2>
+    <p class="lead">The microphone. One button, two states, and the muted state is legible without
+      colour — a slash crosses it.</p>
+  </header>
+
+  <figure class="doc-ex" data-example="orb-mic">
+    <figcaption class="doc-ex-cap">click it — open ⇄ muted</figcaption>
+    <div class="doc-ex-live" data-live data-doc-orb>
+      <div class="row" style="gap: var(--ui-space-5)">
+        <button class="orb" type="button" aria-pressed="false" aria-label="microphone open">
+          <span class="orb-ring"></span><span class="orb-slash"></span>
+        </button>
+        <button class="orb is-muted" type="button" aria-pressed="true" aria-label="microphone muted">
+          <span class="orb-ring"></span><span class="orb-slash"></span>
+        </button>
+        <button class="orb" type="button" style="--ui-orb-size: 56px" aria-label="microphone open, large">
+          <span class="orb-ring"></span><span class="orb-slash"></span>
+        </button>
+      </div>
+    </div>
+  </figure>
+
+  <table data-table>
+    <thead><tr><th>class</th><th>is</th></tr></thead>
+    <tbody>
+      <tr data-class="orb"><td class="table-mono">.orb</td><td>the button; size from <code class="code">--ui-orb-size</code></td></tr>
+      <tr data-class="orb-ring"><td class="table-mono">.orb-ring</td><td>the halo that breathes while open</td></tr>
+      <tr data-class="orb-slash"><td class="table-mono">.orb-slash</td><td>drawn only under <code class="code">.is-muted</code></td></tr>
+      <tr data-class="is-muted"><td class="table-mono">.is-muted</td><td>muted; mirror it into <code class="code">aria-pressed</code> and the label</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════ card ── -->
+<section class="doc-section" id="card" data-component="card">
+  <header class="stack">
+    <p class="eyebrow">surfaces</p>
+    <h2 class="h1">Card</h2>
+    <p class="lead">A box with an optional head and foot. Content the page owns — as opposed to a
+      <a class="link" href="#panel">panel</a>, which frames a channel.</p>
+  </header>
+
+  <figure class="doc-ex" data-example="card-parts">
+    <figcaption class="doc-ex-cap">head, body, foot — and the hoverable variant</figcaption>
+    <div class="doc-ex-live" data-live>
+      <div data-grid style="--ui-grid-min: 260px">
+        <div class="card">
+          <div class="card-head">
+            <h3 class="h3">Voice roster</h3>
+            <span class="spacer"></span>
+            <span class="badge">28</span>
+          </div>
+          <div class="card-body muted">The body takes the padding; a <code class="code">.stack</code> on it takes the rhythm.</div>
+          <div class="card-foot">
+            <span class="hint">28 advertised · 4 shown</span>
+            <span class="spacer"></span>
+            <button class="btn btn-sm btn-quiet" type="button">copy</button>
+          </div>
+        </div>
+        <div class="card card-hoverable">
+          <div class="card-body stack">
+            <p class="eyebrow">hoverable</p>
+            <p class="muted">Lifts on hover. Use it only when the whole card is a target.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </figure>
+
+  <table data-table>
+    <thead><tr><th>class</th><th>is</th></tr></thead>
+    <tbody>
+      <tr data-class="card"><td class="table-mono">.card</td><td>the surface</td></tr>
+      <tr data-class="card-head"><td class="table-mono">.card-head</td><td>a flex row; a <code class="code">.spacer</code> pushes trailing controls</td></tr>
+      <tr data-class="card-body"><td class="table-mono">.card-body</td><td>the padded content</td></tr>
+      <tr data-class="card-foot"><td class="table-mono">.card-foot</td><td>a sunken row for hints and actions</td></tr>
+      <tr data-class="card-hoverable"><td class="table-mono">.card-hoverable</td><td>lifts on hover</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ panel ── -->
+<section class="doc-section" id="panel" data-component="panel">
+  <header class="stack">
+    <p class="eyebrow">surfaces</p>
+    <h2 class="h1">Panel</h2>
+    <p class="lead">The instrument frame: a named head with a coloured rail, and a body. Its hue
+      is <code class="code">--ui-panel-accent</code>, which is where a page's own channel colours
+      enter the library.</p>
+  </header>
+
+  <figure class="doc-ex" data-example="panel-basic">
+    <figcaption class="doc-ex-cap">name, sub, trailing controls</figcaption>
+    <div class="doc-ex-live" data-live>
+      <div class="panel" style="--ui-panel-accent: var(--ui-info)">
+        <div class="panel-head">
+          <h3 class="panel-name">ears</h3>
+          <span class="panel-sub">transcription</span>
+          <span class="spacer"></span>
+          <span class="badge">418</span>
+          <button class="btn btn-ghost btn-sm" type="button">pause</button>
+        </div>
+        <div class="panel-body muted">The body is a grid; give it <code class="code">.stack</code> when its children need rhythm.</div>
+      </div>
+    </div>
+  </figure>
+
+  <p class="doc-note"><code class="code">.panel-name</code> is styling, not structure. When the
+    head <em>is</em> the document's heading, use a heading class instead and let the element carry the
+    outline — the panel does not care which:</p>
+
+  <figure class="doc-ex" data-example="panel-heading">
+    <figcaption class="doc-ex-cap">the head as a real heading, and the wide variant</figcaption>
+    <div class="doc-ex-live" data-live>
+      <section class="panel panel-wide">
+        <header class="panel-head">
+          <h3 class="h3">Voices</h3>
+          <span class="panel-sub">click a row to audition</span>
+          <span class="spacer"></span>
+          <span class="badge">28</span>
+        </header>
+        <div class="panel-body muted">.panel-wide spans every column of an enclosing [data-grid].</div>
+      </section>
+    </div>
+  </figure>
+
+  <table data-table>
+    <thead><tr><th>class</th><th>is</th></tr></thead>
+    <tbody>
+      <tr data-class="panel"><td class="table-mono">.panel</td><td>the frame; <code class="code">display: grid</code></td></tr>
+      <tr data-class="panel-head"><td class="table-mono">.panel-head</td><td>the named bar, with the accent rail</td></tr>
+      <tr data-class="panel-name"><td class="table-mono">.panel-name</td><td>the channel name, in the accent</td></tr>
+      <tr data-class="panel-sub"><td class="table-mono">.panel-sub</td><td>the qualifier beside it</td></tr>
+      <tr data-class="panel-body"><td class="table-mono">.panel-body</td><td>the content</td></tr>
+      <tr data-class="panel-wide"><td class="table-mono">.panel-wide</td><td><code class="code">grid-column: 1 / -1</code> — works on a card too</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════ appbar ── -->
+<section class="doc-section" id="appbar" data-component="appbar">
+  <header class="stack">
+    <p class="eyebrow">surfaces</p>
+    <h2 class="h1">Appbar</h2>
+    <p class="lead">The window's top edge: title, nav, and whatever status the page owes at all
+      times. This page is wearing one.</p>
+  </header>
+
+  <figure class="doc-ex" data-example="appbar-full">
+    <figcaption class="doc-ex-cap">title · nav · spacer · status</figcaption>
+    <div class="doc-ex-live" data-live>
+      <header class="appbar">
+        <span class="appbar-title">
+          <svg class="icon" aria-hidden="true"><use href="#ph-waveform" /></svg>
+          ra <small>· the loop</small>
+        </span>
+        <nav class="appbar-nav" aria-label="views">
+          <a class="pill is-active" href="#appbar" aria-current="page">lab</a>
+          <a class="pill" href="#appbar">stage</a>
+        </nav>
+        <span class="spacer"></span>
+        <span class="pill pill-ok"><i class="dot dot-ok dot-pulse"></i>live</span>
+        <span class="badge badge-accent">1041</span>
+      </header>
+    </div>
+  </figure>
+
+  <p class="doc-note">The current page is both <code class="code">.is-active</code> and
+    <code class="code">aria-current="page"</code> — that is the one place the library asks for
+    both, because the class styles a pill the attribute cannot reach on its own.</p>
+</section>
+
+<!-- ════════════════════════════════════════════════════ list · row ── -->
+<section class="doc-section" id="list" data-component="list">
+  <header class="stack">
+    <p class="eyebrow">collections</p>
+    <h2 class="h1">List &amp; listrow</h2>
+    <p class="lead">Sized for the inside of a panel. The left rail carries selection, so a current
+      row never changes size, and actions stay hidden until the row is reachable.</p>
+  </header>
+
+  <figure class="doc-ex" data-example="list-rows">
+    <figcaption class="doc-ex-cap">click a row · hover for its actions</figcaption>
+    <div class="doc-ex-live" data-live data-doc-list>
+      <div class="panel">
+        <div class="panel-head"><span class="panel-name">voices</span><span class="spacer"></span><span class="badge">5</span></div>
+        <div class="panel-body">
+          <div class="list" role="listbox" aria-label="voices">
+            <button class="listrow is-current" type="button" role="option" aria-selected="true">
+              <span class="listrow-name">af_heart</span>
+              <span class="listrow-meta"><span class="badge badge-ok">resident</span>en-US · 172 wpm</span>
+              <span class="listrow-actions">
+                <span class="btn btn-outline-accent btn-sm">
+                  <svg class="icon" aria-hidden="true"><use href="#ph-play" /></svg>audition
+                </span>
+              </span>
+            </button>
+            <button class="listrow is-busy" type="button" role="option" aria-selected="false">
+              <span class="listrow-name">am_michael</span>
+              <span class="listrow-meta"><span class="badge">warming</span>en-US · 164 wpm</span>
+            </button>
+            <button class="listrow is-warned" type="button" role="option" aria-selected="false">
+              <span class="listrow-name">bf_emma</span>
+              <span class="listrow-meta"><span class="badge badge-warn">evicted</span>en-GB · 158 wpm</span>
+              <span class="listrow-actions">
+                <span class="btn btn-outline btn-sm">
+                  <svg class="icon" aria-hidden="true"><use href="#ph-arrow-clockwise" /></svg>rewarm
+                </span>
+              </span>
+            </button>
+            <button class="listrow" type="button" role="option" aria-selected="false">
+              <span class="listrow-name">bm_george</span>
+              <span class="listrow-meta">en-GB · 151 wpm</span>
+            </button>
+            <button class="listrow" type="button" role="option" aria-selected="false" aria-disabled="true">
+              <span class="listrow-name">jf_alpha</span>
+              <span class="listrow-meta">ja-JP · not on the English shelves</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </figure>
+
+  <p class="doc-note">Use a <code class="code">&lt;button&gt;</code> (or set
+    <code class="code">role="option"</code> with <code class="code">aria-selected</code>) so the
+    row is reachable by keyboard. Actions are revealed on hover, focus, focus-within and
+    <code class="code">.is-current</code>, which keeps a long list from reading as a wall of
+    buttons.</p>
+
+  <table data-table>
+    <thead><tr><th>class</th><th>is</th></tr></thead>
+    <tbody>
+      <tr data-class="list"><td class="table-mono">.list</td><td>the container</td></tr>
+      <tr data-class="listrow"><td class="table-mono">.listrow</td><td>a row: name, meta, actions</td></tr>
+      <tr data-class="is-current"><td class="table-mono">.is-current</td><td>fills the row and promotes the meta from faint to muted ink — faint loses AA against a tint</td></tr>
+      <tr data-class="is-busy"><td class="table-mono">.is-busy</td><td>pulses; stops under <code class="code">prefers-reduced-motion</code></td></tr>
+      <tr data-class="is-warned"><td class="table-mono">.is-warned</td><td>rail and name only — it deliberately does <em>not</em> fill, because two tints in one list read as one muddled emphasis and selection owns the tint</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ table ── -->
+<section class="doc-section" id="table" data-component="table">
+  <header class="stack">
+    <p class="eyebrow">collections</p>
+    <h2 class="h1">Table</h2>
+    <p class="lead">A real <code class="code">&lt;table&gt;</code>, styled. Column behaviour is
+      per-cell: mono, numeric, or allowed to wrap.</p>
+  </header>
+
+  <figure class="doc-ex" data-example="table-roster">
+    <figcaption class="doc-ex-cap">hover rows, mono keys, numeric columns</figcaption>
+    <div class="doc-ex-live" data-live>
+      <div class="table-wrap">
+        <table class="table-hover" data-table>
+          <thead>
+            <tr><th>voice</th><th>locale</th><th class="table-num">wpm</th><th class="table-num">warm</th><th>state</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="table-mono">af_heart</td><td>en-US</td><td class="table-num">172</td><td class="table-num">0.4 s</td><td><span class="pill pill-ok"><i class="dot dot-ok"></i>resident</span></td></tr>
+            <tr><td class="table-mono">am_michael</td><td>en-US</td><td class="table-num">164</td><td class="table-num">1.9 s</td><td><span class="pill">cold</span></td></tr>
+            <tr><td class="table-mono">bf_emma</td><td>en-GB</td><td class="table-num">158</td><td class="table-num">2.1 s</td><td><span class="pill pill-warn">evicted</span></td></tr>
+            <tr><td class="table-mono">bm_george</td><td>en-GB</td><td class="table-num">151</td><td class="table-num">—</td><td><span class="pill pill-danger">missing</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </figure>
+
+  <table data-table>
+    <thead><tr><th>name</th><th>on</th><th>is</th></tr></thead>
+    <tbody>
+      <tr data-class="[data-table]"><td class="table-mono">[data-table]</td><td>table</td><td>the skin — an attribute, not a class; see <a class="link" href="#layout-attributes">layout primitives</a></td></tr>
+      <tr data-class="table-hover"><td class="table-mono">.table-hover</td><td>table</td><td>row hover tint — only when a row is a target</td></tr>
+      <tr data-class="table-wrap"><td class="table-mono">.table-wrap</td><td>wrapper</td><td>scrolls the table sideways instead of the page</td></tr>
+      <tr data-class="table-mono"><td class="table-mono">.table-mono</td><td>cell</td><td>the mono stack — ids, voices, hashes</td></tr>
+      <tr data-class="table-num"><td class="table-mono">.table-num</td><td>cell</td><td>tabular figures, right-aligned</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ transcript ── -->
+<section class="doc-section" id="transcript" data-component="transcript">
+  <header class="stack">
+    <p class="eyebrow">collections</p>
+    <h2 class="h1">Transcript</h2>
+    <p class="lead">Turns, and words with a confidence state. A streaming recogniser revises what
+      it already said, so a word carries whether it is settled, still moving, or withdrawn.</p>
+  </header>
+
+  <figure class="doc-ex" data-example="transcript-turns">
+    <figcaption class="doc-ex-cap">two turns, three word states</figcaption>
+    <div class="doc-ex-live" data-live>
+      <div class="transcript">
+        <div class="transcript-turn transcript-turn-self">
+          <span class="transcript-who">owner · 00:12.4</span>
+          <p class="transcript-text">
+            <span class="word-stable">set the kitchen light to</span>
+            <span class="word-tentative">forty</span>
+            <span class="word-ghost">fourteen</span>
+          </p>
+        </div>
+        <div class="transcript-turn transcript-turn-agent">
+          <span class="transcript-who">ra · 00:13.9</span>
+          <p class="transcript-text word-stable">Kitchen light at forty percent.</p>
+        </div>
+      </div>
+    </div>
+  </figure>
+
+  <table data-table>
+    <thead><tr><th>class</th><th>is</th></tr></thead>
+    <tbody>
+      <tr data-class="transcript"><td class="table-mono">.transcript</td><td>the scroll</td></tr>
+      <tr data-class="transcript-turn"><td class="table-mono">.transcript-turn</td><td>+ <code class="code">-self</code> <code class="code">-agent</code></td></tr>
+      <tr data-class="transcript-who"><td class="table-mono">.transcript-who</td><td>speaker and time</td></tr>
+      <tr data-class="transcript-text"><td class="table-mono">.transcript-text</td><td>the words</td></tr>
+      <tr data-class="word-stable"><td class="table-mono">.word-stable</td><td>settled — will not be revised</td></tr>
+      <tr data-class="word-tentative"><td class="table-mono">.word-tentative</td><td>still moving</td></tr>
+      <tr data-class="word-ghost"><td class="table-mono">.word-ghost</td><td>retracted — struck, kept visible</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════ icon ── -->
+<section class="doc-section" id="icon" data-component="icon">
+  <header class="stack">
+    <p class="eyebrow">details</p>
+    <h2 class="h1">Icon</h2>
+    <p class="lead">A 28-glyph <a class="link" href="https://phosphoricons.com">Phosphor</a>
+      subset, regular weight, vendored. Nothing is fetched at runtime.</p>
+  </header>
+
+  <figure class="doc-ex" data-example="icon-sizes">
+    <figcaption class="doc-ex-cap">sizes, and inheritance of <code class="code">currentColor</code></figcaption>
+    <div class="doc-ex-live" data-live>
+      <div class="row">
+        <svg class="icon icon-sm" aria-hidden="true"><use href="#ph-microphone" /></svg>
+        <svg class="icon" aria-hidden="true"><use href="#ph-microphone" /></svg>
+        <svg class="icon icon-lg" aria-hidden="true"><use href="#ph-microphone" /></svg>
+        <svg class="icon icon-lg" aria-hidden="true" style="color: var(--ui-danger)"><use href="#ph-microphone-slash" /></svg>
+        <svg class="icon" aria-hidden="true" style="--ui-icon-size: 40px; color: var(--ui-accent)"><use href="#ph-waveform" /></svg>
+      </div>
+    </div>
+  </figure>
+
+  <p class="doc-note">Inline the sprite once per document. An external
+    <code class="code">&lt;use href="file.svg#id"&gt;</code> does not resolve over
+    <code class="code">file://</code> and costs a request over HTTP — which is one reason this repo
+    ships a server.</p>
+  <pre class="readout">&lt;body&gt;
+  &lt;!-- paste icons/sprite.svg here --&gt;
+  &lt;svg class="icon" aria-hidden="true"&gt;&lt;use href="#ph-microphone"&gt;&lt;/use&gt;&lt;/svg&gt;</pre>
+
+  <h3 class="doc-h3">The subset</h3>
+  <div class="doc-icons" id="icon-grid"></div>
+  <p class="doc-note">To add one, drop its file into <code class="code">icons/svg/</code> from
+    <code class="code">@phosphor-icons/core@2.x/assets/regular/</code> and append a matching
+    <code class="code">&lt;symbol&gt;</code> to the sprite. MIT © 2023 Phosphor Icons — full text in
+    <code class="code">icons/LICENSE</code>.</p>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════ misc ── -->
+<section class="doc-section" id="misc" data-component="misc">
+  <header class="stack">
+    <p class="eyebrow">details</p>
+    <h2 class="h1">Code, kbd, tip, empty</h2>
+    <p class="lead">The small print of an interface.</p>
+  </header>
+
+  <figure class="doc-ex" data-example="misc-inline">
+    <figcaption class="doc-ex-cap">inline code, keys, a tooltip, an empty state</figcaption>
+    <div class="doc-ex-live" data-live>
+      <div class="stack">
+        <p>Toggle with <code class="code">el.hidden = true</code>, or press
+          <span class="kbd">⌘</span> <span class="kbd">⇧</span> <span class="kbd">L</span>.</p>
+        <div class="row">
+          <button class="btn btn-sm tip" type="button" data-ui-tip="hover me — the tip is an attribute">tooltip</button>
+          <span class="tip" data-ui-tip="tips work on anything with the class"><span class="badge">?</span></span>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><span class="panel-name">led</span><span class="panel-sub">room ledger</span></div>
+          <div class="panel-body"><p class="empty">nothing on the wire yet</p></div>
+        </div>
+      </div>
+    </div>
+  </figure>
+
+  <table data-table>
+    <thead><tr><th>class</th><th>is</th></tr></thead>
+    <tbody>
+      <tr data-class="code"><td class="table-mono">.code</td><td>inline code — a tinted mono run</td></tr>
+      <tr data-class="kbd"><td class="table-mono">.kbd</td><td>a key cap</td></tr>
+      <tr data-class="tip"><td class="table-mono">.tip</td><td>with <code class="code">data-ui-tip="…"</code>; a static hint on a static anchor</td></tr>
+      <tr data-class="empty"><td class="table-mono">.empty</td><td>the sentence that stands in for content that has not arrived</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ════════════════════════════════════════════════════════ wrapping ── -->
+<section class="doc-section" id="wrapping" data-component="wrapping">
+  <header class="stack">
+    <p class="eyebrow">the page itself</p>
+    <h2 class="h1">Wrapping (visor)</h2>
+    <p class="lead">This page is served, not opened, so it can be developed <em>through</em>
+      <strong>visor</strong> — a local reverse proxy
+      that puts a rail beside the app and lets a comment thread be anchored to any element on it.</p>
+  </header>
+
+  <pre class="readout">./serve.py <span class="readout-key"># http://127.0.0.1:8080/docs/</span>
+visor 8080 <span class="readout-key"># wrap it — the rail appears beside this page</span>
+visor -- ./serve.py <span class="readout-key"># or let visor own the port and spawn the server</span></pre>
+
+  <p class="doc-note">visor asks the wrapped app for almost nothing: it forwards every request that
+    is not its own <code class="code">/__visor/*</code> route, and splices its script tags in
+    before <code class="code">&lt;/head&gt;</code>. What it <em>does</em> need is a page whose
+    elements can be named. Its threads grow a CSS selector one ancestor at a time, preferring
+    <code class="code">id</code> → <code class="code">data-testid</code> →
+    <code class="code">data-component</code> → <code class="code">aria-label</code> → stable
+    classes → position, and skipping anything that looks like build output. A page of hashed class
+    names gives it nothing but position, and a thread anchored to
+    <code class="code">div:nth-child(7) &gt; div:nth-child(2)</code> is a thread that dies at the
+    next edit.</p>
+
+  <p class="doc-note">So this page publishes a small <strong>semantic DOM contract</strong>, in the
+    shape ra's workbench uses. Walk up from any click target:</p>
+
+  <table data-table>
+    <thead><tr><th>attribute</th><th>on</th><th>resolves</th></tr></thead>
+    <tbody>
+      <tr><td class="table-mono">data-page</td><td><code class="code">&lt;body&gt;</code></td><td><code class="code">docs</code> — which of the two pages you are on</td></tr>
+      <tr><td class="table-mono">data-component</td><td>section root</td><td>the component family (<code class="code">button</code>, <code class="code">panel</code>, <code class="code">tokens</code>, …); equal to the section's <code class="code">id</code></td></tr>
+      <tr><td class="table-mono">data-example</td><td><code class="code">&lt;figure&gt;</code></td><td>the individual example, stable across edits</td></tr>
+      <tr><td class="table-mono">data-live</td><td>the rendered block</td><td>marks the DOM that <em>is</em> the documented markup</td></tr>
+      <tr><td class="table-mono">data-code-for</td><td>the markup pane</td><td>the <code class="code">data-example</code> it was generated from</td></tr>
+      <tr><td class="table-mono">data-class</td><td>a variants-table row</td><td>the class or attribute selector that row documents</td></tr>
+      <tr><td class="table-mono">data-token</td><td>a swatch or hooks row</td><td>the token it documents</td></tr>
+    </tbody>
+  </table>
+
+  <p class="doc-note">Every section id is also its component name, so a selector visor derives —
+    <code class="code">#button [data-example="button-group"]</code> — reads as the sentence a
+    reviewer would have typed anyway, and survives everything except renaming the component.</p>
+
+  <p class="doc-note"><code class="code">window.__uiDocs.resolve(element)</code> is the reference
+    reader: it performs exactly that walk and returns
+    <code class="code">{ component, section, example, class?, token?, markup? }</code>. A wrapper
+    may reimplement it — but if the two disagree, the attributes are right.</p>
+
+  <p class="doc-note">Three things the server does on visor's behalf, none of them optional:
+    it speaks HTTP/1.1 with keep-alive (an iframe reloading a page's whole subresource set over
+    connection-per-request is visibly slow); it threads its handler, so the stylesheet, the script and
+    the sprite are not serialised behind each other; and it sends no
+    <code class="code">Content-Security-Policy</code> at all — a blocking CSP fails <em>silently</em>
+    under visor, with no console error and no network request, just chrome that never appears.</p>
+</section>
+
+</main>
+</div>
+
+<script src="docs.js"></script>
+</body>
+</html>
