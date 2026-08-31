@@ -10,10 +10,10 @@ cannot wrap a URL that has no origin.
 
     ./serve.py                 # http://127.0.0.1:8080/ → /docs/
     ./serve.py --port 4321
-    visor 8080                 # wrap the running server
-    visor -- ./serve.py        # or let visor own the port and spawn it
+    proxy 8080                 # wrap the running server
+    proxy -- ./serve.py        # or let the proxy own the port and spawn it
 
-In the second form visor keeps its own port and hands the child an ephemeral one
+In the second form the proxy keeps its own port and hands the child an ephemeral one
 through $PORT, which is why the environment beats the built-in default and loses
 to an explicit --port.
 """
@@ -34,7 +34,7 @@ DEFAULT_PORT = 8080
 class Handler(SimpleHTTPRequestHandler):
     """Static files, with the three corrections a dev server owes a wrapper."""
 
-    # Keep-alive: visor proxies every subresource through one upstream client,
+    # Keep-alive: the review proxy pipes every subresource through one upstream client,
     # and HTTP/1.0's connection-per-request makes an iframe reload visibly slow.
     protocol_version = "HTTP/1.1"
 
@@ -71,7 +71,7 @@ class Handler(SimpleHTTPRequestHandler):
 
 class Server(ThreadingHTTPServer):
     # A page pulls the stylesheet, the script and the sprite at once, and under
-    # visor it does so from inside an iframe; a single-threaded server serializes
+    # the proxy it does so from inside an iframe; a single-threaded server serializes
     # them behind whichever request is slowest.
     allow_reuse_address = True
     daemon_threads = True
@@ -88,7 +88,7 @@ def main() -> int:
     ap.add_argument(
         "--host",
         default="127.0.0.1",
-        help="bind address (default: 127.0.0.1 — loopback, like visor)",
+        help="bind address (default: 127.0.0.1 — loopback only)",
     )
     args = ap.parse_args()
 
