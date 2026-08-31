@@ -446,19 +446,19 @@ The demo still opens straight off disk. The docs page does not, quite — it loa
 its stylesheet and script by absolute path — and neither page can be *wrapped*
 off disk, which is the real reason the server exists.
 
-### Wrapping (a review proxy)
+### Wrapping (visor)
 
-A local reverse proxy (private tooling) is what you
+**visor** is a local reverse proxy you
 develop a web app *through*: it puts a rail beside the page, and lets a comment
 thread be anchored to any element on it. Either form works:
 
 ```sh
-./serve.py & proxy 8080    # attach: the proxy fronts the running server
-proxy -- ./serve.py        # spawn: the proxy owns the port, the child gets $PORT
+./serve.py & visor 8080    # attach: visor proxies the running server
+visor -- ./serve.py        # spawn: visor owns the port, the child gets $PORT
 ```
 
-The proxy asks the wrapped app for almost nothing — it forwards every request that
-is not its own reserved routes, and splices its script tags in before
+visor asks the wrapped app for almost nothing — it forwards every request that
+is not its own `/__visor/*` route, and splices its script tags in before
 `</head>`. What it *needs* is a page whose elements can be named: its threads
 grow a CSS selector one ancestor at a time, preferring `id` → `data-testid` →
 `data-component` → `aria-label` → stable classes → position. A page of hashed
@@ -481,14 +481,14 @@ workbench uses. Walk up from any click target:
 `window.__uiDocs.resolve(element)` performs exactly that walk and is the
 reference reader; if it and the attributes disagree, the attributes are right.
 
-Three things the server does on the proxy's behalf: HTTP/1.1 keep-alive, because an
+Three things the server does on visor's behalf: HTTP/1.1 keep-alive, because an
 iframe re-fetching a page's whole subresource set over connection-per-request is
 visibly slow; a threaded handler, so the stylesheet, the script and the sprite
 are not serialised behind each other; and **no `Content-Security-Policy` at
-all** — a policy that blocks the proxy's injected script fails silently, with no
+all** — a policy that blocks visor's injected script fails silently, with no
 console error and no network request, just chrome that never appears.
 
-The proxy writes its scratch (`.visor/`) into the directory it runs from; it is gitignored here.
+visor writes `.visor/` into the directory it runs from; it is gitignored here.
 
 ## License
 
