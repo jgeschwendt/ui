@@ -1,0 +1,13 @@
+[tools]
+# bun runs the contract suite (test/); nothing ships through it.
+bun = "1.4.0"
+# hk runs the pre-push gate (hk.pkl); `hk install --mise` wires it per clone.
+hk = "2.5.0"
+
+[tasks.serve]
+description = "Serve the docs and the demo (http://127.0.0.1:8080/docs/)"
+run = "python3 serve.py"
+
+[tasks.test]
+description = "The contract suite"
+run = "bun test"

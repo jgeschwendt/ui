@@ -1,0 +1,12 @@
+amends "package://github.com/jdx/hk/releases/download/v2.5.0/hk@2.5.0#/Config.pkl"
+// The pre-push gate. CI-free repo: stele and the contract suite run here or
+// nowhere. The `unset` keeps git's hook env out of anything a test spawns.
+hooks {
+  ["pre-push"] {
+    steps {
+      ["gate"] {
+        check = "unset $(git rev-parse --local-env-vars); stele check && stele emit --check && bun test"
+      }
+    }
+  }
+}
