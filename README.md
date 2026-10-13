@@ -252,7 +252,8 @@ for the same fact.
 | type | `.h1 .h2 .h3`, `.eyebrow`, `.lead`, `.muted`, `.faint`, `.mono`, `.link` |
 
 The component names are the documentation; everything else is discoverable by
-reading `ui.css`, which is sectioned in the same order as the table.
+reading `ui.css`: layout and type sit in its base layer, and every other family
+lives under a `/* ── name ── */` banner in its components layer.
 
 ### Layout primitives are attributes
 
@@ -442,9 +443,10 @@ install, no dependency, no build. It threads its handler, speaks HTTP/1.1, sends
 `Cache-Control: no-store` so an edit to `ui.css` shows on reload, and redirects
 `/` to the docs.
 
-The demo still opens straight off disk. The docs page does not, quite — it loads
-its stylesheet and script by absolute path — and neither page can be *wrapped*
-off disk, which is the real reason the server exists.
+The demo still opens straight off disk. The docs page does not, quite — its token
+reference fetches `ui.css`, which `file://` refuses, so that table renders empty —
+and neither page can be *wrapped* off disk, which is the real reason the server
+exists.
 
 ### Wrapping (visor)
 
@@ -454,8 +456,11 @@ thread be anchored to any element on it. Either form works:
 
 ```sh
 ./serve.py & visor 8080    # attach: visor proxies the running server
-visor -- ./serve.py        # spawn: visor owns the port, the child gets $PORT
+visor -- python3 serve.py  # spawn: visor owns the port, the child gets $PORT
 ```
+
+Spawn names the interpreter because visor resolves the command through `$PATH`
+only, so `./serve.py` is not found.
 
 visor asks the wrapped app for almost nothing — it forwards every request that
 is not its own `/__visor/*` route, and splices its script tags in before

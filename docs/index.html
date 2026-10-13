@@ -1278,7 +1278,7 @@ strip.classList.add("strip-danger");</pre>
 
   <pre class="readout">./serve.py <span class="readout-key"># http://127.0.0.1:8080/docs/</span>
 visor 8080 <span class="readout-key"># wrap it — the rail appears beside this page</span>
-visor -- ./serve.py <span class="readout-key"># or let visor own the port and spawn the server</span></pre>
+visor -- python3 serve.py <span class="readout-key"># or let visor own the port and spawn the server</span></pre>
 
   <p class="doc-note">visor asks the wrapped app for almost nothing: it forwards every request that
     is not its own <code class="code">/__visor/*</code> route, and splices its script tags in

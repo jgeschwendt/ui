@@ -11,7 +11,7 @@ cannot wrap a URL that has no origin.
     ./serve.py                 # http://127.0.0.1:8080/ → /docs/
     ./serve.py --port 4321
     visor 8080                 # wrap the running server
-    visor -- ./serve.py        # or let visor own the port and spawn it
+    visor -- python3 serve.py  # or let visor own the port and spawn it
 
 In the second form visor keeps its own port and hands the child an ephemeral one
 through $PORT, which is why the environment beats the built-in default and loses
