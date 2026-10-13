@@ -5,13 +5,15 @@ invariants, `README.md` the contract; this file is what is open.
 
 ## Hazards
 
-- `docs/` is the published site: GitHub Pages serves this file beside the
-  reference page.
+- GitHub Pages serves the repository root (`index.html` redirects to
+  `docs/`), so this file and every other one here is public
+  (unverified 2026-10-13 · the Pages API is unreachable from the shift
+  sandbox).
 - Component order inside `ui.components` is cascade order — a later section
   wins a same-specificity tie with an earlier one. Never reorder sections to
   match a table.
-- `bun test` binds loopback sockets for `serve.py`; in a shift sandbox run it
-  through `shift-test`, alone in its call.
+- `bun test` binds loopback sockets for `serve.py`; a sandbox that denies
+  loopback binds fails that test at `cannot bind`, not the code.
 
 ## Next
 
@@ -31,3 +33,21 @@ invariants, `README.md` the contract; this file is what is open.
    through `System.find_executable`, which searches `$PATH` only. The runbooks
    here now name `python3 serve.py`; visor resolving a path-qualified command
    as a path would fix it for every repo.
+5. Stale claims the s-20261013T0312Z review found, older than it — each needs
+   its owner's word on the fix, not only the words:
+   - Tailwind (README § Tailwind compatibility, § Why not Preflight): v4
+     declares `@layer theme, base, components, utilities` after `ui.*`, and
+     Preflight lives in `base`, so Preflight beats `ui.components` — `.btn`,
+     `.input`, `.card` lose padding and borders. "Preflight wins wherever they
+     overlap and nothing fights" is false; disabling Preflight is required,
+     or ui.css imports into a layer after `base`.
+   - visor's anchors (docs § Wrapping, README § Wrapping): visor's stable
+     attributes are `data-testid`, `data-component`, `aria-label`, and an
+     `id` ends the walk, so it never reads `data-example`; its fallback is
+     `:nth-of-type`, not `:nth-child`.
+   - `visor 8080` serves the rail on visor's own port (9000 attach, 3000
+     spawn), not 8080; no runbook names it.
+   - Sage "28% saturation" is HSV; its HSL saturation is 16%, while brass
+     and warn are quoted in HSL.
+   - "Omit `.ui` and only the components style themselves": the type scale
+     and layout helpers in `ui.base` are unscoped and apply without it.

@@ -7,38 +7,50 @@ import { readdirSync } from "node:fs";
 const root = `${import.meta.dir}/..`;
 const read = (path: string) => Bun.file(`${root}/${path}`).text();
 const all = (text: string, re: RegExp) => [...text.matchAll(re)].map((m) => m[1]);
+const set = (text: string, re: RegExp) => [...new Set(all(text, re))].sort();
 const css = (await read("ui.css")).replace(/\/\*[\s\S]*?\*\//g, "");
 const pages = await Promise.all(["demo/index.html", "docs/index.html"].map(read));
 
-test("the public surface — every class and token — changes only on purpose", () => {
-  const preludes = all(css, /([^{};]+)\{/g).filter((p) => !p.trim().startsWith("@"));
+test("the public surface — every class, attribute and token — changes only on purpose", () => {
+  const preludes = all(css, /([^{};]+)\{/g).filter((p) => !p.trim().startsWith("@")).join();
   expect({
-    classes: [...new Set(preludes.flatMap((p) => all(p, /\.([a-z][a-z0-9-]*)/g)))].sort(),
-    tokens: [...new Set(all(css, /(--ui-[a-z0-9-]+)\s*:/g))].sort(),
+    attributes: set(`${preludes} ${all(css, /attr\(([a-z-]+)/g).map((a) => `[${a}`)}`, /\[([a-z-]+)/g),
+    classes: set(preludes, /\.([a-z][a-z0-9-]*)/g),
+    tokens: set(css, /(--ui-[a-z0-9-]+)/g),
   }).toMatchSnapshot();
 });
 
 test("every rule lives in a layer; :root declares every token a theme reassigns or a rule reads bare", () => {
-  expect(all(css, /^([^\s}].*)$/gm)).toEqual([
-    "@layer ui.tokens, ui.base, ui.components;",
-    ...["tokens", "base", "components"].map((l) => `@layer ui.${l} {`),
-  ]);
+  let depth = 0;
+  let top = "";
+  for (const c of css) {
+    if (c === "}") depth--;
+    if (!depth) top += c;
+    if (c === "{") depth++;
+  }
+  expect(top.replace(/\s+/g, " ").trim()).toBe(
+    "@layer ui.tokens, ui.base, ui.components; @layer ui.tokens {} @layer ui.base {} @layer ui.components {}",
+  );
   const ground = new Set(all(css.match(/\n {2}:root \{([^}]*)\}/)![1], /(--ui-[a-z0-9-]+)\s*:/g));
-  expect([...new Set(all(css, /var\((--ui-[a-z0-9-]+)\)/g))].filter((t) => !ground.has(t))).toEqual([]);
   const themed = all(css, /:root[^{]*\{([^}]*)\}/g).join();
-  expect([...new Set(all(themed, /(--ui-[a-z0-9-]+)\s*:/g))].filter((t) => !ground.has(t))).toEqual([]);
+  expect(
+    [...set(css, /var\(\s*(--ui-[a-z0-9-]+)\s*\)/g), ...set(themed, /(--ui-[a-z0-9-]+)\s*:/g)].filter((t) => !ground.has(t)),
+  ).toEqual([]);
 });
 
 test("the sprite, the standalone glyphs and each page's inlined copy are one set", async () => {
   const symbols = (text: string) => all(text, /(<symbol id="ph-[\s\S]*?<\/symbol>)/g).sort();
+  const names = readdirSync(`${root}/icons/svg`).filter((f) => f.endsWith(".svg")).map((f) => f.slice(0, -4));
+  const files = await Promise.all(names.map((n) => read(`icons/svg/${n}.svg`)));
   const sprite = symbols(await read("icons/sprite.svg"));
-  const names = readdirSync(`${root}/icons/svg`).map((f) => f.replace(/\.svg$/, ""));
-  expect(sprite.map((s) => s.match(/ph-([a-z-]+)/)![1])).toEqual(names.sort());
+  expect(sprite).toEqual(
+    files.map((f, i) => f.trim().replace(/^<svg xmlns="[^"]*"/, `<symbol id="ph-${names[i]}"`).replace(/<\/svg>$/, "</symbol>")).sort(),
+  );
   expect(await read("README.md")).toContain(`A ${names.length}-glyph subset`);
   for (const page of pages) {
     expect(symbols(page)).toEqual(sprite);
-    expect(all(page, /href="#ph-([a-z-]+)"/g).filter((n) => !names.includes(n))).toEqual([]);
-    expect(all(page, /<(?:link|script|img)[^>]+(?:href|src)="(https?:[^"]*)"/g)).toEqual([]);
+    expect(all(page, /href="#ph-([^"]*)"/g).filter((n) => !names.includes(n))).toEqual([]);
+    expect(all(page, /<(?:link|script|img)[^>]+(?:href|src)=["']((?:https?:)?\/\/[^"']*)/g)).toEqual([]);
   }
 });
 
@@ -55,8 +67,9 @@ const serve = async (args: string[], env: Record<string, string> = {}) => {
 };
 
 test("serve.py: / is the docs, edits show on reload, the environment loses to --port", async () => {
-  const { child, origin } = await serve(["--port", "0"], { PORT: "1" });
+  const { child, out, origin } = await serve(["--port", "0"], { PORT: "1" });
   try {
+    expect(out).toContain("demo →");
     for (const path of ["/", "/index.html"]) {
       const res = await fetch(origin + path, { redirect: "manual" });
       expect([res.status, res.headers.get("location")]).toEqual([302, "/docs/"]);
@@ -72,6 +85,6 @@ test("serve.py: / is the docs, edits show on reload, the environment loses to --
     expect([await taken.child.exited, taken.out]).toEqual([1, expect.stringContaining("serve: cannot bind")]);
   } finally {
     child.kill("SIGINT");
-    expect(await child.exited).toBe(0);
   }
+  expect(await child.exited).toBe(0);
 });

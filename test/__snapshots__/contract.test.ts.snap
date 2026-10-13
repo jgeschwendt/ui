@@ -1,7 +1,20 @@
 // Bun Snapshot v1, https://bun.sh/docs/test/snapshots
 
-exports[`the public surface — every class and token — changes only on purpose 1`] = `
+exports[`the public surface — every class, attribute and token — changes only on purpose 1`] = `
 {
+  "attributes": [
+    "aria-current",
+    "aria-disabled",
+    "aria-invalid",
+    "aria-pressed",
+    "data-container",
+    "data-grid",
+    "data-table",
+    "data-theme",
+    "data-ui-tip",
+    "hidden",
+    "role",
+  ],
   "classes": [
     "appbar",
     "appbar-nav",
@@ -155,6 +168,7 @@ exports[`the public surface — every class and token — changes only on purpos
     "--ui-bg",
     "--ui-border",
     "--ui-border-strong",
+    "--ui-container",
     "--ui-danger",
     "--ui-danger-soft",
     "--ui-ease",
@@ -166,13 +180,17 @@ exports[`the public surface — every class and token — changes only on purpos
     "--ui-font-mono",
     "--ui-font-sans",
     "--ui-glow",
+    "--ui-grid-min",
     "--ui-icon-size",
     "--ui-info",
     "--ui-info-soft",
     "--ui-leading-body",
     "--ui-leading-tight",
+    "--ui-meter-value",
     "--ui-ok",
     "--ui-ok-soft",
+    "--ui-orb-size",
+    "--ui-panel-accent",
     "--ui-radius-full",
     "--ui-radius-lg",
     "--ui-radius-md",

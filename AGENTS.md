@@ -7,26 +7,28 @@ commands:
   serve: python3 serve.py
   test: bun test
 invariants:
-  - claim: ui.css is the artifact — no build step, no dependency, no network request; every page loads it by relative path
+  - claim: ui.css is the whole library — no build step, no framework dependency, no network requests
     anchor: README.md#ui
   - claim: :root declares every token; theme blocks only reassign
     anchor: README.md#theming-contract
+    enforced_by: test/contract.test.ts
   - claim: every rule sits in ui.tokens, ui.base or ui.components, declared in that order before any rule
     anchor: README.md#tailwind-compatibility
+    enforced_by: test/contract.test.ts
 ```
 
 ## Map
 
 | where | what |
 | --- | --- |
-| ui.css | the library — tokens, base (reset, type, layout), components |
-| serve.py | stdlib dev server: `/` → `/docs/`, `no-store`, HTTP/1.1, threaded, `--port` › `$PORT` › 8080 |
 | index.html | GitHub Pages redirect to `docs/` (`.nojekyll` beside it) |
+| serve.py | stdlib dev server: `/` → `/docs/`, `no-store`, HTTP/1.1, threaded, `--port` › `$PORT` › 8080 |
 | test/ | the contract suite |
+| ui.css | the library — tokens, base (reset, type, layout), components; both pages load it as `../ui.css` |
 
 ## Working here
 
-- The public surface is the snapshot in `test/__snapshots__/`: a class or token added or removed fails the suite until `bun test --update-snapshots` records it on purpose.
+- The public surface is the snapshot in `test/__snapshots__/`: a class, attribute or token added or removed fails the suite until `bun test --update-snapshots` records it on purpose. The gate runs `CI=true bun test`, under which a missing snapshot fails rather than being written.
 - The sprite exists four times — `icons/sprite.svg`, `icons/svg/`, and inlined in each page. Adding a glyph means all four; the suite fails on any drift.
 
 <!-- @stele -->

@@ -252,8 +252,9 @@ for the same fact.
 | type | `.h1 .h2 .h3`, `.eyebrow`, `.lead`, `.muted`, `.faint`, `.mono`, `.link` |
 
 The component names are the documentation; everything else is discoverable by
-reading `ui.css`: layout and type sit in its base layer, and every other family
-lives under a `/* ── name ── */` banner in its components layer.
+reading `ui.css`: layout and type sit in its base layer, every other family in
+its components layer under a `/* ── name ── */` banner — related families share
+one (chip with the status dot; code, kbd and metric with the readout).
 
 ### Layout primitives are attributes
 

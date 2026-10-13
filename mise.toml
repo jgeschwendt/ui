@@ -10,4 +10,4 @@ run = "python3 serve.py"
 
 [tasks.test]
 description = "The contract suite"
-run = "bun test"
+run = "CI=true bun test"
