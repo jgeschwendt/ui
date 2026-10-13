@@ -1,7 +1,7 @@
 amends "package://github.com/jdx/hk/releases/download/v2.5.0/hk@2.5.0#/Config.pkl"
-// The pre-push gate. CI-free repo: stele and the contract suite run here or
-// nowhere. CI=true makes a missing snapshot fail instead of being written, so
-// renaming the surface test cannot re-record the surface. The `unset` keeps
+// The pre-push gate: stele and the contract suite, as ci.yaml runs them.
+// CI=true makes a missing snapshot fail instead of being written, so renaming
+// the surface test cannot re-record the surface. The `unset` keeps
 // git's hook env out of anything a test spawns.
 hooks {
   ["pre-push"] {
