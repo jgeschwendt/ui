@@ -1,0 +1,3 @@
+[exhaustiveness]
+# `.github` is CI wiring, not code reachable from the router.
+exclude = [".github"]
