@@ -87,7 +87,6 @@ except OSError as err:
     sys.exit(f"serve: cannot bind {args.host}:{args.port} — {err}")
 
 origin = f"http://{args.host}:{httpd.server_port}"
-print(f"ui   → {origin}/docs/", file=sys.stderr)
-print(f"demo → {origin}/demo/", file=sys.stderr)
+print(f"ui   → {origin}/docs/\ndemo → {origin}/demo/", file=sys.stderr)
 with httpd, suppress(KeyboardInterrupt):
     httpd.serve_forever()
