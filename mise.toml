@@ -4,6 +4,10 @@ bun = "1.4.0"
 # hk runs the pre-push gate (hk.pkl); `hk install --mise` wires it per clone.
 hk = "2.5.0"
 
+[tasks.figures]
+description = "Render every Claude Design board under docs/figures/project/ to its PNG (agent-browser, 2×)"
+run = "sh docs/figures/export.sh"
+
 [tasks.serve]
 description = "Serve the docs and the demo (http://127.0.0.1:8080/docs/)"
 run = "python3 serve.py"
