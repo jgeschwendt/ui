@@ -5,7 +5,7 @@ kind: system
 purpose: ui — a semantic component stylesheet on custom properties, light white-and-green and dark black-and-gold; one file, no build, plus its docs, demo, glyphs and dev server.
 commands:
   serve: python3 serve.py
-  test: bun test
+  test: mise run test
 invariants:
   - claim: ui.css is the whole library — no build step, no framework dependency, no network requests
     anchor: README.md#ui
@@ -45,7 +45,7 @@ invariants:
 | demo  | container | index.html — the kitchen sink: every component at once under fake telemetry, opens off disk; its inline script carries the shared theme toggle.                                         | `stele unfold demo` · or read `demo/AGENTS.md`   |
 | docs  | container | the reference page (index.html, page.css, docs.js — its token table reads ui.css live; its open section is what is unsettled) and figures/, its Claude Design boards with their source. | `stele unfold docs` · or read `docs/AGENTS.md`   |
 | icons | container | the vendored Phosphor regular subset — sprite.svg and svg/NAME.svg, MIT in LICENSE; each page inlines the sprite.                                                                       | `stele unfold icons` · or read `icons/AGENTS.md` |
-| test  | container | contract.test.ts — the external contract end to end: the class/token snapshot, layer and :root rules, glyph-set parity, figure/board parity, serve.py over a live socket.               | `stele unfold test` · or read `test/AGENTS.md`   |
+| test  | container | contract.test.ts — the external contract end to end: class/token snapshot, layers and :root, docs.css shell, glyphs, figures, README's Tailwind import compiled, serve.py live.         | `stele unfold test` · or read `test/AGENTS.md`   |
 
 ## Indexes
 
