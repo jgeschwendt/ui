@@ -428,12 +428,12 @@ gigantic.dev shares — container, prose measure, section rhythm, and the furnit
 those pages all carry (`.docs-shell`, `.docs-lead`, `.docs-flavor`, `.docs-note`,
 `.docs-toc`, `.docs-section`, `.docs-foot`, `pre.snippet` / `pre.tree`,
 `.snippet-note`, `ul.claims`, `ol.steps`, `figure.figure`). Consumers link both from the CDN, then
-their own stylesheet for what is truly theirs:
+their own `page.css` for what is truly theirs:
 
 ```html
 <link rel="stylesheet" href="https://gigantic.dev/ui/ui.css" />
 <link rel="stylesheet" href="https://gigantic.dev/ui/docs.css" />
-<link rel="stylesheet" href="plan.css" />
+<link rel="stylesheet" href="page.css" />
 ```
 
 Its tokens join `ui.tokens` — `--ui-measure` (52rem, the one prose measure) and

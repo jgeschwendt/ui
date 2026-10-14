@@ -14,7 +14,7 @@
           "text": "every rule sits in ui.tokens, ui.base or ui.components, declared in that order before any rule",
           "verified": {
             "digest": null,
-            "sha": "368cc5925ddf35d621684769229ee14acb7e4636"
+            "sha": "8acfb46f1a9b05a5f6d95352f66ba51219e51231"
           }
         },
         {
@@ -26,7 +26,7 @@
           "text": ":root declares every token; theme blocks only reassign",
           "verified": {
             "digest": null,
-            "sha": "368cc5925ddf35d621684769229ee14acb7e4636"
+            "sha": "8acfb46f1a9b05a5f6d95352f66ba51219e51231"
           }
         },
         {
@@ -38,7 +38,7 @@
           "text": "ui.css is the whole library — no build step, no framework dependency, no network requests",
           "verified": {
             "digest": null,
-            "sha": "368cc5925ddf35d621684769229ee14acb7e4636"
+            "sha": "8acfb46f1a9b05a5f6d95352f66ba51219e51231"
           }
         }
       ],
@@ -96,7 +96,7 @@
       },
       "id": "docs",
       "kind": "container",
-      "purpose": "the reference page (index.html, docs.css, docs.js — its token table reads ui.css live; its open section is what is unsettled) and figures/, its Claude Design boards with their source."
+      "purpose": "the reference page (index.html, page.css, docs.js — its token table reads ui.css live; its open section is what is unsettled) and figures/, its Claude Design boards with their source."
     },
     "icons": {
       "budget": null,
