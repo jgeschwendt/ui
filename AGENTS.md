@@ -30,7 +30,7 @@ invariants:
 
 ## Working here
 
-- The public surface is the snapshot in `test/__snapshots__/`: a class, attribute or token added or removed fails the suite until `bun test --update-snapshots` records it on purpose. The gate runs `CI=true bun test`, under which a missing snapshot fails rather than being written.
+- The public surface is the snapshot in `test/__snapshots__/`: a class, attribute or token added or removed fails the suite until `bun test --update-snapshots` records it on purpose. The gate is `mise run test`: it installs the one dev dependency, tailwindcss, then runs `CI=true bun test`, under which a missing snapshot fails rather than being written.
 - The sprite exists four times — `icons/sprite.svg`, `icons/svg/`, and inlined in each page. Adding a glyph means all four; the suite fails on any drift.
 
 <!-- @stele -->
