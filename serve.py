@@ -39,7 +39,6 @@ class Handler(SimpleHTTPRequestHandler):
         ".html": "text/html; charset=utf-8",
         ".js": "text/javascript; charset=utf-8",
         ".json": "application/json; charset=utf-8",
-        ".map": "application/json; charset=utf-8",
         ".md": "text/markdown; charset=utf-8",
     }
 
