@@ -427,7 +427,7 @@ Build them on top: `.panel` for the frame, `.readout` for the values,
 gigantic.dev shares — container, prose measure, section rhythm, and the furniture
 those pages all carry (`.docs-shell`, `.docs-lead`, `.docs-flavor`, `.docs-note`,
 `.docs-toc`, `.docs-section`, `.docs-foot`, `pre.snippet` / `pre.tree`,
-`.snippet-note`, `ul.claims`, `ol.steps`, `figure.figure`). Consumers link both from the CDN, then
+`.snippet-note`, `ul.claims`, `ol.steps`, `figure.figure` with `.figure-light` / `.figure-dark`). Consumers link both from the CDN, then
 their own `page.css` for what is truly theirs:
 
 ```html
@@ -447,11 +447,17 @@ A figure is a board from the project's Claude Design canvas (`<project>
 figures`), rendered to `docs/figures/<name>.png` at 2× with its source read back
 into `docs/figures/project/`. `figure.figure` frames it — `ui-bg` behind the
 image, a `ui-border` hairline, `ui-radius-lg` corners — and sets the caption in
-`ui-fg-faint` at the prose measure. The caption names its source:
+`ui-fg-faint` at the prose measure. Each board renders twice, `<name>.png` and
+`<name>-dark.png` — the dark one derived at export by swapping every gigantic
+colour token's light value for its dark one, never drawn twice — and the figure
+carries both: `.figure-light` shows by default, `.figure-dark` wherever ui.css
+resolves Brass (`prefers-color-scheme: dark` unless `data-theme="light"`, or
+`data-theme="dark"`). The caption names its source:
 
 ```html
 <figure class="figure">
-  <img src="figures/<name>.png" alt="…" />
+  <img class="figure-light" src="figures/<name>.png" alt="…" />
+  <img class="figure-dark" src="figures/<name>-dark.png" alt="" aria-hidden="true" loading="lazy" />
   <figcaption>… Source: Claude Design canvas <a href="<canvas url>"><project> figures</a>, board <name>.</figcaption>
 </figure>
 ```

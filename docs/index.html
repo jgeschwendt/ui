@@ -258,7 +258,8 @@
   </table>
 
   <figure class="figure">
-    <img src="figures/themes.png" alt="Three selectors in resolution order, :root, prefers-color-scheme: dark and :root[data-theme], then the Sage and Brass themes side by side as token swatches with their hex values." />
+    <img class="figure-light" src="figures/themes.png" alt="Three selectors in resolution order, :root, prefers-color-scheme: dark and :root[data-theme], then the Sage and Brass themes side by side as token swatches with their hex values." />
+    <img class="figure-dark" src="figures/themes-dark.png" alt="" aria-hidden="true" loading="lazy" />
     <figcaption>The two themes token by token, and the order that picks one: <code class="code">:root</code> is Sage, the system's dark is Brass, and <code class="code">data-theme</code> overrides both. Source: Claude Design canvas <a href="https://claude.ai/artifact/9SNgMFS1dsMhmN8zarPh2s">ui figures</a>, board Themes.</figcaption>
   </figure>
 
@@ -1286,7 +1287,8 @@ strip.classList.add("strip-danger");</pre>
   </header>
 
   <figure class="figure">
-    <img src="figures/layers.png" alt="Four cascade layers left to right, ui.tokens, ui.base, ui.components and ui.docs, ending at the page's own unlayered stylesheet; below ui.base, the .ui opt-in and the one unscoped [hidden] rule." />
+    <img class="figure-light" src="figures/layers.png" alt="Four cascade layers left to right, ui.tokens, ui.base, ui.components and ui.docs, ending at the page's own unlayered stylesheet; below ui.base, the .ui opt-in and the one unscoped [hidden] rule." />
+    <img class="figure-dark" src="figures/layers-dark.png" alt="" aria-hidden="true" loading="lazy" />
     <figcaption>Weakest on the left. <code class="code">ui.base</code> paints the page only under <code class="code">.ui</code>; the one rule that needs no class is <code class="code">[hidden]</code>, whose <code class="code">!important</code> runs the layer order backwards. Source: Claude Design canvas <a href="https://claude.ai/artifact/9SNgMFS1dsMhmN8zarPh2s">ui figures</a>, board Layers.</figcaption>
   </figure>
 </section>

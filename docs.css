@@ -95,6 +95,30 @@
     width: 100%;
   }
 
+  /* each figure ships a light and a dark render (docs/figures/<name>-dark.png);
+     the pair resolves exactly as ui.css picks its theme */
+  figure.figure > .figure-dark {
+    display: none;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) figure.figure > .figure-light {
+      display: none;
+    }
+
+    :root:not([data-theme="light"]) figure.figure > .figure-dark {
+      display: block;
+    }
+  }
+
+  :root[data-theme="dark"] figure.figure > .figure-light {
+    display: none;
+  }
+
+  :root[data-theme="dark"] figure.figure > .figure-dark {
+    display: block;
+  }
+
   figure.figure > figcaption {
     color: var(--ui-fg-faint);
     font-size: var(--ui-text-sm);

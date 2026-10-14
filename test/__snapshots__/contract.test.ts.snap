@@ -240,6 +240,8 @@ exports[`docs.css — the shared docs shell — is additive: its own layer, ui's
     "docs-shell",
     "docs-toc",
     "figure",
+    "figure-dark",
+    "figure-light",
     "snippet",
     "snippet-note",
     "steps",
