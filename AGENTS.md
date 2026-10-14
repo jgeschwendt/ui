@@ -21,6 +21,7 @@ invariants:
 
 | where | what |
 | --- | --- |
+| docs.css | the shared docs shell — container, measure, section rhythm — every gigantic.dev docs page links after ui.css; additive-only |
 | index.html | GitHub Pages redirect to `docs/` (`.nojekyll` beside it) |
 | serve.py | stdlib dev server: `/` → `/docs/`, `no-store`, HTTP/1.1, threaded, `--port` › `$PORT` › 8080 |
 | test/ | the contract suite |

@@ -54,6 +54,29 @@ test("the sprite, the standalone glyphs and each page's inlined copy are one set
   }
 });
 
+test("docs.css — the shared docs shell — is additive: its own layer, ui's tokens, no colour literal, no ui.css class", async () => {
+  const docs = (await read("docs.css")).replace(/\/\*[\s\S]*?\*\//g, "");
+  let depth = 0;
+  let top = "";
+  for (const c of docs) {
+    if (c === "}") depth--;
+    if (!depth) top += c;
+    if (c === "{") depth++;
+  }
+  expect(top.replace(/\s+/g, " ").trim()).toBe(
+    "@layer ui.tokens, ui.base, ui.components, ui.docs; @layer ui.tokens {} @layer ui.docs {}",
+  );
+  const preludes = all(docs, /([^{};]+)\{/g).filter((p) => !p.trim().startsWith("@")).join();
+  const own = all(docs.match(/\n {2}:root \{([^}]*)\}/)![1], /(--ui-[a-z0-9-]+)\s*:/g);
+  const ground = new Set([...all(css.match(/\n {2}:root \{([^}]*)\}/)![1], /(--ui-[a-z0-9-]+)\s*:/g), ...own]);
+  expect(set(docs, /var\(\s*(--ui-[a-z0-9-]+)\s*\)/g).filter((t) => !ground.has(t))).toEqual([]);
+  expect(docs.match(/#[0-9a-f]{3,8}\b|\b(?:rgba?|hsla?|oklch|oklab|lab|lch|color)\(/gi)).toBeNull();
+  const classes = set(preludes, /\.([a-z][a-z0-9-]*)/g);
+  const library = new Set(set(all(css, /([^{};]+)\{/g).join(), /\.([a-z][a-z0-9-]*)/g));
+  expect(classes.filter((c) => library.has(c))).toEqual([]);
+  expect({ classes, tokens: set(docs, /(--ui-[a-z0-9-]+)/g) }).toMatchSnapshot();
+});
+
 const serve = async (args: string[], env: Record<string, string> = {}) => {
   const child = Bun.spawn(["python3", `${root}/serve.py`, ...args], { env: { ...process.env, ...env }, stderr: "pipe" });
   const reader = child.stderr.getReader();

@@ -421,6 +421,32 @@ twenty lines written against the actual numbers.
 Build them on top: `.panel` for the frame, `.readout` for the values,
 `--ui-panel-accent` and your own hue tokens for the colour.
 
+## The docs shell
+
+`docs.css` sits beside `ui.css`: the layout shell every project docs page under
+gigantic.dev shares — container, prose measure, section rhythm, and the furniture
+those pages all carry (`.docs-shell`, `.docs-lead`, `.docs-flavor`, `.docs-note`,
+`.docs-toc`, `.docs-section`, `.docs-foot`, `pre.snippet` / `pre.tree`,
+`.snippet-note`, `ul.claims`, `ol.steps`). Consumers link both from the CDN, then
+their own stylesheet for what is truly theirs:
+
+```html
+<link rel="stylesheet" href="https://gigantic.dev/ui/ui.css" />
+<link rel="stylesheet" href="https://gigantic.dev/ui/docs.css" />
+<link rel="stylesheet" href="plan.css" />
+```
+
+Its tokens join `ui.tokens` — `--ui-measure` (52rem, the one prose measure) and
+`--ui-measure-wide` (60rem, lists and steps) — and its rules sit in `ui.docs`, a
+layer after `ui.components`, so a page's unlayered rules override any of it. The
+breakpoints are constants stated once in its header comment, because a media
+query cannot read a custom property: **900px** (the gigantic.dev rail docks and
+offsets the page by 224px; below it, a 48px strip) and **640px** (phone).
+
+Consumers link latest, so every change to `ui.css` or `docs.css` is **additive**
+or ships together with the consumer updates it needs — a renamed class or a
+removed token breaks every docs page at once.
+
 ## Two pages, and a server
 
 `docs/index.html` is the **reference**: one section per component family, each
