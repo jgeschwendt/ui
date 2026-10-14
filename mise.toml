@@ -1,5 +1,6 @@
 [tools]
-# bun runs the contract suite (test/); nothing ships through it.
+# bun runs the contract suite (test/) and installs its one dev dependency,
+# tailwindcss, which compiles README's import; nothing ships through it.
 bun = "1.4.0"
 # hk runs the pre-push gate (hk.pkl); `hk install --mise` wires it per clone.
 hk = "2.5.0"
@@ -14,4 +15,4 @@ run = "python3 serve.py"
 
 [tasks.test]
 description = "The contract suite"
-run = "CI=true bun test"
+run = ["bun install --frozen-lockfile", "CI=true bun test"]

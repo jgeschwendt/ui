@@ -1,13 +1,14 @@
 amends "package://github.com/jdx/hk/releases/download/v2.5.0/hk@2.5.0#/Config.pkl"
 // The pre-push gate: stele and the contract suite, as ci.yaml runs them.
-// CI=true makes a missing snapshot fail instead of being written, so renaming
-// the surface test cannot re-record the surface. The `unset` keeps
-// git's hook env out of anything a test spawns.
+// `mise run test` installs, then runs the suite under CI=true, which makes a
+// missing snapshot fail instead of being written, so renaming the surface test
+// cannot re-record the surface. The `unset` keeps git's hook env out of
+// anything a test spawns.
 hooks {
   ["pre-push"] {
     steps {
       ["gate"] {
-        check = "unset $(git rev-parse --local-env-vars); stele check && stele emit --check && CI=true bun test"
+        check = "unset $(git rev-parse --local-env-vars); stele check && stele emit --check && mise run test"
       }
     }
   }
