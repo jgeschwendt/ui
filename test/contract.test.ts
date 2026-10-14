@@ -92,17 +92,19 @@ test("serve.py: / is the docs, edits show on reload, the environment loses to --
     expect(out).toContain(`ui   → ${origin}/docs/\ndemo → ${origin}/demo/`);
     const port = origin!.split(":")[2];
     // Threaded: an idle connection holds no request hostage.
-    const idle = await Bun.connect({ hostname: "127.0.0.1", port: +port, socket: { data() {} } });
-    for (const path of ["/", "/index.html"]) {
-      const res = await fetch(origin + path, { redirect: "manual" });
-      expect([res.status, res.headers.get("location")]).toEqual([302, "/docs/"]);
-    }
-    for (const [path, type] of [["/ui.css", "text/css; charset=utf-8"], ["/docs/", "text/html; charset=utf-8"], ["/docs/docs.js", "text/javascript; charset=utf-8"], ["/icons/sprite.svg", "image/svg+xml"]]) {
+    let raw = "";
+    const closed = Promise.withResolvers();
+    const idle = await Bun.connect({ hostname: "127.0.0.1", port: +port, socket: { data: (_, d) => void (raw += d), close: closed.resolve } });
+    for (const [path, type] of [["/ui.css", "text/css; charset=utf-8"], ["/docs/", "text/html; charset=utf-8"], ["/docs/docs.js", "text/javascript; charset=utf-8"], ["/icons/sprite.svg", "image/svg+xml"], ["/README.md", "text/markdown; charset=utf-8"], ["/docs/figures/project/canvas.json", "application/json; charset=utf-8"]]) {
       const res = await fetch(origin + path);
       expect([res.status, res.headers.get("content-type"), res.headers.get("cache-control")]).toEqual([200, type, "no-store"]);
       expect(await res.text()).toBe(await read(path.slice(1).replace(/\/$/, "/index.html")));
     }
-    idle.end();
+    // Keep-alive: both redirects answer on one pipelined connection, then the server closes it.
+    idle.write("GET / HTTP/1.1\r\nHost: x\r\n\r\nHEAD /index.html HTTP/1.1\r\nHost: x\r\nConnection: close\r\n\r\n");
+    await closed.promise;
+    const redirect = expect.arrayContaining(["HTTP/1.1 302 Found", "Location: /docs/", "Content-Length: 0", "Cache-Control: no-store"]);
+    expect(raw.split("\r\n\r\n").filter(Boolean).map((block) => block.split("\r\n"))).toEqual([redirect, redirect]);
     const taken = await serve([], { PORT: port });
     expect([await taken.child.exited, taken.out]).toEqual([1, expect.stringContaining("serve: cannot bind")]);
   } finally {
