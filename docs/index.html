@@ -1387,11 +1387,7 @@ visor -- python3 serve.py <span class="readout-key"># or let visor own the port 
       through <code class="code">System.find_executable</code>, which searches <code class="code">$PATH</code> only. The
       runbooks here name <code class="code">python3 serve.py</code>; visor treating a path-qualified command as a path
       would fix it for every repo.</li>
-    <li><strong>Stale claims, each awaiting its owner's word on the fix.</strong> Tailwind v4 declares
-      <code class="code">@layer theme, base, components, utilities</code> after <code class="code">ui.*</code>, so
-      Preflight in <code class="code">base</code> beats <code class="code">ui.components</code> and the README's "nothing
-      fights" is false: disabling Preflight is required, or <code class="code">ui.css</code> imports into a layer after
-      <code class="code">base</code>. visor's stable attributes are <code class="code">data-testid</code>,
+    <li><strong>Stale claims, each awaiting its owner's word on the fix.</strong> visor's stable attributes are <code class="code">data-testid</code>,
       <code class="code">data-component</code> and <code class="code">aria-label</code>, and an <code class="code">id</code>
       ends the walk, so it never reads <code class="code">data-example</code>; its fallback is
       <code class="code">:nth-of-type</code>, not <code class="code">:nth-child</code>. <code class="code">visor 8080</code>

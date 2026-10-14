@@ -23,6 +23,7 @@ invariants:
 | --- | --- |
 | docs.css | the shared docs shell — container, measure, section rhythm — every gigantic.dev docs page links after ui.css; additive-only |
 | index.html | GitHub Pages redirect to `docs/` (`.nojekyll` beside it) |
+| package.json | one dev dependency, tailwindcss: the suite compiles README's Tailwind import; ui.css needs nothing |
 | serve.py | stdlib dev server: `/` → `/docs/`, `no-store`, HTTP/1.1, threaded, `--port` › `$PORT` › 8080 |
 | test/ | the contract suite |
 | ui.css | the library — tokens, base (reset, type, layout), components; both pages load it as `../ui.css` |

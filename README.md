@@ -80,10 +80,12 @@ opt-in, and three things follow:
   library. Removing list markers is a decision the markup makes with
   `role="list"`.
 - **No double reset.** Loading `ui.css` next to Tailwind gives you Preflight
-  *and* this, and the two disagree about `<ul>` and `<button>`. Because this one
-  is scoped and zero-specificity, Preflight wins wherever they overlap and
-  nothing fights — but if you own the Tailwind config, disable Preflight and let
-  the scoped reset be the only one. See [Tailwind compatibility](#tailwind-compatibility).
+  *and* this, and the two disagree about `<ul>` and `<button>`. Imported into
+  Tailwind's `components` layer, every `ui` layer sorts after Preflight's
+  `base`, so the components keep their padding, margins and borders while
+  Preflight still governs bare markup outside `.ui`. If you own the Tailwind
+  config, disabling Preflight leaves the scoped reset as the only one. See
+  [Tailwind compatibility](#tailwind-compatibility).
 
 ## Theming contract
 
@@ -285,18 +287,19 @@ class, including the table modifiers (`.table-hover`, `.table-mono`,
 
 ### Import order
 
-Import `ui.css` **before** `tailwindcss`:
+Import `tailwindcss` first, then `ui.css` **into its `components` layer**:
 
 ```css
-@import "./ui.css";
 @import "tailwindcss";
+@import "./ui.css" layer(components);
 ```
 
-The layer order declared first is the order that holds, so `ui.components`
-sorts below Tailwind's `utilities` and a utility wins any residual tie — a
-`p-0` next to a `.card` removes the padding, no `!important` needed. Import it
-after and the layers land in the other order, leaving components able to
-outrank the utilities meant to override them.
+Tailwind v4 declares `@layer theme, base, components, utilities`, and `ui.*`
+nests as `components.ui.*`: after Preflight in `base`, before `utilities`. So a
+`.btn` keeps its padding against Preflight's `button` reset, and a utility wins
+any residual tie — a `p-0` next to a `.card` removes the padding, no
+`!important` needed. Imported bare before Tailwind, `ui.*` declares first and
+sorts below `base`, and Preflight strips every component.
 
 ### Strip vs notice
 
@@ -364,15 +367,17 @@ block too.
 ## Tailwind compatibility
 
 `ui.css` declares `@layer ui.tokens, ui.base, ui.components` and puts every rule
-inside one of them. Tailwind's own utilities live in `@layer utilities` (v4) or
-are unlayered (v3) — either way they sort **after** an author-declared named
-layer, so `class="btn px-6"` works with no `!important` and no arbitrary
-specificity war. Load `ui.css` before Tailwind:
+inside one of them. Under Tailwind v4, import it into the `components` layer so
+it lands between Preflight and the utilities — `class="btn px-6"` works with no
+`!important` and no arbitrary specificity war (see [Import order](#import-order)):
 
 ```css
-@import "./ui.css";
 @import "tailwindcss";
+@import "./ui.css" layer(components);
 ```
+
+Tailwind v3 leaves Preflight and the utilities unlayered, and unlayered rules
+beat every layer: there, disable Preflight (`corePlugins: { preflight: false }`).
 
 The components use no Tailwind-reserved class prefix, so there is nothing to
 purge or safelist. Point Tailwind's theme at the same tokens if you want the

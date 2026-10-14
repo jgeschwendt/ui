@@ -136,3 +136,14 @@ test("serve.py: / is the docs, edits show on reload, the environment loses to --
   }
   expect(await child.exited).toBe(0);
 });
+
+test("README's Tailwind import nests ui in components: after Preflight's base, before utilities", async () => {
+  const { compile } = await import("tailwindcss");
+  const imports = all(await read("README.md"), /```css\n([^`]*@import "tailwindcss"[^`]*)```/g);
+  expect(new Set(imports)).toEqual(new Set(['@import "tailwindcss";\n@import "./ui.css" layer(components);\n']));
+  const files: Record<string, string> = { "./ui.css": "ui.css", tailwindcss: "node_modules/tailwindcss/index.css" };
+  const loadStylesheet = async (id: string) => ({ path: id, base: root, content: await read(files[id]) });
+  const out = (await compile(imports[0], { base: root, loadStylesheet })).build(["btn", "p-0"]);
+  expect(out.match(/^@layer [^{]+;/m)?.[0]).toBe("@layer theme, base, components, utilities;");
+  expect(out).toMatch(/^@layer components \{\s*@layer ui\.tokens, ui\.base, ui\.components;/m);
+});
