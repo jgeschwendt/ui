@@ -18,21 +18,16 @@ through $PORT, which is why the environment beats the built-in default and loses
 to an explicit --port.
 """
 
-from __future__ import annotations
-
 import argparse
 import os
 import sys
+from contextlib import suppress
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
-from pathlib import Path
-
-ROOT = Path(__file__).resolve().parent
-DEFAULT_PORT = 8080
 
 
 class Handler(SimpleHTTPRequestHandler):
-    """Static files, with the three corrections a dev server owes a wrapper."""
+    """Static files, with the corrections a dev server owes a wrapper."""
 
     # Keep-alive: visor proxies every subresource through one upstream client,
     # and HTTP/1.0's connection-per-request makes an iframe reload visibly slow.
@@ -46,7 +41,6 @@ class Handler(SimpleHTTPRequestHandler):
         ".json": "application/json; charset=utf-8",
         ".map": "application/json; charset=utf-8",
         ".md": "text/markdown; charset=utf-8",
-        ".svg": "image/svg+xml",
     }
 
     def end_headers(self) -> None:
@@ -57,60 +51,44 @@ class Handler(SimpleHTTPRequestHandler):
 
     def send_head(self):
         # "/" is the docs page, not a directory listing of the repository.
-        if self.path in ("/", "/index.html"):
-            self.send_response(302)
-            self.send_header("Location", "/docs/")
-            self.send_header("Content-Length", "0")
-            self.end_headers()
-            return None
-        return super().send_head()
+        if self.path not in ("/", "/index.html"):
+            return super().send_head()
+        self.send_response(302)
+        self.send_header("Location", "/docs/")
+        self.send_header("Content-Length", "0")
+        self.end_headers()
 
     def log_message(self, fmt: str, *args) -> None:
         sys.stderr.write("%s %s\n" % (self.log_date_time_string(), fmt % args))
 
 
-class Server(ThreadingHTTPServer):
-    # A page pulls the stylesheet, the script and the sprite at once, and under
-    # visor it does so from inside an iframe; a single-threaded server serializes
-    # them behind whichever request is slowest.
-    allow_reuse_address = True
-    daemon_threads = True
+ap = argparse.ArgumentParser(description="serve the ui repository over HTTP")
+ap.add_argument(
+    "--port",
+    type=int,
+    default=os.environ.get("PORT") or "8080",
+    help="bind port (default: $PORT, else 8080)",
+)
+ap.add_argument(
+    "--host",
+    default="127.0.0.1",
+    help="bind address (default: 127.0.0.1 — loopback, like visor)",
+)
+args = ap.parse_args()
 
-
-def main() -> int:
-    ap = argparse.ArgumentParser(description="serve the ui repository over HTTP")
-    ap.add_argument(
-        "--port",
-        type=int,
-        default=None,
-        help=f"bind port (default: $PORT, else {DEFAULT_PORT})",
+try:
+    # Threaded: a page pulls the stylesheet, the script and the sprite at once,
+    # and under visor it does so from inside an iframe; a single-threaded server
+    # serializes them behind whichever request is slowest.
+    httpd = ThreadingHTTPServer(
+        (args.host, args.port),
+        partial(Handler, directory=os.path.dirname(__file__)),
     )
-    ap.add_argument(
-        "--host",
-        default="127.0.0.1",
-        help="bind address (default: 127.0.0.1 — loopback, like visor)",
-    )
-    args = ap.parse_args()
+except OSError as err:
+    sys.exit(f"serve: cannot bind {args.host}:{args.port} — {err}")
 
-    port = args.port if args.port is not None else int(os.environ.get("PORT") or DEFAULT_PORT)
-
-    try:
-        httpd = Server((args.host, port), partial(Handler, directory=str(ROOT)))
-    except OSError as err:
-        print(f"serve: cannot bind {args.host}:{port} — {err}", file=sys.stderr)
-        return 1
-
-    bound = httpd.socket.getsockname()[1]
-    print(f"ui   → http://{args.host}:{bound}/docs/", file=sys.stderr)
-    print(f"demo → http://{args.host}:{bound}/demo/", file=sys.stderr)
-    try:
-        httpd.serve_forever()
-    except KeyboardInterrupt:
-        pass
-    finally:
-        httpd.server_close()
-    return 0
-
-
-if __name__ == "__main__":
-    raise SystemExit(main())
+origin = f"http://{args.host}:{httpd.server_port}"
+print(f"ui   → {origin}/docs/", file=sys.stderr)
+print(f"demo → {origin}/demo/", file=sys.stderr)
+with httpd, suppress(KeyboardInterrupt):
+    httpd.serve_forever()
