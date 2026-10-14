@@ -1,6 +1,7 @@
-// The external contract, end to end: the stylesheet's public surface, the
-// glyphs every page inlines, and the dev server's corrections. Nothing here
-// imports the library — it ships as files, so the tests read the files.
+// The external contract, end to end: the stylesheet's public surface, the docs
+// shell, the glyphs every page inlines, the figures, README's Tailwind import,
+// and the dev server's corrections. Nothing here imports ui — it ships as
+// files, so the tests read the files.
 import { expect, test } from "bun:test";
 import { readdirSync } from "node:fs";
 
@@ -86,15 +87,15 @@ const serve = async (args: string[], env: Record<string, string> = {}) => {
   return { child, out, origin: out.match(/(http:\/\/[^/]+)/)?.[1] };
 };
 
-test("serve.py: / is the docs, edits show on reload, the environment loses to --port", async () => {
+test("serve.py: / redirects to the docs over keep-alive, files carry charset and no-store, an idle socket blocks nothing, --port › $PORT", async () => {
   const { child, out, origin } = await serve(["--port", "0"], { PORT: "1" });
   try {
     expect(out).toContain(`ui   → ${origin}/docs/\ndemo → ${origin}/demo/`);
-    const port = origin!.split(":")[2];
+    const { hostname, port } = new URL(origin!);
     // Threaded: an idle connection holds no request hostage.
     let raw = "";
     const closed = Promise.withResolvers();
-    const idle = await Bun.connect({ hostname: "127.0.0.1", port: +port, socket: { data: (_, d) => void (raw += d), close: closed.resolve } });
+    const idle = await Bun.connect({ hostname, port: +port, socket: { data: (_, d) => void (raw += d), close: closed.resolve } });
     for (const [path, type] of [["/ui.css", "text/css; charset=utf-8"], ["/docs/", "text/html; charset=utf-8"], ["/docs/docs.js", "text/javascript; charset=utf-8"], ["/icons/sprite.svg", "image/svg+xml"], ["/README.md", "text/markdown; charset=utf-8"], ["/docs/figures/project/canvas.json", "application/json; charset=utf-8"]]) {
       const res = await fetch(origin + path);
       expect([res.status, res.headers.get("content-type"), res.headers.get("cache-control")]).toEqual([200, type, "no-store"]);

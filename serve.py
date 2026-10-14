@@ -2,7 +2,7 @@
 """Serve this repository over HTTP, so the docs and the demo are visited rather
 than file-opened.
 
-Nothing is built and nothing is installed: the stylesheet, the pages and the
+Nothing is built: the stylesheet, the pages and the
 icons are already the artifacts. This exists because a page opened off disk is
 a different page — an external `<use href="sprite.svg#id">` does not resolve
 over `file://`, `localStorage` is per-file-origin, and, mainly, a reverse proxy
@@ -13,7 +13,7 @@ cannot wrap a URL that has no origin.
     visor 8080                 # wrap the running server
     visor -- python3 serve.py  # or let visor own the port and spawn it
 
-In the second form visor keeps its own port and hands the child an ephemeral one
+In the spawn form (the last line) visor keeps its own port and hands the child an ephemeral one
 through $PORT, which is why the environment beats the built-in default and loses
 to an explicit --port.
 """
