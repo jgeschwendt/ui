@@ -1366,7 +1366,7 @@ visor -- python3 serve.py <span class="readout-key"># or let visor own the port 
       published (unverified 2026-10-13: the Pages API was unreachable from the shift sandbox).</li>
     <li><strong>Component order is cascade order.</strong> Inside <code class="code">ui.components</code> a later
       section wins a same-specificity tie with an earlier one; never reorder sections to match a table.</li>
-    <li><strong>The suite binds loopback sockets.</strong> <code class="code">bun test</code> starts
+    <li><strong>The suite binds loopback sockets.</strong> <code class="code">mise run test</code> installs tailwindcss, then starts
       <code class="code">serve.py</code>; a sandbox that denies loopback binds fails that test at
       <code class="code">cannot bind</code>, not the code.</li>
   </ul>

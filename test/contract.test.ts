@@ -107,7 +107,7 @@ test("serve.py: / redirects to the docs over keep-alive, files carry charset and
     const redirect = expect.arrayContaining(["HTTP/1.1 302 Found", "Location: /docs/", "Content-Length: 0", "Cache-Control: no-store"]);
     expect(raw.split("\r\n\r\n").filter(Boolean).map((block) => block.split("\r\n"))).toEqual([redirect, redirect]);
     const taken = await serve([], { PORT: port });
-    expect([await taken.child.exited, taken.out]).toEqual([1, expect.stringContaining("serve: cannot bind")]);
+    expect([await taken.child.exited, taken.out]).toEqual([1, expect.stringContaining(`serve: cannot bind ${hostname}:${port} `)]);
   } finally {
     child.kill("SIGINT");
   }
