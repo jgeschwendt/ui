@@ -1,0 +1,136 @@
+/* docs.css — the shared docs shell: the layer between ui.css (tokens and
+   components) and a project docs page's own stylesheet. Container, measure,
+   section rhythm and the prose furniture every gigantic.dev docs page carries;
+   nothing page-specific (a page's grids, lanes and plates stay in its own CSS).
+
+   Load after ui.css, before the page's stylesheet:
+     <link rel="stylesheet" href="https://gigantic.dev/ui/ui.css" />
+     <link rel="stylesheet" href="https://gigantic.dev/ui/docs.css" />
+
+   Tokens join ui.tokens; rules sit in ui.docs, a layer after ui.components, so
+   the shell outranks [data-container] and the components, and any unlayered
+   page rule outranks the shell.
+
+   Breakpoints — media queries cannot read custom properties, so these two
+   constants are stated here once and every consumer (gigantic.dev's rail.css
+   included) cites this comment:
+     900px  desktop: the rail docks and offsets the page by 224px; below it the
+            rail is a 48px strip on top
+     640px  phone: the shell tightens its padding */
+
+@layer ui.tokens, ui.base, ui.components, ui.docs;
+
+@layer ui.tokens {
+  :root {
+    /* one prose measure for every docs page; wide for lists and steps */
+    --ui-measure: 52rem;
+    --ui-measure-wide: 60rem;
+  }
+}
+
+@layer ui.docs {
+  .docs-shell {
+    margin: 0 auto;
+    max-width: var(--ui-container, 100rem);
+    padding: 1.5rem 1.25rem 5rem;
+  }
+
+  @media (max-width: 640px) {
+    .docs-shell {
+      padding: var(--ui-space-4) var(--ui-space-4) var(--ui-space-7);
+    }
+  }
+
+  .docs-flavor {
+    color: var(--ui-fg-faint);
+    font-size: 0.9375rem;
+    max-width: var(--ui-measure);
+  }
+
+  .docs-foot {
+    border-top: 1px solid var(--ui-border);
+    color: var(--ui-fg-faint);
+    font-size: var(--ui-text-sm);
+    margin-top: var(--ui-space-7);
+    padding-top: 1.25rem;
+  }
+
+  .docs-lead {
+    max-width: var(--ui-measure);
+  }
+
+  .docs-note {
+    color: var(--ui-fg-muted);
+    font-size: 0.9375rem;
+    max-width: var(--ui-measure);
+  }
+
+  .docs-section {
+    margin-top: var(--ui-space-7);
+    scroll-margin-top: var(--ui-space-5);
+  }
+
+  .docs-section > header {
+    margin-bottom: var(--ui-space-4);
+  }
+
+  .docs-toc {
+    flex-wrap: wrap;
+    margin-top: var(--ui-space-4);
+  }
+
+  ol.steps {
+    display: grid;
+    gap: 0.625rem;
+    margin-top: var(--ui-space-4);
+    max-width: var(--ui-measure-wide);
+    padding-left: 1.5rem;
+  }
+
+  ol.steps > li {
+    color: var(--ui-fg-muted);
+    font-size: 0.9375rem;
+  }
+
+  ol.steps > li::marker {
+    color: var(--ui-fg-faint);
+    font-weight: 600;
+  }
+
+  ol.steps strong {
+    color: var(--ui-fg);
+  }
+
+  pre.snippet,
+  pre.tree {
+    background: var(--ui-sunken);
+    border: 1px solid var(--ui-border);
+    border-radius: var(--ui-radius-md);
+    font-family: var(--ui-font-mono);
+    font-size: var(--ui-text-sm);
+    line-height: 1.6;
+    margin-top: var(--ui-space-3);
+    overflow-x: auto;
+    padding: var(--ui-space-4) 1.25rem;
+  }
+
+  .snippet-note {
+    color: var(--ui-fg-faint);
+  }
+
+  ul.claims {
+    color: var(--ui-fg-muted);
+    font-size: 0.9375rem;
+    margin-top: 1.25rem;
+    max-width: var(--ui-measure-wide);
+  }
+
+  ul.claims > li::before {
+    color: var(--ui-fg-faint);
+    content: "— ";
+  }
+
+  ul.claims strong {
+    color: var(--ui-fg);
+  }
+}

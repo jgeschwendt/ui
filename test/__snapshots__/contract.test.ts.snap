@@ -227,3 +227,39 @@ exports[`the public surface — every class, attribute and token — changes onl
   ],
 }
 `;
+
+exports[`docs.css — the shared docs shell — is additive: its own layer, ui's tokens, no colour literal, no ui.css class 1`] = `
+{
+  "classes": [
+    "claims",
+    "docs-flavor",
+    "docs-foot",
+    "docs-lead",
+    "docs-note",
+    "docs-section",
+    "docs-shell",
+    "docs-toc",
+    "snippet",
+    "snippet-note",
+    "steps",
+    "tree",
+  ],
+  "tokens": [
+    "--ui-border",
+    "--ui-container",
+    "--ui-fg",
+    "--ui-fg-faint",
+    "--ui-fg-muted",
+    "--ui-font-mono",
+    "--ui-measure",
+    "--ui-measure-wide",
+    "--ui-radius-md",
+    "--ui-space-3",
+    "--ui-space-4",
+    "--ui-space-5",
+    "--ui-space-7",
+    "--ui-sunken",
+    "--ui-text-sm",
+  ],
+}
+`;
