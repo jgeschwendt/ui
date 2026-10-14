@@ -82,9 +82,11 @@ opt-in, and three things follow:
 - **No double reset.** Loading `ui.css` next to Tailwind gives you Preflight
   *and* this, and the two disagree about `<ul>` and `<button>`. Imported into
   Tailwind's `components` layer, every `ui` layer sorts after Preflight's
-  `base`, so the components keep their padding, margins and borders while
-  Preflight still governs bare markup outside `.ui`. If you own the Tailwind
-  config, disabling Preflight leaves the scoped reset as the only one. See
+  `base`, so the classed components keep their padding, margins and borders.
+  Bare markup is another matter: the scoped reset leaves lists, heading sizes
+  and `<button>` chrome to the UA rather than restating them, so Preflight
+  still strips those, inside `.ui` too. If you own the Tailwind config,
+  disabling Preflight leaves the scoped reset as the only one. See
   [Tailwind compatibility](#tailwind-compatibility).
 
 ## Theming contract
