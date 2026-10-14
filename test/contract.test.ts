@@ -8,34 +8,25 @@ const root = `${import.meta.dir}/..`;
 const read = (path: string) => Bun.file(`${root}/${path}`).text();
 const all = (text: string, re: RegExp) => [...text.matchAll(re)].map((m) => m[1]);
 const set = (text: string, re: RegExp) => [...new Set(all(text, re))].sort();
-const css = (await read("ui.css")).replace(/\/\*[\s\S]*?\*\//g, "");
+const [css, docs] = await Promise.all(["ui.css", "docs.css"].map(async (p) => (await read(p)).replace(/\/\*[\s\S]*?\*\//g, "")));
 const pages = await Promise.all(["demo/index.html", "docs/index.html"].map(read));
+const top = (sheet: string, d = 0) => [...sheet].filter((c) => !(c === "}" ? --d : c === "{" ? d++ : d)).join("").replace(/\s+/g, " ").trim();
+const ground = (sheet: string) => all(sheet.match(/\n {2}:root \{([^}]*)\}/)![1], /(--ui-[a-z0-9-]+)\s*:/g);
+const bare = (sheet: string) => set(sheet, /var\(\s*(--ui-[a-z0-9-]+)\s*\)/g);
+const preludes = (sheet: string) => all(sheet, /([^{};]+)\{/g).filter((p) => !p.trim().startsWith("@")).join();
+const classes = (text: string) => set(text, /\.([a-z][a-z0-9-]*)/g);
 
 test("the public surface — every class, attribute and token — changes only on purpose", () => {
-  const preludes = all(css, /([^{};]+)\{/g).filter((p) => !p.trim().startsWith("@")).join();
   expect({
-    attributes: set(`${preludes} ${all(css, /attr\(([a-z-]+)/g).map((a) => `[${a}`)}`, /\[([a-z-]+)/g),
-    classes: set(preludes, /\.([a-z][a-z0-9-]*)/g),
+    attributes: set(`${preludes(css)} ${all(css, /attr\(([a-z-]+)/g).map((a) => `[${a}`)}`, /\[([a-z-]+)/g),
+    classes: classes(preludes(css)),
     tokens: set(css, /(--ui-[a-z0-9-]+)/g),
   }).toMatchSnapshot();
 });
 
 test("every rule lives in a layer; :root declares every token a theme reassigns or a rule reads bare", () => {
-  let depth = 0;
-  let top = "";
-  for (const c of css) {
-    if (c === "}") depth--;
-    if (!depth) top += c;
-    if (c === "{") depth++;
-  }
-  expect(top.replace(/\s+/g, " ").trim()).toBe(
-    "@layer ui.tokens, ui.base, ui.components; @layer ui.tokens {} @layer ui.base {} @layer ui.components {}",
-  );
-  const ground = new Set(all(css.match(/\n {2}:root \{([^}]*)\}/)![1], /(--ui-[a-z0-9-]+)\s*:/g));
-  const themed = all(css, /:root[^{]*\{([^}]*)\}/g).join();
-  expect(
-    [...set(css, /var\(\s*(--ui-[a-z0-9-]+)\s*\)/g), ...set(themed, /(--ui-[a-z0-9-]+)\s*:/g)].filter((t) => !ground.has(t)),
-  ).toEqual([]);
+  expect(top(css)).toBe("@layer ui.tokens, ui.base, ui.components; @layer ui.tokens {} @layer ui.base {} @layer ui.components {}");
+  expect([...bare(css), ...set(all(css, /:root[^{]*\{([^}]*)\}/g).join(), /(--ui-[a-z0-9-]+)\s*:/g)].filter((t) => !ground(css).includes(t))).toEqual([]);
 });
 
 test("the sprite, the standalone glyphs and each page's inlined copy are one set", async () => {
@@ -55,61 +46,42 @@ test("the sprite, the standalone glyphs and each page's inlined copy are one set
 });
 
 test("docs.css — the shared docs shell — is additive: its own layer, ui's tokens, no colour literal, no ui.css class", async () => {
-  const docs = (await read("docs.css")).replace(/\/\*[\s\S]*?\*\//g, "");
-  let depth = 0;
-  let top = "";
-  for (const c of docs) {
-    if (c === "}") depth--;
-    if (!depth) top += c;
-    if (c === "{") depth++;
-  }
-  expect(top.replace(/\s+/g, " ").trim()).toBe(
-    "@layer ui.tokens, ui.base, ui.components, ui.docs; @layer ui.tokens {} @layer ui.docs {}",
-  );
-  const preludes = all(docs, /([^{};]+)\{/g).filter((p) => !p.trim().startsWith("@")).join();
-  const own = all(docs.match(/\n {2}:root \{([^}]*)\}/)![1], /(--ui-[a-z0-9-]+)\s*:/g);
-  const ground = new Set([...all(css.match(/\n {2}:root \{([^}]*)\}/)![1], /(--ui-[a-z0-9-]+)\s*:/g), ...own]);
-  expect(set(docs, /var\(\s*(--ui-[a-z0-9-]+)\s*\)/g).filter((t) => !ground.has(t))).toEqual([]);
+  expect(top(docs)).toBe("@layer ui.tokens, ui.base, ui.components, ui.docs; @layer ui.tokens {} @layer ui.docs {}");
+  expect(bare(docs).filter((t) => ![...ground(css), ...ground(docs)].includes(t))).toEqual([]);
   expect(docs.match(/#[0-9a-f]{3,8}\b|\b(?:rgba?|hsla?|oklch|oklab|lab|lch|color)\(/gi)).toBeNull();
-  const classes = set(preludes, /\.([a-z][a-z0-9-]*)/g);
-  const library = new Set(set(all(css, /([^{};]+)\{/g).join(), /\.([a-z][a-z0-9-]*)/g));
-  expect(classes.filter((c) => library.has(c))).toEqual([]);
-  expect({ classes, tokens: set(docs, /(--ui-[a-z0-9-]+)/g) }).toMatchSnapshot();
+  const own = classes(preludes(docs));
+  const library = classes(all(css, /([^{};]+)\{/g).join());
+  expect(own.filter((c) => library.includes(c))).toEqual([]);
+  expect({ classes: own, tokens: set(docs, /(--ui-[a-z0-9-]+)/g) }).toMatchSnapshot();
   const shell = (await read("README.md")).split("## The docs shell")[1].split("\n## ")[0];
-  expect(classes.filter((c) => !shell.includes(`.${c}`))).toEqual([]);
+  expect(own.filter((c) => !shell.includes(`.${c}`))).toEqual([]);
 });
 
 test("figures: every <figure class=figure> on the docs page shows a rendered board from its canvas source", async () => {
-  const page = pages[1];
-  const figures = all(page, /<figure class="figure">([\s\S]*?)<\/figure>/g);
-  const shown = figures.map((f) => {
-    const m = f.match(/^\s*<img class="figure-light" src="figures\/([a-z0-9-]+)\.png" alt="[^"]+" \/>\s*<img class="figure-dark" src="figures\/([a-z0-9-]+)-dark\.png" alt="" aria-hidden="true" loading="lazy" \/>/);
+  const shown = all(pages[1], /<figure class="figure">([\s\S]*?)<\/figure>/g).flatMap((f) => {
+    const m = f.match(/^\s*<img class="figure-light" src="figures\/([a-z0-9-]+)\.png" alt="[^"]+" \/>\s*<img class="figure-dark" src="figures\/\1-dark\.png" alt="" aria-hidden="true" loading="lazy" \/>/);
     expect(m?.[1]).toBeDefined();
-    expect(m![2]).toBe(m![1]);
+    expect(f).toMatch(/<figcaption>[\s\S]*?Source: Claude Design canvas <a href="https:\/\/claude\.ai\/artifact\/[A-Za-z0-9]+">ui figures<\/a>, board [A-Z][A-Za-z]+\.<\/figcaption>/);
     return [`${m![1]}.png`, `${m![1]}-dark.png`];
-  }).flat();
+  });
   const pngs = readdirSync(`${root}/docs/figures`).filter((f) => f.endsWith(".png")).sort();
-  expect([...shown].sort()).toEqual(pngs);
-  const canvas = JSON.parse(await read("docs/figures/project/canvas.json"));
+  expect(shown.sort()).toEqual(pngs);
   const exporter = await read("docs/figures/export.sh");
-  for (const board of Object.keys(canvas.boards)) {
+  for (const board of Object.keys(JSON.parse(await read("docs/figures/project/canvas.json")).boards)) {
     expect(await Bun.file(`${root}/docs/figures/project/${board}`).exists()).toBe(true);
     expect(exporter).toMatch(new RegExp(`shoot ${board.replace(".", "\\.")} ([a-z0-9-]+)\\.png \\1-dark\\.png`));
   }
   expect(all(exporter, /^shoot \S+ (\S+\.png \S+\.png)$/gm).flatMap((p) => p.split(" ")).sort()).toEqual(pngs);
-  for (const caption of all(page, /<figure class="figure">[\s\S]*?<figcaption>([\s\S]*?)<\/figcaption>/g)) {
-    expect(caption).toMatch(/Source: Claude Design canvas <a href="https:\/\/claude\.ai\/artifact\/[A-Za-z0-9]+">ui figures<\/a>, board [A-Z][A-Za-z]+\.$/);
-  }
 });
 
 const serve = async (args: string[], env: Record<string, string> = {}) => {
   const child = Bun.spawn(["python3", `${root}/serve.py`, ...args], { env: { ...process.env, ...env }, stderr: "pipe" });
-  const reader = child.stderr.getReader();
+  const reader = child.stderr.pipeThrough(new TextDecoderStream()).getReader();
   let out = "";
   while (!/demo →|cannot bind/.test(out)) {
     const { done, value } = await reader.read();
     if (done) break;
-    out += new TextDecoder().decode(value);
+    out += value;
   }
   return { child, out, origin: out.match(/(http:\/\/[^/]+)/)?.[1] };
 };
@@ -117,19 +89,21 @@ const serve = async (args: string[], env: Record<string, string> = {}) => {
 test("serve.py: / is the docs, edits show on reload, the environment loses to --port", async () => {
   const { child, out, origin } = await serve(["--port", "0"], { PORT: "1" });
   try {
-    expect(out).toContain("demo →");
+    expect(out).toContain(`ui   → ${origin}/docs/\ndemo → ${origin}/demo/`);
+    const port = origin!.split(":")[2];
+    // Threaded: an idle connection holds no request hostage.
+    const idle = await Bun.connect({ hostname: "127.0.0.1", port: +port, socket: { data() {} } });
     for (const path of ["/", "/index.html"]) {
       const res = await fetch(origin + path, { redirect: "manual" });
       expect([res.status, res.headers.get("location")]).toEqual([302, "/docs/"]);
     }
-    const res = await fetch(`${origin}/ui.css`);
-    expect([res.status, res.headers.get("content-type"), res.headers.get("cache-control")]).toEqual([
-      200,
-      "text/css; charset=utf-8",
-      "no-store",
-    ]);
-    expect(await res.text()).toBe(await read("ui.css"));
-    const taken = await serve([], { PORT: origin!.split(":")[2] });
+    for (const [path, type] of [["/ui.css", "text/css; charset=utf-8"], ["/docs/", "text/html; charset=utf-8"], ["/docs/docs.js", "text/javascript; charset=utf-8"], ["/icons/sprite.svg", "image/svg+xml"]]) {
+      const res = await fetch(origin + path);
+      expect([res.status, res.headers.get("content-type"), res.headers.get("cache-control")]).toEqual([200, type, "no-store"]);
+      expect(await res.text()).toBe(await read(path.slice(1).replace(/\/$/, "/index.html")));
+    }
+    idle.end();
+    const taken = await serve([], { PORT: port });
     expect([await taken.child.exited, taken.out]).toEqual([1, expect.stringContaining("serve: cannot bind")]);
   } finally {
     child.kill("SIGINT");
