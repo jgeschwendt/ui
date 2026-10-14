@@ -427,7 +427,7 @@ Build them on top: `.panel` for the frame, `.readout` for the values,
 gigantic.dev shares — container, prose measure, section rhythm, and the furniture
 those pages all carry (`.docs-shell`, `.docs-lead`, `.docs-flavor`, `.docs-note`,
 `.docs-toc`, `.docs-section`, `.docs-foot`, `pre.snippet` / `pre.tree`,
-`.snippet-note`, `ul.claims`, `ol.steps`). Consumers link both from the CDN, then
+`.snippet-note`, `ul.claims`, `ol.steps`, `figure.figure`). Consumers link both from the CDN, then
 their own stylesheet for what is truly theirs:
 
 ```html
@@ -442,6 +442,19 @@ layer after `ui.components`, so a page's unlayered rules override any of it. The
 breakpoints are constants stated once in its header comment, because a media
 query cannot read a custom property: **900px** (the gigantic.dev rail docks and
 offsets the page by 224px; below it, a 48px strip) and **640px** (phone).
+
+A figure is a board from the project's Claude Design canvas (`<project>
+figures`), rendered to `docs/figures/<name>.png` at 2× with its source read back
+into `docs/figures/project/`. `figure.figure` frames it — `ui-bg` behind the
+image, a `ui-border` hairline, `ui-radius-lg` corners — and sets the caption in
+`ui-fg-faint` at the prose measure. The caption names its source:
+
+```html
+<figure class="figure">
+  <img src="figures/<name>.png" alt="…" />
+  <figcaption>… Source: Claude Design canvas <a href="<canvas url>"><project> figures</a>, board <name>.</figcaption>
+</figure>
+```
 
 Consumers link latest, so every change to `ui.css` or `docs.css` is **additive**
 or ships together with the consumer updates it needs — a renamed class or a

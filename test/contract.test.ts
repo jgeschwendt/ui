@@ -75,6 +75,26 @@ test("docs.css — the shared docs shell — is additive: its own layer, ui's to
   const library = new Set(set(all(css, /([^{};]+)\{/g).join(), /\.([a-z][a-z0-9-]*)/g));
   expect(classes.filter((c) => library.has(c))).toEqual([]);
   expect({ classes, tokens: set(docs, /(--ui-[a-z0-9-]+)/g) }).toMatchSnapshot();
+  const shell = (await read("README.md")).split("## The docs shell")[1].split("\n## ")[0];
+  expect(classes.filter((c) => !shell.includes(`.${c}`))).toEqual([]);
+});
+
+test("figures: every <figure class=figure> on the docs page shows a rendered board from its canvas source", async () => {
+  const page = pages[1];
+  const shown = all(page, /<figure class="figure">\s*<img src="figures\/([a-z0-9-]+\.png)"/g);
+  expect(shown.length).toBe(all(page, /(<figure class="figure">)/g).length);
+  const pngs = readdirSync(`${root}/docs/figures`).filter((f) => f.endsWith(".png")).sort();
+  expect([...shown].sort()).toEqual(pngs);
+  const canvas = JSON.parse(await read("docs/figures/project/canvas.json"));
+  const exporter = await read("docs/figures/export.sh");
+  for (const board of Object.keys(canvas.boards)) {
+    expect(await Bun.file(`${root}/docs/figures/project/${board}`).exists()).toBe(true);
+    expect(exporter).toMatch(new RegExp(`shoot ${board.replace(".", "\\.")} [a-z0-9-]+\\.png`));
+  }
+  expect(all(exporter, /shoot \S+ (\S+\.png)/g).sort()).toEqual(pngs);
+  for (const caption of all(page, /<figure class="figure">[\s\S]*?<figcaption>([\s\S]*?)<\/figcaption>/g)) {
+    expect(caption).toMatch(/Source: Claude Design canvas <a href="https:\/\/claude\.ai\/artifact\/[A-Za-z0-9]+">ui figures<\/a>, board [A-Z][A-Za-z]+\.$/);
+  }
 });
 
 const serve = async (args: string[], env: Record<string, string> = {}) => {

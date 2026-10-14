@@ -102,7 +102,9 @@
   <a href="#icon">icon</a>
   <a href="#misc">code · kbd · tip · empty</a>
   <h2>the page itself</h2>
+  <a href="#layers">layers</a>
   <a href="#wrapping">wrapping (visor)</a>
+  <a href="#open">open</a>
 </nav>
 
 <main>
@@ -254,6 +256,11 @@
       <tr><td class="table-mono">:root[data-theme="light"]</td><td>a dark system</td></tr>
     </tbody>
   </table>
+
+  <figure class="figure">
+    <img src="figures/themes.png" alt="Three selectors in resolution order, :root, prefers-color-scheme: dark and :root[data-theme], then the Sage and Brass themes side by side as token swatches with their hex values." />
+    <figcaption>The two themes token by token, and the order that picks one: <code class="code">:root</code> is Sage, the system's dark is Brass, and <code class="code">data-theme</code> overrides both. Source: Claude Design canvas <a href="https://claude.ai/artifact/9SNgMFS1dsMhmN8zarPh2s">ui figures</a>, board Themes.</figcaption>
+  </figure>
 
   <p class="doc-note">That is the whole contract. The toggle in this page's appbar is exactly it —
     three buttons writing (or removing) one attribute:</p>
@@ -1267,6 +1274,23 @@ strip.classList.add("strip-danger");</pre>
   </table>
 </section>
 
+<!-- ══════════════════════════════════════════════════════════ layers ── -->
+<section class="doc-section" id="layers" data-component="layers">
+  <header class="stack">
+    <p class="eyebrow">the page itself</p>
+    <h2 class="h1">Layers</h2>
+    <p class="lead">Every rule sits in a cascade layer, declared in one statement before any rule:
+      <code class="code">ui.tokens</code>, <code class="code">ui.base</code>,
+      <code class="code">ui.components</code>, then <code class="code">ui.docs</code> from
+      <code class="code">docs.css</code>. A page's own unlayered rules come after all of them and win.</p>
+  </header>
+
+  <figure class="figure">
+    <img src="figures/layers.png" alt="Four cascade layers left to right, ui.tokens, ui.base, ui.components and ui.docs, ending at the page's own unlayered stylesheet; below ui.base, the .ui opt-in and the one unscoped [hidden] rule." />
+    <figcaption>Weakest on the left. <code class="code">ui.base</code> paints the page only under <code class="code">.ui</code>; the one rule that needs no class is <code class="code">[hidden]</code>, whose <code class="code">!important</code> runs the layer order backwards. Source: Claude Design canvas <a href="https://claude.ai/artifact/9SNgMFS1dsMhmN8zarPh2s">ui figures</a>, board Layers.</figcaption>
+  </figure>
+</section>
+
 <!-- ════════════════════════════════════════════════════════ wrapping ── -->
 <section class="doc-section" id="wrapping" data-component="wrapping">
   <header class="stack">
@@ -1323,6 +1347,56 @@ visor -- python3 serve.py <span class="readout-key"># or let visor own the port 
     the sprite are not serialised behind each other; and it sends no
     <code class="code">Content-Security-Policy</code> at all — a blocking CSP fails <em>silently</em>
     under visor, with no console error and no network request, just chrome that never appears.</p>
+</section>
+
+<!-- ════════════════════════════════════════════════════════════ open ── -->
+<section class="doc-section" id="open" data-component="open">
+  <header class="stack">
+    <p class="eyebrow">the page itself</p>
+    <h2 class="h1">Open</h2>
+    <p class="lead">What is not settled yet: the hazards of working here, then the work next in line.</p>
+  </header>
+
+  <h3 class="doc-h3">Hazards</h3>
+  <ul class="claims" role="list">
+    <li><strong>Everything here is public.</strong> GitHub Pages serves the repository root
+      (<code class="code">index.html</code> redirects to <code class="code">docs/</code>), so every file in it is
+      published (unverified 2026-10-13: the Pages API was unreachable from the shift sandbox).</li>
+    <li><strong>Component order is cascade order.</strong> Inside <code class="code">ui.components</code> a later
+      section wins a same-specificity tie with an earlier one; never reorder sections to match a table.</li>
+    <li><strong>The suite binds loopback sockets.</strong> <code class="code">bun test</code> starts
+      <code class="code">serve.py</code>; a sandbox that denies loopback binds fails that test at
+      <code class="code">cannot bind</code>, not the code.</li>
+  </ul>
+
+  <h3 class="doc-h3">Next</h3>
+  <ol class="steps">
+    <li><strong>One glyph source.</strong> The sprite lives in four copies (<code class="code">icons/sprite.svg</code>,
+      <code class="code">icons/svg/</code>, inlined in <code class="code">demo/</code> and <code class="code">docs/</code>),
+      kept equal by the suite but edited by hand. A stdlib <code class="code">icons/sprite.py</code> that writes the
+      sprite and splices it into both pages would make the svg files the only source.</li>
+    <li><strong>One theme toggle.</strong> The demo's inline script and <code class="code">docs/docs.js</code> each carry
+      <code class="code">applyTheme</code> and the <code class="code">ui-theme</code> key; a shared
+      <code class="code">theme.js</code> beside <code class="code">ui.css</code> would load off disk too.</li>
+    <li><strong>Browser coverage.</strong> <code class="code">docs.js</code> (<code class="code">resolve</code>, the token
+      table, scrollspy) and the demo script run in no test. A headless agent-browser probe over
+      <code class="code">serve.py</code> would cover them.</li>
+    <li><strong>visor spawn.</strong> <code class="code">visor -- ./serve.py</code> fails: visor resolves the child
+      through <code class="code">System.find_executable</code>, which searches <code class="code">$PATH</code> only. The
+      runbooks here name <code class="code">python3 serve.py</code>; visor treating a path-qualified command as a path
+      would fix it for every repo.</li>
+    <li><strong>Stale claims, each awaiting its owner's word on the fix.</strong> Tailwind v4 declares
+      <code class="code">@layer theme, base, components, utilities</code> after <code class="code">ui.*</code>, so
+      Preflight in <code class="code">base</code> beats <code class="code">ui.components</code> and the README's "nothing
+      fights" is false: disabling Preflight is required, or <code class="code">ui.css</code> imports into a layer after
+      <code class="code">base</code>. visor's stable attributes are <code class="code">data-testid</code>,
+      <code class="code">data-component</code> and <code class="code">aria-label</code>, and an <code class="code">id</code>
+      ends the walk, so it never reads <code class="code">data-example</code>; its fallback is
+      <code class="code">:nth-of-type</code>, not <code class="code">:nth-child</code>. <code class="code">visor 8080</code>
+      serves the rail on visor's own port (9000 attach, 3000 spawn), not 8080. Sage's "28% saturation" is HSV; in HSL,
+      the unit brass and warn are quoted in, it is 16%. "Omit <code class="code">.ui</code> and only the components style
+      themselves" overlooks the type and layout classes in <code class="code">ui.base</code>, which are unscoped.</li>
+  </ol>
 </section>
 
 </main>
