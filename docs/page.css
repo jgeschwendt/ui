@@ -231,21 +231,8 @@ body {
   margin-top: 0;
 }
 
-.doc-tokref th[scope="row"] {
-  font-weight: var(--ui-weight-normal);
-  text-align: left;
-  white-space: nowrap;
-}
-
 .doc-tokref .doc-tokref-family th {
-  background: var(--ui-sunken);
   color: var(--ui-fg-muted);
-  font-size: var(--ui-text-2xs);
-  letter-spacing: var(--ui-tracking-caps);
-  position: sticky;
-  text-align: left;
-  text-transform: uppercase;
-  top: 0;
 }
 
 .doc-tokref td {
