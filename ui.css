@@ -255,6 +255,7 @@
   :where(
     .ui blockquote,
     .ui body,
+    body.ui,
     .ui dd,
     .ui dl,
     .ui figure,
@@ -694,12 +695,15 @@
     box-shadow: none;
     margin-left: -1px;
   }
+  /* longhands, so a lone child — first and last at once — keeps all four */
   .btn-group > .btn:first-child {
-    border-radius: var(--ui-radius-md) 0 0 var(--ui-radius-md);
+    border-bottom-left-radius: var(--ui-radius-md);
+    border-top-left-radius: var(--ui-radius-md);
     margin-left: 0;
   }
   .btn-group > .btn:last-child {
-    border-radius: 0 var(--ui-radius-md) var(--ui-radius-md) 0;
+    border-bottom-right-radius: var(--ui-radius-md);
+    border-top-right-radius: var(--ui-radius-md);
   }
   .btn-group > .btn:hover,
   .btn-group > .btn.is-on {
@@ -859,13 +863,13 @@
     font-weight: var(--ui-weight-bold);
   }
 
-  .chip-danger b {
+  .chip-danger :is(b, .chip-value) {
     color: var(--ui-danger);
   }
-  .chip-ok b {
+  .chip-ok :is(b, .chip-value) {
     color: var(--ui-ok);
   }
-  .chip-warn b {
+  .chip-warn :is(b, .chip-value) {
     color: var(--ui-warn-ink);
   }
 
@@ -1358,7 +1362,8 @@
   .input:disabled,
   .select:disabled,
   .textarea:disabled {
-    background: var(--ui-sunken);
+    /* background-color, not the shorthand, which would wipe .select's caret */
+    background-color: var(--ui-sunken);
     cursor: not-allowed;
     opacity: 0.6;
   }
@@ -1488,7 +1493,9 @@
   .table-hover tbody tr:hover td {
     background: var(--ui-sunken);
   }
-  .table-num {
+  /* th too: [data-table] th's left alignment would otherwise outrank it */
+  .table-num,
+  [data-table] th.table-num {
     font-family: var(--ui-font-mono);
     font-variant-numeric: tabular-nums;
     text-align: right;
