@@ -84,7 +84,7 @@
 <div class="strip strip-ok" id="live-strip">
   <span class="strip-tag">wire</span>
   <span class="strip-msg" id="live-strip-msg">connected · 8 channels · seq 1041</span>
-  <span class="badge badge-ok">ok</span>
+  <span class="badge badge-ok" id="live-strip-badge">ok</span>
 </div>
 
 <main class="demo-main" data-container>
@@ -516,14 +516,18 @@
    prefers-color-scheme decide. Persisted so a reload keeps the choice. ── */
 const THEME_KEY = "ui-theme";
 
+/* Blocked site data makes localStorage throw on touch; the choice then lasts
+   only as long as the page, and nothing after this line notices. */
+function stored(op, mode) {
+  try {
+    return localStorage[op](THEME_KEY, mode);
+  } catch {}
+}
+
 function applyTheme(mode) {
-  if (mode === "auto") {
-    document.documentElement.removeAttribute("data-theme");
-    localStorage.removeItem(THEME_KEY);
-  } else {
-    document.documentElement.dataset.theme = mode;
-    localStorage.setItem(THEME_KEY, mode);
-  }
+  if (mode === "auto") document.documentElement.removeAttribute("data-theme");
+  else document.documentElement.dataset.theme = mode;
+  stored(mode === "auto" ? "removeItem" : "setItem", mode);
   for (const b of document.querySelectorAll("[data-theme-set]")) {
     b.setAttribute("aria-pressed", String(b.dataset.themeSet === mode));
   }
@@ -532,7 +536,7 @@ function applyTheme(mode) {
 for (const b of document.querySelectorAll("[data-theme-set]")) {
   b.addEventListener("click", () => applyTheme(b.dataset.themeSet));
 }
-applyTheme(localStorage.getItem(THEME_KEY) || "auto");
+applyTheme(stored("getItem") || "auto");
 
 /* ── latched buttons ── */
 for (const group of document.querySelectorAll("[data-demo-latch]")) {
@@ -589,11 +593,15 @@ list.addEventListener("click", (e) => {
 list.addEventListener("keydown", (e) => {
   if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
   e.preventDefault();
-  const rows = [...list.children].filter((r) => r.getAttribute("aria-disabled") !== "true");
-  const i = rows.indexOf(document.activeElement);
-  const next = rows[(i + (e.key === "ArrowDown" ? 1 : rows.length - 1)) % rows.length];
-  next.focus();
-  selectRow(next);
+  // Step from the focused row's own place — a disabled row takes focus too —
+  // and past any disabled row on the way.
+  const rows = [...list.children];
+  const step = e.key === "ArrowDown" ? 1 : rows.length - 1;
+  let i = rows.indexOf(document.activeElement.closest(".listrow"));
+  do i = (i + step) % rows.length;
+  while (rows[i].getAttribute("aria-disabled") === "true");
+  rows[i].focus();
+  selectRow(rows[i]);
 });
 
 /* ── [hidden] beats a component's own display, with nothing but the attribute ── */
@@ -613,17 +621,20 @@ hideToggle.addEventListener("click", () => {
 /* ── the strip cycles its moods, since a mood is the whole point ── */
 const strip = document.getElementById("live-strip");
 const stripMsg = document.getElementById("live-strip-msg");
+const stripBadge = document.getElementById("live-strip-badge");
 const MOODS = [
-  ["strip-ok", "connected · 8 channels"],
-  ["strip-info", "replaying fixture kitchen-evening.jsonl"],
-  ["strip-warn", "3 missing sequence numbers on ears"],
-  ["strip-danger", "closed after 1 attempt — the loop is not running"],
+  ["ok", "connected · 8 channels"],
+  ["info", "replaying fixture kitchen-evening.jsonl"],
+  ["warn", "3 missing sequence numbers on ears"],
+  ["danger", "closed after 1 attempt — the loop is not running"],
 ];
 let mood = 0;
 setInterval(() => {
   mood = (mood + 1) % MOODS.length;
-  const [cls, msg] = MOODS[mood];
-  strip.className = "strip " + cls;
+  const [hue, msg] = MOODS[mood];
+  strip.className = "strip strip-" + hue;
+  stripBadge.className = "badge badge-" + hue;
+  stripBadge.textContent = hue;
   stripMsg.textContent = msg + " · seq " + (1041 + n);
 }, 3600);
 

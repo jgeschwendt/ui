@@ -1723,8 +1723,9 @@ visor -- python3 serve.py <span class="readout-key"># or let visor own the port 
     <li><strong>One theme toggle.</strong> The demo's inline script and <code class="code">docs/docs.js</code> each carry
       <code class="code">applyTheme</code> and the <code class="code">ui-theme</code> key; a shared
       <code class="code">theme.js</code> beside <code class="code">ui.css</code> would load off disk too.</li>
-    <li><strong>Browser coverage.</strong> <code class="code">docs.js</code> (<code class="code">resolve</code>, the token
-      table, scrollspy) and the demo script run in no test. A headless agent-browser probe over
+    <li><strong>Browser coverage.</strong> <code class="code">test/scripts.test.ts</code> runs <code class="code">docs.js</code>
+      and the demo script over a stub DOM in <code class="code">node:vm</code>, but <code class="code">resolve</code>, the token
+      table and scrollspy run in no test. A headless agent-browser probe over
       <code class="code">serve.py</code> would cover them.</li>
     <li><strong>visor spawn.</strong> <code class="code">visor -- ./serve.py</code> fails: visor resolves the child
       through <code class="code">System.find_executable</code>, which searches <code class="code">$PATH</code> only. The
