@@ -1,4 +1,4 @@
-// The external contract, end to end: the stylesheet's public surface, the docs
+// The external contract, end to end: the stylesheet's public surface and cascade traps, the docs
 // shell, the glyphs every page inlines, the figures, the docs page's Tailwind import,
 // and the dev server's corrections. Nothing here imports ui — it ships as
 // files, so the tests read the files.
