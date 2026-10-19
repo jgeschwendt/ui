@@ -253,7 +253,7 @@
       <tr data-token="--ui-icon-size"><td class="table-mono">--ui-icon-size</td><td><code class="code">.icon</code></td><td class="table-num">1.15em</td></tr>
       <tr data-token="--ui-meter-value"><td class="table-mono">--ui-meter-value</td><td><code class="code">.meter</code> fill</td><td class="table-num">a percentage</td></tr>
       <tr data-token="--ui-orb-size"><td class="table-mono">--ui-orb-size</td><td><code class="code">.orb</code></td><td class="table-num">34px</td></tr>
-      <tr data-token="--ui-panel-accent"><td class="table-mono">--ui-panel-accent</td><td><code class="code">.panel</code> head rail and name</td><td class="table-num">--ui-accent</td></tr>
+      <tr data-token="--ui-panel-accent"><td class="table-mono">--ui-panel-accent</td><td><code class="code">.panel</code> head rail and name</td><td class="table-num">unset: no rail, --ui-fg name</td></tr>
     </tbody>
   </table>
 </section>
@@ -324,9 +324,15 @@ document.documentElement.removeAttribute("data-theme");  <span class="readout-ke
     controls, scrollbars and <code class="code">Highlight</code> follow.</p>
 
   <h3 class="doc-h3">Retheming</h3>
-  <p class="doc-note">Override tokens, not rules. Anything under <code class="code">--ui-accent*</code>
-    retints the whole library:</p>
-  <pre class="readout">:root { --ui-accent: #7c3aed; --ui-accent-soft: #f1eafe; --ui-accent-soft-fg: #5b21b6; }</pre>
+  <p class="doc-note">Override tokens, not rules. The accent is the seven <code class="code">--ui-accent*</code>
+    tokens, plus <code class="code">--ui-glow</code> in dark; set each theme you retint. Declare them
+    in <code class="code">ui.tokens</code>, after <code class="code">ui.css</code>: an unlayered
+    <code class="code">:root</code> beats both theme blocks and paints the light values into dark.</p>
+  <pre class="readout">@layer ui.tokens {
+  :root, :root[data-theme="light"] { --ui-accent: #7c3aed; --ui-accent-soft: #f1eafe; /* …the other five */ }
+  :root[data-theme="dark"] { /* the dark set */ }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { /* the same */ } }
+}</pre>
 
   <h3 class="doc-h3">Bring your own hues, in our shape</h3>
   <p class="doc-note">The library ships five semantic hues and that is the whole vocabulary, on
@@ -880,7 +886,7 @@ document.documentElement.removeAttribute("data-theme");  <span class="readout-ke
       <tr data-class="dot"><td class="table-mono">.dot</td><td class="table-mono">-danger -info -ok -warn</td><td>a light; <code class="code">.dot-pulse</code> while live</td></tr>
     </tbody>
   </table>
-  <p class="doc-note"><code class="code">.dot-pulse</code> stops under
+  <p class="doc-note">Inside <code class="code">.ui</code>, <code class="code">.dot-pulse</code> stops under
     <code class="code">prefers-reduced-motion</code>, so the dot must never be the only carrier of
     "live" — pair it with a word, as every example above does.</p>
 </section>
@@ -1149,7 +1155,7 @@ strip.classList.add("strip-danger");</pre>
     <h2 class="h1">Panel</h2>
     <p class="lead">The instrument frame: a named head with a coloured rail, and a body. Its hue
       is <code class="code">--ui-panel-accent</code>, which is where a page's own channel colours
-      enter the library.</p>
+      enter the library; unset, the rail is transparent and the name plain ink.</p>
   </header>
 
   <figure class="doc-ex" data-example="panel-basic">
@@ -1163,7 +1169,7 @@ strip.classList.add("strip-danger");</pre>
           <span class="badge">418</span>
           <button class="btn btn-ghost btn-sm" type="button">pause</button>
         </div>
-        <div class="panel-body muted">The body is a grid; give it <code class="code">.stack</code> when its children need rhythm.</div>
+        <div class="panel-body muted">The body is a plain block; give it <code class="code">.stack</code> when its children need rhythm.</div>
       </div>
     </div>
   </figure>
@@ -1190,7 +1196,7 @@ strip.classList.add("strip-danger");</pre>
   <table data-table>
     <thead><tr><th>class</th><th>is</th></tr></thead>
     <tbody>
-      <tr data-class="panel"><td class="table-mono">.panel</td><td>the frame; <code class="code">display: grid</code></td></tr>
+      <tr data-class="panel"><td class="table-mono">.panel</td><td>the frame; a flex column</td></tr>
       <tr data-class="panel-head"><td class="table-mono">.panel-head</td><td>the named bar, with the accent rail</td></tr>
       <tr data-class="panel-name"><td class="table-mono">.panel-name</td><td>the channel name, in the accent</td></tr>
       <tr data-class="panel-sub"><td class="table-mono">.panel-sub</td><td>the qualifier beside it</td></tr>
@@ -1297,8 +1303,13 @@ strip.classList.add("strip-danger");</pre>
       <tr data-class="list"><td class="table-mono">.list</td><td>the container</td></tr>
       <tr data-class="listrow"><td class="table-mono">.listrow</td><td>a row: name, meta, actions</td></tr>
       <tr data-class="is-current"><td class="table-mono">.is-current</td><td>fills the row and promotes the meta from faint to muted ink — faint loses AA against a tint</td></tr>
-      <tr data-class="is-busy"><td class="table-mono">.is-busy</td><td>pulses; stops under <code class="code">prefers-reduced-motion</code></td></tr>
+<<<<<<< HEAD
+      <tr data-class="is-busy"><td class="table-mono">.is-busy</td><td>pulses; stops under <code class="code">prefers-reduced-motion</code> inside <code class="code">.ui</code></td></tr>
       <tr data-class="is-warned"><td class="table-mono">.is-warned</td><td>rail and name only — it deliberately does <em>not</em> fill, because two tints in one list read as one muddled emphasis and selection owns the tint. The split was forced when warn and accent were the same brass in dark; warn is orange now, and the split is kept because it was right on its own terms</td></tr>
+=======
+      <tr data-class="is-busy"><td class="table-mono">.is-busy</td><td>pulses; stops under <code class="code">prefers-reduced-motion</code> inside <code class="code">.ui</code></td></tr>
+      <tr data-class="is-warned"><td class="table-mono">.is-warned</td><td>rail and name only — it deliberately does <em>not</em> fill, because two tints in one list read as one muddled emphasis and selection owns the tint</td></tr>
+>>>>>>> 97eb10a (docs(docs, demo): claims match ui.css — panel accent, flex panel, reduced motion, retheming)
     </tbody>
   </table>
 </section>
@@ -1722,7 +1733,9 @@ visor -- python3 serve.py <span class="readout-key"># or let visor own the port 
       sprite and splices it into both pages would make the svg files the only source.</li>
     <li><strong>One theme toggle.</strong> The demo's inline script and <code class="code">docs/docs.js</code> each carry
       <code class="code">applyTheme</code> and the <code class="code">ui-theme</code> key; a shared
-      <code class="code">theme.js</code> beside <code class="code">ui.css</code> would load off disk too.</li>
+      <code class="code">theme.js</code> beside <code class="code">ui.css</code> would load off disk too, and should
+      apply the stored theme from <code class="code">&lt;head&gt;</code> — both pages now apply it at the end of
+      <code class="code">&lt;body&gt;</code>, so a stored choice that differs from the system flashes on first paint.</li>
     <li><strong>Browser coverage.</strong> <code class="code">test/scripts.test.ts</code> runs <code class="code">docs.js</code>
       and the demo script over a stub DOM in <code class="code">node:vm</code>, but <code class="code">resolve</code>, the token
       table and scrollspy run in no test. A headless agent-browser probe over
