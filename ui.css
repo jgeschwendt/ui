@@ -1369,7 +1369,9 @@
   }
 
   .input-invalid,
-  .input[aria-invalid="true"] {
+  .input[aria-invalid="true"],
+  .select[aria-invalid="true"],
+  .textarea[aria-invalid="true"] {
     border-color: var(--ui-danger);
   }
 
