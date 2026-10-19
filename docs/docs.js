@@ -21,15 +21,19 @@
    the server, and a theme chosen on one is the theme the other opens in. */
 const THEME_KEY = "ui-theme";
 
+/* Blocked site data makes localStorage throw on touch; the choice then lasts
+   only as long as the page, and nothing after this line notices. */
+function stored(op, mode) {
+  try {
+    return localStorage[op](THEME_KEY, mode);
+  } catch {}
+}
+
 function applyTheme(mode) {
   const root = document.documentElement;
-  if (mode === "auto") {
-    root.removeAttribute("data-theme");
-    localStorage.removeItem(THEME_KEY);
-  } else {
-    root.dataset.theme = mode;
-    localStorage.setItem(THEME_KEY, mode);
-  }
+  if (mode === "auto") root.removeAttribute("data-theme");
+  else root.dataset.theme = mode;
+  stored(mode === "auto" ? "removeItem" : "setItem", mode);
   for (const b of document.querySelectorAll("[data-theme-set]")) {
     b.setAttribute("aria-pressed", String(b.dataset.themeSet === mode));
   }
@@ -38,7 +42,7 @@ function applyTheme(mode) {
 for (const b of document.querySelectorAll("[data-theme-set]")) {
   b.addEventListener("click", () => applyTheme(b.dataset.themeSet));
 }
-applyTheme(localStorage.getItem(THEME_KEY) || "auto");
+applyTheme(stored("getItem") || "auto");
 
 /* ──────────────────────────────────────────────── markup, from the DOM ── */
 
@@ -374,9 +378,7 @@ for (const host of document.querySelectorAll("[data-doc-list]")) {
   });
 }
 
-for (const host of document.querySelectorAll("[data-doc-orb]")) {
-  const orb = host.querySelector(".orb");
-  if (!orb) continue;
+for (const orb of document.querySelectorAll("[data-doc-orb] .orb")) {
   orb.addEventListener("click", () => {
     const muted = orb.classList.toggle("is-muted");
     orb.setAttribute("aria-pressed", String(muted));
