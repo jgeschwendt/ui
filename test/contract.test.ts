@@ -32,12 +32,13 @@ test("every rule lives in a layer; :root declares every token a theme reassigns 
 
 test("cascade traps: no modifier, tone or state is undone by a stronger selector, a shorthand or a dead pairing", () => {
   expect([
+    /@media \(prefers-color-scheme: dark\) \{\s*:root:not\(\[data-theme="light"\]\)/,
     /:where\([^)]*\bbody\.ui\b[^)]*\)\s*\{\s*margin: 0/,
     /\[data-table\] th\.table-num[^{]*\{[^}]*text-align: right/,
     ...["danger", "ok", "warn"].map((t) => new RegExp(`\\.chip-${t} [^{]*\\.chip-value`)),
     ...["input", "select", "textarea"].map((c) => new RegExp(`\\.${c}\\[aria-invalid="true"\\]`)),
   ].filter((re) => !re.test(css))).toEqual([]);
-  expect(css.match(/\.btn:(?:first|last)-child[^{]*\{[^}]*border-radius:|\.select:disabled[^{]*\{[^}]*\bbackground:|\{[^}]*(?:cursor:[^}]*pointer-events: none|pointer-events: none[^}]*cursor:)/g)).toBeNull();
+  expect(css.match(/\.btn:(?:first|last)-child[^{]*\{[^}]*border-radius:|\.select:disabled[^{]*\{[^}]*\bbackground:|\{[^}]*(?:cursor:[^}]*pointer-events: none|pointer-events: none[^}]*cursor:)|:root\[data-theme="light"\]/g)).toBeNull();
 });
 
 test("the sprite, the standalone glyphs and each page's inlined copy are one set", async () => {
