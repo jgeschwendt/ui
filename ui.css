@@ -572,7 +572,6 @@
 
   .btn:disabled,
   .btn[aria-disabled="true"] {
-    cursor: not-allowed;
     opacity: 0.45;
     pointer-events: none;
   }
@@ -1081,7 +1080,6 @@
 
   .listrow:disabled,
   .listrow[aria-disabled="true"] {
-    cursor: not-allowed;
     opacity: 0.45;
     pointer-events: none;
   }
