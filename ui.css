@@ -7,10 +7,10 @@
 
 /* ══════════════════════════════════════════════════════════════════════════
    TOKENS
-   Light is the ground truth on :root. Dark arrives three ways:
-     1. @media (prefers-color-scheme: dark) — guarded so [data-theme="light"] wins
+   Light is the ground truth on :root. Dark arrives two ways:
+     1. @media (prefers-color-scheme: dark) — guarded by :not([data-theme="light"]),
+        so a manual light toggle wins over a dark system with no block of its own
      2. [data-theme="dark"] — a manual toggle wins over a light system
-     3. [data-theme="light"] — restated so a manual toggle wins over a dark system
    Every color has its definition on bare :root; the blocks below only reassign.
    ══════════════════════════════════════════════════════════════════════════ */
 @layer ui.tokens {
@@ -172,44 +172,6 @@
     --ui-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.6);
     --ui-shadow-md: 0 2px 4px rgba(0, 0, 0, 0.5), 0 8px 24px rgba(0, 0, 0, 0.55);
     --ui-shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.7);
-  }
-
-  :root[data-theme="light"] {
-    color-scheme: light;
-
-    --ui-bg: #ffffff;
-    --ui-surface: #fbfcfa;
-    --ui-surface-raised: #ffffff;
-    --ui-sunken: #f2f4f0;
-    --ui-border: #e2e6df;
-    --ui-border-strong: #c8d0c5;
-    --ui-fg: #141c15;
-    --ui-fg-muted: #5a6b5b;
-    --ui-fg-faint: #879287;
-    --ui-fg-inverse: #ffffff;
-
-    --ui-accent: #476349;
-    --ui-accent-hover: #3b5340;
-    --ui-accent-active: #2f4333;
-    --ui-accent-fg: #ffffff;
-    --ui-accent-soft: #eaefe9;
-    --ui-accent-soft-fg: #3b5340;
-    --ui-accent-ring: rgba(71, 99, 73, 0.32);
-
-    --ui-danger: #b4262a;
-    --ui-danger-soft: #fdecec;
-    --ui-info: #1d5fa8;
-    --ui-info-soft: #e9f1fa;
-    --ui-ok: #476349;
-    --ui-ok-soft: #eaefe9;
-    --ui-warn: #c86a17;
-    --ui-warn-ink: #9c500f;
-    --ui-warn-soft: #fdf1e4;
-
-    --ui-glow: none;
-    --ui-shadow-sm: 0 1px 2px rgba(20, 28, 21, 0.06);
-    --ui-shadow-md: 0 2px 4px rgba(20, 28, 21, 0.05), 0 8px 20px rgba(20, 28, 21, 0.06);
-    --ui-shadow-lg: 0 12px 40px rgba(20, 28, 21, 0.12);
   }
 }
 

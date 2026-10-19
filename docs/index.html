@@ -302,9 +302,11 @@
       <tr><td class="table-mono">:root</td><td>— light is the ground truth; every token is defined here</td></tr>
       <tr><td class="table-mono">@media (prefers-color-scheme: dark) :root:not([data-theme="light"])</td><td>the system default</td></tr>
       <tr><td class="table-mono">:root[data-theme="dark"]</td><td>a light system</td></tr>
-      <tr><td class="table-mono">:root[data-theme="light"]</td><td>a dark system</td></tr>
     </tbody>
   </table>
+
+  <p class="doc-note"><code class="code">data-theme="light"</code> needs no block of its own: it
+    switches the dark media block off, and bare <code class="code">:root</code> is light.</p>
 
   <figure class="figure">
     <img class="figure-light" src="figures/themes.png" alt="Three selectors in resolution order, :root, prefers-color-scheme: dark and :root[data-theme], then the Sage and Brass themes side by side as token swatches with their hex values." />
