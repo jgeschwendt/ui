@@ -57,13 +57,16 @@
       -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, "Helvetica Neue", sans-serif;
     --ui-leading-body: 1.55;
     --ui-leading-tight: 1.25;
-    --ui-text-2xs: 0.6875rem; /* 11px */
-    --ui-text-xs: 0.75rem; /* 12px */
-    --ui-text-sm: 0.8125rem; /* 13px */
-    --ui-text-md: 0.875rem; /* 14px */
-    --ui-text-lg: 1rem; /* 16px */
-    --ui-text-xl: 1.25rem; /* 20px */
-    --ui-text-2xl: 1.625rem; /* 26px */
+    /* rem: px at a 16px root · px beneath <html class="ui">, which computes to
+       14px itself (--ui-text-md against 16px), so every token read below it
+       scales by 0.875 */
+    --ui-text-2xs: 0.6875rem; /* 11px · 9.625px */
+    --ui-text-xs: 0.75rem; /* 12px · 10.5px */
+    --ui-text-sm: 0.8125rem; /* 13px · 11.375px */
+    --ui-text-md: 0.875rem; /* 14px · 12.25px */
+    --ui-text-lg: 1rem; /* 16px · 14px */
+    --ui-text-xl: 1.25rem; /* 20px · 17.5px */
+    --ui-text-2xl: 1.625rem; /* 26px · 22.75px */
     --ui-tracking-caps: 0.07em;
     --ui-tracking-tight: -0.011em;
     --ui-weight-bold: 650;
