@@ -30,6 +30,15 @@ test("every rule lives in a layer; :root declares every token a theme reassigns 
   expect([...bare(css), ...set(all(css, /:root[^{]*\{([^}]*)\}/g).join(), /(--ui-[a-z0-9-]+)\s*:/g)].filter((t) => !ground(css).includes(t))).toEqual([]);
 });
 
+test("cascade traps: no modifier, tone or state is undone by a stronger selector, a shorthand or a dead pairing", () => {
+  expect([
+    /:where\([^)]*\bbody\.ui\b[^)]*\)\s*\{\s*margin: 0/,
+    /\[data-table\] th\.table-num[^{]*\{[^}]*text-align: right/,
+    ...["danger", "ok", "warn"].map((t) => new RegExp(`\\.chip-${t} [^{]*\\.chip-value`)),
+  ].filter((re) => !re.test(css))).toEqual([]);
+  expect(css.match(/\.btn:(?:first|last)-child[^{]*\{[^}]*border-radius:|\.select:disabled[^{]*\{[^}]*\bbackground:/g)).toBeNull();
+});
+
 test("the sprite, the standalone glyphs and each page's inlined copy are one set", async () => {
   const symbols = (text: string) => all(text, /(<symbol id="ph-[\s\S]*?<\/symbol>)/g).sort();
   const names = readdirSync(`${root}/icons/svg`).filter((f) => f.endsWith(".svg")).map((f) => f.slice(0, -4));

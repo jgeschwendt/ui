@@ -382,7 +382,7 @@ document.documentElement.removeAttribute("data-theme");  <span class="readout-ke
     <code class="code">--ui-warn-soft</code></strong> (5.7:1 on <code class="code">--ui-surface</code>,
     5.3:1 on <code class="code">--ui-sunken</code>). Every light-mode warn <em>text</em> colour —
     <code class="code">.pill-warn</code>, <code class="code">.badge-warn</code>,
-    <code class="code">.chip-warn b</code>, <code class="code">.strip-warn</code>, and
+    <code class="code">.chip-warn</code>'s value, <code class="code">.strip-warn</code>, and
     <code class="code">.is-warned</code>'s row name — is drawn in the ink, while backgrounds, borders
     and fills keep <code class="code">--ui-warn</code>. In dark mode the ink aliases straight back to
     warn: <code class="code">#f5893a</code> is 8.1:1 on <code class="code">--ui-bg</code>, 7.7:1 on
@@ -418,7 +418,7 @@ document.documentElement.removeAttribute("data-theme");  <span class="readout-ke
   <table data-table>
     <thead><tr><th>rule</th><th>why</th></tr></thead>
     <tbody>
-      <tr><td><code class="code">margin: 0</code> on <code class="code">blockquote</code>, <code class="code">body</code>, <code class="code">dd</code>, <code class="code">dl</code>, <code class="code">figure</code>, <code class="code">h1</code>–<code class="code">h6</code>, <code class="code">p</code>, <code class="code">pre</code></td><td>UA margins are vertical rhythm from a document engine; here spacing belongs to <code class="code">.stack</code>, <code class="code">.row</code>, <code class="code">[data-grid]</code> and the components' own padding</td></tr>
+      <tr><td><code class="code">margin: 0</code> on <code class="code">blockquote</code>, <code class="code">body</code> (under <code class="code">.ui</code> or carrying it), <code class="code">dd</code>, <code class="code">dl</code>, <code class="code">figure</code>, <code class="code">h1</code>–<code class="code">h6</code>, <code class="code">p</code>, <code class="code">pre</code></td><td>UA margins are vertical rhythm from a document engine; here spacing belongs to <code class="code">.stack</code>, <code class="code">.row</code>, <code class="code">[data-grid]</code> and the components' own padding</td></tr>
       <tr><td><code class="code">list-style: none; padding-left: 0</code> on <code class="code">ol[role="list"]</code>, <code class="code">ul[role="list"]</code></td><td>lists opt <strong>out</strong> by saying so</td></tr>
       <tr><td><code class="code">display: block; max-width: 100%</code> on <code class="code">canvas</code>, <code class="code">img</code>, <code class="code">picture</code>, <code class="code">svg</code>, <code class="code">video</code></td><td>replaced elements are boxes, not letters — no baseline gap, no overflow</td></tr>
       <tr><td><code class="code">font: inherit</code> on <code class="code">button</code>, <code class="code">input</code>, <code class="code">select</code>, <code class="code">textarea</code></td><td>controls opt out of inheritance for historical reasons only</td></tr>
