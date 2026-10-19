@@ -35,6 +35,7 @@ test("cascade traps: no modifier, tone or state is undone by a stronger selector
     /:where\([^)]*\bbody\.ui\b[^)]*\)\s*\{\s*margin: 0/,
     /\[data-table\] th\.table-num[^{]*\{[^}]*text-align: right/,
     ...["danger", "ok", "warn"].map((t) => new RegExp(`\\.chip-${t} [^{]*\\.chip-value`)),
+    ...["input", "select", "textarea"].map((c) => new RegExp(`\\.${c}\\[aria-invalid="true"\\]`)),
   ].filter((re) => !re.test(css))).toEqual([]);
   expect(css.match(/\.btn:(?:first|last)-child[^{]*\{[^}]*border-radius:|\.select:disabled[^{]*\{[^}]*\bbackground:/g)).toBeNull();
 });
