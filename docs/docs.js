@@ -250,8 +250,7 @@ function tokenRows(css) {
       tr.dataset.token = name;
       tr.dataset.tokenFamily = family.id;
 
-      const key = document.createElement("th");
-      key.scope = "row";
+      const key = document.createElement("td");
       key.className = "table-mono";
       key.textContent = name;
       tr.appendChild(key);
