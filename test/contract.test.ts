@@ -37,7 +37,7 @@ test("cascade traps: no modifier, tone or state is undone by a stronger selector
     ...["danger", "ok", "warn"].map((t) => new RegExp(`\\.chip-${t} [^{]*\\.chip-value`)),
     ...["input", "select", "textarea"].map((c) => new RegExp(`\\.${c}\\[aria-invalid="true"\\]`)),
   ].filter((re) => !re.test(css))).toEqual([]);
-  expect(css.match(/\.btn:(?:first|last)-child[^{]*\{[^}]*border-radius:|\.select:disabled[^{]*\{[^}]*\bbackground:/g)).toBeNull();
+  expect(css.match(/\.btn:(?:first|last)-child[^{]*\{[^}]*border-radius:|\.select:disabled[^{]*\{[^}]*\bbackground:|\{[^}]*(?:cursor:[^}]*pointer-events: none|pointer-events: none[^}]*cursor:)/g)).toBeNull();
 });
 
 test("the sprite, the standalone glyphs and each page's inlined copy are one set", async () => {
