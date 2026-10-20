@@ -193,7 +193,9 @@ function tokenRows(css) {
 
 const body = document.querySelector("[data-token-reference] tbody");
 const count = document.getElementById("token-reference-count");
-const sheet = document.querySelector('link[rel="stylesheet"][href$="ui.css"]').getAttribute("href");
+const sheet =
+  document.querySelector('link[rel="stylesheet"][href$="ui.css"]')?.getAttribute("href") ||
+  "../ui.css";
 const errorRow = (text) =>
   h("tr", { className: "doc-tokref-error" }, h("td", { colSpan: 3, textContent: text }));
 

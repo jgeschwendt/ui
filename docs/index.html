@@ -145,8 +145,8 @@
     <code class="code">.is-muted</code>, <code class="code">.is-on</code>,
     <code class="code">.is-paused</code> and <code class="code">.is-warned</code>; the attributes,
     where one exists, are <code class="code">[aria-pressed]</code>,
-    <code class="code">[aria-current]</code>, <code class="code">[aria-invalid]</code> and
-    <code class="code">:disabled</code>.</p>
+    <code class="code">[aria-current]</code>, <code class="code">[aria-disabled]</code>,
+    <code class="code">[aria-invalid]</code> and <code class="code">:disabled</code>.</p>
 
   <p class="doc-note">The component names are the documentation; everything else is discoverable by
     reading <code class="code">ui.css</code>: layout and type sit in its base layer, every other
@@ -252,7 +252,7 @@
       <tr data-token="--ui-container"><td class="table-mono">--ui-container</td><td><code class="code">[data-container]</code> max width</td><td class="table-num">100rem</td></tr>
       <tr data-token="--ui-grid-min"><td class="table-mono">--ui-grid-min</td><td><code class="code">[data-grid]</code> column floor</td><td class="table-num">280px</td></tr>
       <tr data-token="--ui-icon-size"><td class="table-mono">--ui-icon-size</td><td><code class="code">.icon</code></td><td class="table-num">1.15em</td></tr>
-      <tr data-token="--ui-meter-value"><td class="table-mono">--ui-meter-value</td><td><code class="code">.meter</code> fill</td><td class="table-num">a percentage</td></tr>
+      <tr data-token="--ui-meter-value"><td class="table-mono">--ui-meter-value</td><td><code class="code">.meter</code> fill</td><td class="table-num">0%</td></tr>
       <tr data-token="--ui-orb-size"><td class="table-mono">--ui-orb-size</td><td><code class="code">.orb</code></td><td class="table-num">34px</td></tr>
       <tr data-token="--ui-panel-accent"><td class="table-mono">--ui-panel-accent</td><td><code class="code">.panel</code> head rail and name</td><td class="table-num">unset: no rail, --ui-fg name</td></tr>
     </tbody>
@@ -311,7 +311,7 @@
     switches the dark media block off, and bare <code class="code">:root</code> is light.</p>
 
   <figure class="figure">
-    <img class="figure-light" src="figures/themes.png" alt="Three selectors in resolution order, :root, prefers-color-scheme: dark and :root[data-theme], then the Sage and Brass themes side by side as token swatches with their hex values." />
+    <img class="figure-light" src="figures/themes.png" alt="Three selectors in resolution order, :root, prefers-color-scheme: dark (unless data-theme=&quot;light&quot;) and :root[data-theme=&quot;dark&quot;], then the Sage and Brass themes side by side as token swatches with their hex values." />
     <img class="figure-dark" src="figures/themes-dark.png" alt="" aria-hidden="true" loading="lazy" />
     <figcaption>The two themes token by token, and the order that picks one: <code class="code">:root</code> is Sage, the system's dark is Brass, and <code class="code">data-theme</code> overrides both. Source: Claude Design canvas <a href="https://claude.ai/artifact/9SNgMFS1dsMhmN8zarPh2s">ui figures</a>, board Themes.</figcaption>
   </figure>
@@ -327,9 +327,13 @@ document.documentElement.removeAttribute("data-theme");  <span class="readout-ke
 
   <h3 class="doc-h3">Retheming</h3>
   <p class="doc-note">Override tokens, not rules. The accent is the seven <code class="code">--ui-accent*</code>
-    tokens, plus <code class="code">--ui-glow</code> in dark; set each theme you retint. Declare them
-    in <code class="code">ui.tokens</code>, after <code class="code">ui.css</code>: an unlayered
-    <code class="code">:root</code> beats both theme blocks and paints the light values into dark.</p>
+    tokens; set each theme you retint. <code class="code">--ui-ok</code> and
+    <code class="code">--ui-ok-soft</code> match light's sage by value, not by reference, and dark's
+    <code class="code">--ui-glow</code> is brass — restate them if they should follow the new accent.
+    Declare the overrides in <code class="code">ui.tokens</code> (<code class="code">components.ui.tokens</code>
+    under the Tailwind import), after <code class="code">ui.css</code>: an unlayered
+    <code class="code">:root</code>, or a layer ordered after them, beats both theme blocks and paints
+    the light values into dark.</p>
   <pre class="readout">@layer ui.tokens {
   :root { --ui-accent: #7c3aed; --ui-accent-soft: #f1eafe; /* …the other five */ }
   :root[data-theme="dark"] { /* the dark set */ }
@@ -1692,8 +1696,8 @@ visor -- python3 serve.py <span class="readout-key"># or let visor own the port 
 
   <p class="doc-note">Three things the server does on visor's behalf, none of them optional:
     it speaks HTTP/1.1 with keep-alive (an iframe reloading a page's whole subresource set over
-    connection-per-request is visibly slow); it threads its handler, so the stylesheet, the script and
-    the sprite are not serialised behind each other; and it sends no
+    connection-per-request is visibly slow); it threads its handler, so the three stylesheets and the two
+    scripts are not serialised behind each other; and it sends no
     <code class="code">Content-Security-Policy</code> at all — a blocking CSP fails <em>silently</em>
     under visor, with no console error and no network request, just chrome that never appears.</p>
 
@@ -1717,7 +1721,7 @@ visor -- python3 serve.py <span class="readout-key"># or let visor own the port 
       published (unverified 2026-10-13: the Pages API was unreachable from the shift sandbox).</li>
     <li><strong>Component order is cascade order.</strong> Inside <code class="code">ui.components</code> a later
       section wins a same-specificity tie with an earlier one; never reorder sections to match a table.</li>
-    <li><strong>The suite binds loopback sockets.</strong> <code class="code">mise run test</code> installs tailwindcss, then starts
+    <li><strong>The suite binds loopback sockets.</strong> <code class="code">mise run test</code> installs its dev dependencies (happy-dom, tailwindcss), then starts
       <code class="code">serve.py</code>; a sandbox that denies loopback binds fails that test at
       <code class="code">cannot bind</code>, not the code.</li>
   </ul>
@@ -1743,6 +1747,10 @@ visor -- python3 serve.py <span class="readout-key"># or let visor own the port 
       serves the rail on visor's own port (9000 attach, 3000 spawn), not 8080. Sage's "28% saturation" is HSV; in HSL,
       the unit brass and warn are quoted in, it is 16%. "Omit <code class="code">.ui</code> and only the components style
       themselves" overlooks the type and layout classes in <code class="code">ui.base</code>, which are unscoped.</li>
+    <li><strong>Redraw Themes ③.</strong> The board still draws <code class="code">:root[data-theme]</code> as one
+      selector for both values; ui.css has only <code class="code">:root[data-theme="dark"]</code>, and
+      <code class="code">"light"</code> switches ② off. Redraw it on the canvas, then <code class="code">mise run figures</code>
+      (owner-only: the render needs agent-browser).</li>
   </ol>
 </section>
 
