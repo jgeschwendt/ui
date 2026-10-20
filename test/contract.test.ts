@@ -107,7 +107,7 @@ test("serve.py: / redirects to the docs over keep-alive, files carry charset and
     let raw = "";
     const closed = Promise.withResolvers();
     const idle = await Bun.connect({ hostname, port: +port, socket: { data: (_, d) => void (raw += d), close: closed.resolve } });
-    for (const [path, type] of [["/ui.css", "text/css; charset=utf-8"], ["/docs/", "text/html; charset=utf-8"], ["/docs/docs.js", "text/javascript; charset=utf-8"], ["/icons/sprite.svg", "image/svg+xml"], ["/README.md", "text/markdown; charset=utf-8"], ["/docs/figures/project/canvas.json", "application/json; charset=utf-8"]]) {
+    for (const [path, type] of [["/ui.css", "text/css; charset=utf-8"], ["/docs/", "text/html; charset=utf-8"], ["/docs/docs.js", "text/javascript; charset=utf-8"], ["/docs/theme.js", "text/javascript; charset=utf-8"], ["/icons/sprite.svg", "image/svg+xml"], ["/README.md", "text/markdown; charset=utf-8"], ["/docs/figures/project/canvas.json", "application/json; charset=utf-8"]]) {
       const res = await fetch(origin + path);
       expect([res.status, res.headers.get("content-type"), res.headers.get("cache-control")]).toEqual([200, type, "no-store"]);
       expect(await res.text()).toBe(await read(path.slice(1).replace(/\/$/, "/index.html")));

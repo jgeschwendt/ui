@@ -3,17 +3,17 @@
   "landmarks": {
     "tailwind-compatibility": {
       "file": "docs/index.html",
-      "line": 1475,
+      "line": 1476,
       "node": "docs"
     },
     "theming-contract": {
       "file": "docs/index.html",
-      "line": 317,
+      "line": 318,
       "node": "docs"
     },
     "whole-library": {
       "file": "docs/index.html",
-      "line": 124,
+      "line": 125,
       "node": "docs"
     }
   },
@@ -26,11 +26,11 @@
           "enforced_by": "test/contract.test.ts",
           "id": "tailwind-compatibility",
           "kind": "invariant",
-          "resolved": "docs/index.html:1475",
+          "resolved": "docs/index.html:1476",
           "text": "every rule sits in ui.tokens, ui.base or ui.components, declared in that order before any rule",
           "verified": {
             "digest": null,
-            "sha": "cf40c0e29dd6fcdb182371b21cba5774a5d499a8"
+            "sha": "0aeaae52cc0173b49860fabe7218fb826e0dd1ba"
           }
         },
         {
@@ -38,11 +38,11 @@
           "enforced_by": "test/contract.test.ts",
           "id": "theming-contract",
           "kind": "invariant",
-          "resolved": "docs/index.html:317",
+          "resolved": "docs/index.html:318",
           "text": ":root declares every token; theme blocks only reassign",
           "verified": {
             "digest": null,
-            "sha": "cf40c0e29dd6fcdb182371b21cba5774a5d499a8"
+            "sha": "0aeaae52cc0173b49860fabe7218fb826e0dd1ba"
           }
         },
         {
@@ -50,11 +50,11 @@
           "enforced_by": null,
           "id": "whole-library",
           "kind": "invariant",
-          "resolved": "docs/index.html:124",
+          "resolved": "docs/index.html:125",
           "text": "ui.css is the whole library — no build step, no framework dependency, no network requests",
           "verified": {
             "digest": null,
-            "sha": "cf40c0e29dd6fcdb182371b21cba5774a5d499a8"
+            "sha": "0aeaae52cc0173b49860fabe7218fb826e0dd1ba"
           }
         }
       ],
@@ -95,7 +95,7 @@
       },
       "id": "demo",
       "kind": "container",
-      "purpose": "index.html — the kitchen sink: every component at once under fake telemetry, opens off disk; its inline script carries the shared theme toggle."
+      "purpose": "index.html — the kitchen sink: every component at once under fake telemetry, opens off disk; its theme toggle is ../docs/theme.js, shared with the docs page."
     },
     "docs": {
       "budget": null,
@@ -112,7 +112,7 @@
       },
       "id": "docs",
       "kind": "container",
-      "purpose": "the reference page (index.html, page.css, docs.js — its token table reads ui.css live; its open section is what is unsettled) and figures/, its Claude Design boards with their source."
+      "purpose": "the reference page (index.html, page.css, docs.js — its token table reads ui.css live; its open section is what is unsettled), theme.js (both pages' toggle), figures/ (boards + source)."
     },
     "icons": {
       "budget": null,

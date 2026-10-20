@@ -1,5 +1,5 @@
-// The page scripts, run for real over happy-dom: each page's own HTML, its script
-// evaluated in that window, timers ticked by hand, storage working or blocked.
+// The page scripts, run for real over happy-dom: each page's own HTML, theme.js then its
+// script evaluated in that window, timers ticked by hand, storage working or blocked.
 import { expect, test } from "bun:test";
 import { Window } from "happy-dom";
 
@@ -19,9 +19,13 @@ const load = async (page: string, store: string | null = null, sheet = css, stat
   });
   if (store === null) Object.defineProperty(w, "localStorage", { get: () => { throw new Error("SecurityError"); } });
   else w.localStorage.setItem("ui-theme", store);
+  w.eval(await read("docs/theme.js"));
+  // What <head> leaves on <html> before any page script: the stored theme, or no flash fix.
+  const head = w.document.documentElement.getAttribute("data-theme");
   w.eval(page === "docs" ? await read("docs/docs.js") : html.match(/<script>([\s\S]*?)<\/script>/)![1]);
+  w.document.dispatchEvent(new w.Event("DOMContentLoaded"));
   await settle();
-  return Object.assign(w, { $: (s: string) => [...w.document.querySelectorAll(s)], fake });
+  return Object.assign(w, { $: (s: string) => [...w.document.querySelectorAll(s)], fake, head });
 };
 const pages: Record<string, any> = { demo: await load("demo"), docs: await load("docs") };
 const { docs, demo } = pages;
@@ -36,7 +40,7 @@ const flags = (els: any[], c: string) => els.map((e) => +e.classList.contains(c)
 test.each(["docs", "demo"])("%s: a stored theme applies, buttons press, auto removes; blocked storage costs only persistence", (page) => {
   for (const [w, store] of [[stored[page], "dark"], [pages[page], null]]) {
     const state = () => [w.document.documentElement.getAttribute("data-theme"), store && w.localStorage.getItem("ui-theme"), attrs(w.$("[data-theme-set]"), "aria-pressed")];
-    expect(state()).toEqual([store, store, store ? "false,false,true" : "false,true,false"]);
+    expect([w.head, ...state()]).toEqual([store, store, store, store ? "false,false,true" : "false,true,false"]);
     w.$("[data-theme-set]")[1].click();
     expect(state()).toEqual([null, null, "false,true,false"]);
     w.$("[data-theme-set]")[0].click();

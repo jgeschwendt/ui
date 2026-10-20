@@ -14,35 +14,6 @@ const h = (tag, props, ...kids) => {
   return e;
 };
 
-/* ─────────────────────────────────────────────────────────────── theme ── */
-
-/* The same key the demo writes, deliberately: the two pages are one site under
-   the server, and a theme chosen on one is the theme the other opens in. */
-const THEME_KEY = "ui-theme";
-
-/* Blocked site data makes localStorage throw on touch; the choice then lasts
-   only as long as the page, and nothing after this line notices. */
-function stored(op, mode) {
-  try {
-    return localStorage[op](THEME_KEY, mode);
-  } catch {}
-}
-
-function applyTheme(mode) {
-  const root = document.documentElement;
-  if (mode === "auto") root.removeAttribute("data-theme");
-  else root.dataset.theme = mode;
-  stored(mode === "auto" ? "removeItem" : "setItem", mode);
-  for (const b of document.querySelectorAll("[data-theme-set]")) {
-    b.setAttribute("aria-pressed", b.dataset.themeSet === mode);
-  }
-}
-
-for (const b of document.querySelectorAll("[data-theme-set]")) {
-  b.addEventListener("click", () => applyTheme(b.dataset.themeSet));
-}
-applyTheme(stored("getItem") || "auto");
-
 /* ──────────────────────────────────────────────── markup, from the DOM ── */
 
 /** Strip the page's own indentation off a block read out of innerHTML. */
