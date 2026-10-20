@@ -9,19 +9,23 @@ const css = await read("ui.css");
 const load = async (page: string, store: string | null = null, sheet = css, status = 200) => {
   const html = await read(`${page}/index.html`);
   const w: any = new Window({ url: `http://ui.test/${page}/` });
-  w.document.write(html.replace(/<script[\s\S]*?<\/script>/g, ""));
   const fake: any = { observed: [] };
+  w.addEventListener("error", (e: any) => (fake.error = e.error));
   Object.assign(w, {
-    fetch: async () => new Response(sheet, { status }),
+    fetch: async (url: string, init: any) => ((fake.fetched = `${url} ${init.cache}`), new Response(sheet, { status })),
     IntersectionObserver: class { constructor(f: Function) { fake.spy = f; } observe(s: any) { fake.observed.push(s.id); } },
     setInterval: (f: Function, ms: number) => (fake[ms] = f),
     setTimeout: (f: Function, ms: number) => (fake[ms] = f),
   });
   if (store === null) Object.defineProperty(w, "localStorage", { get: () => { throw new Error("SecurityError"); } });
   else w.localStorage.setItem("ui-theme", store);
+  // theme.js runs where <head> loads it, before <body> is parsed — so before the buttons exist.
+  const [top, rest] = html.replace(/<script[\s\S]*?<\/script>/g, "").split("</head>");
+  w.document.write(top);
   w.eval(await read("docs/theme.js"));
   // What <head> leaves on <html> before any page script: the stored theme, or no flash fix.
   const head = w.document.documentElement.getAttribute("data-theme");
+  w.document.write(rest);
   w.eval(page === "docs" ? await read("docs/docs.js") : html.match(/<script>([\s\S]*?)<\/script>/)![1]);
   w.document.dispatchEvent(new w.Event("DOMContentLoaded"));
   await settle();
@@ -32,7 +36,7 @@ const { docs, demo } = pages;
 // Stored dark, and a ui.css with no attribute dark block (the media twin must stand in) and one dark-only token.
 const stored: Record<string, any> = {
   demo: await load("demo", "dark"),
-  docs: await load("docs", "dark", css.replace(':root[data-theme="dark"]', ":root[data-x]").replace('[data-theme="light"]) {', '[data-theme="light"]) { --ui-zz: 1px;')),
+  docs: await load("docs", "dark", "/* :root { --ui-cc: 0 } */ .x:root { --ui-cc: 0 }" + css.replace(':root[data-theme="dark"]', ":root[data-x]").replace('[data-theme="light"]) {', '[data-theme="light"]) { --ui-zz: 1px;')),
 };
 const attrs = (els: any[], k: string) => els.map((e) => e.getAttribute(k)).join();
 const flags = (els: any[], c: string) => els.map((e) => +e.classList.contains(c)).join("");
@@ -60,6 +64,7 @@ test("docs: one markup pane after every example, its code the dedented live DOM,
     expect(code).toMatch(/^\S/m);
     expect(code.replace(/\s+/g, " ").trim()).toBe(live.innerHTML.replace(/\s+/g, " ").trim());
   }
+  expect(lives[0].nextElementSibling.firstChild.innerHTML).toBe('<button class="btn btn-quiet btn-sm" type="button" aria-expanded="false">markup</button><button class="btn btn-quiet btn-sm" type="button">copy</button><span class="spacer"></span><span>tokens-palette</span>');
   const pane = lives[0].nextElementSibling, pre = pane.querySelector("pre"), [toggle, copy] = pane.querySelectorAll("button");
   const state = () => [pre.hidden, toggle.getAttribute("aria-expanded"), copy.textContent];
   expect(state()).toEqual([true, "false", "copy"]);
@@ -79,16 +84,20 @@ test("docs: the token reference is built from ui.css — every :root token a row
   const root = new Set(css.replace(/\/\*[\s\S]*?\*\//g, "").match(/:root \{[^}]*\}/)![0].match(/--ui-[\w-]+(?=\s*:)/g));
   const rows = docs.$("[data-token-reference] tbody tr[data-token]"), same = docs.$("[data-token-reference] td.is-same");
   const [, shown, reassigned] = docs.document.getElementById("token-reference-count").textContent.match(/^(\d+) tokens — every --ui-\* declared on :root in \.\.\/ui\.css; the dark blocks reassign (\d+) of them\.$/);
-  expect([rows.length, +shown, same.length, docs.$(".doc-tokref-error").length]).toEqual([root.size, root.size, root.size - +reassigned, 0]);
+  expect([rows.length, +shown, same.length, docs.$(".doc-tokref-error").length, docs.fake.fetched]).toEqual([root.size, root.size, root.size - +reassigned, 0, "../ui.css no-store"]);
   expect(rows.map((r) => r.firstChild.textContent).sort()).toEqual([...root].sort());
-  expect(docs.$(".doc-tokref-family").map((r) => r.id).join()).toBe("token-surfaces,token-accent,token-semantic,token-spacing,token-type,token-depth");
+  expect(docs.$(".doc-tokref-family > th[colspan='3'][scope=colgroup]:only-child").map((th) => `${th.parentElement.id} ${th.textContent}`).join())
+    .toBe("token-surfaces surfaces & ink,token-accent accent,token-semantic semantic,token-spacing spacing,token-type type,token-depth radius, shadow & motion");
   expect(same.every((td) => td.title === "unchanged in dark" && td.parentElement.children[1].textContent === td.textContent)).toBe(true);
   const paints = docs.$("tr[data-token='--ui-bg'] .doc-tokref-chip > i");
   expect([paints.length, paints.every((i) => i.style.background && i.parentElement.style.background === i.style.background), docs.$("tr[data-token='--ui-bg'] td.is-same").length, docs.$("tr[data-token='--ui-space-1'] .doc-tokref-chip").length, docs.$("tr[data-token='--ui-space-1'] td.is-same").length]).toEqual([2, true, 0, 0, 1]);
   const twin = stored.docs;
   expect([twin.$("[data-token-reference] td.is-same").length, twin.$(".doc-tokref-error").map((r) => r.textContent).join(), twin.document.getElementById("token-reference-count").textContent]).toEqual([same.length, "1 declared token(s) missing from this table: --ui-zz", `${root.size} of ${root.size + 1} tokens shown — see the row above.`]);
-  const failed = await load("docs", "", css, 404);
-  expect([failed.$("[data-token-reference] tbody tr").map((r) => r.className + ":" + r.textContent).join(), failed.document.getElementById("token-reference-count").textContent]).toEqual(["doc-tokref-error:could not read ../ui.css — 404. The table is empty rather than wrong.", "token count unavailable"]);
+  for (const [sheet, status, why] of [[css, 404, "404"], ["", 200, "no --ui-* declarations on :root"]] as const) {
+    const failed = await load("docs", "", sheet, status);
+    expect([failed.$("[data-token-reference] tbody")[0].innerHTML, failed.document.getElementById("token-reference-count").textContent])
+      .toEqual([`<tr class="doc-tokref-error"><td colspan="3">could not read ../ui.css — ${why}. The table is empty rather than wrong.</td></tr>`, "token count unavailable"]);
+  }
 });
 
 test("docs: the index rail marks the first section in nav order that is in view", () => {
@@ -108,21 +117,23 @@ test("docs: latch, list, orb and meter examples breathe; disabled rows stay unse
   rows[4].querySelector("span").click();
   for (const orb of orbs) orb.click();
   docs.fake[1200]();
-  expect([flags(latch, "is-on"), flags(rows, "is-current"), attrs(rows, "aria-selected"), attrs(orbs, "aria-pressed"), attrs(orbs, "aria-label"), meters.map((m) => m.style.getPropertyValue("--ui-meter-value")).join()])
-    .toEqual(["010", "00010", "false,false,false,true,false", "true,false,true", "microphone muted,microphone open,microphone muted, large", "54%,88%,97%"]);
+  expect([flags(latch, "is-on"), flags(rows, "is-current"), attrs(rows, "aria-selected"), attrs(orbs, "aria-pressed"), attrs(orbs, "aria-label"), meters.map((m) => m.style.getPropertyValue("--ui-meter-value")).join(), docs.fake.error])
+    .toEqual(["010", "00010", "false,false,false,true,false", "true,false,true", "microphone muted,microphone open,microphone muted, large", "54%,88%,97%", undefined]);
 });
 
 test.each(["docs", "demo"])("%s: the icon gallery is the inline sprite, one cell per glyph", (page) => {
   const w = pages[page], ids = w.$("symbol[id^='ph-']").map((s) => s.id);
-  expect(w.$("#icon-grid > div").map((c) => `${c.className} ${c.querySelector("svg.icon[aria-hidden=true] use").getAttribute("href")} ${c.textContent}`)).toEqual(ids.map((id) => `${page === "docs" ? "doc" : "demo"}-icon #${id} ${id.slice(3)}`));
-  expect(ids.length).toBe(28);
+  expect([ids.length, ...w.$("#icon-grid > div").map((c) => `${c.className} ${c.querySelector("svg.icon[aria-hidden=true] use").getAttribute("href")} ${c.textContent}`)])
+    .toEqual([28, ...ids.map((id) => `${page === "docs" ? "doc" : "demo"}-icon #${id} ${id.slice(3)}`)]);
 });
 
 test("docs: __uiDocs.resolve reads the carrier attributes around an element", () => {
   const { resolve } = docs.__uiDocs, q = (s: string) => docs.document.querySelector(s);
-  expect(resolve(q("[data-token='--ui-bg'] span"))).toEqual({ component: "tokens", example: "tokens-palette", section: "tokens", token: "--ui-bg", markup: q("[data-example='tokens-palette'] pre code").textContent });
-  expect(resolve(q("tr[data-class='eyebrow'] td"))).toEqual({ component: "type", example: null, section: "type", class: "eyebrow" });
-  expect([resolve(q(".doc-nav")), resolve(q("[data-live]").firstChild), resolve({})]).toEqual([null, null, null]);
+  docs.document.body.insertAdjacentHTML("beforeend", "<figure data-example=t><div data-live>\n\t<b></b>\n   \n\t\t<i></i>\n</div></figure>");
+  expect(resolve(q("[data-example=t] i"))).toStrictEqual({ component: null, example: "t", section: null, markup: "<b></b>\n \n  <i></i>" });
+  expect(resolve(q("[data-token='--ui-bg'] span"))).toStrictEqual({ component: "tokens", example: "tokens-palette", section: "tokens", token: "--ui-bg", markup: q("[data-example='tokens-palette'] pre code").textContent });
+  expect(resolve(q("tr[data-class='eyebrow'] td"))).toStrictEqual({ component: "type", example: null, section: "type", class: "eyebrow" });
+  expect([resolve(q(".doc-nav")), resolve(q("[data-live]").firstChild)]).toEqual([null, null]);
 });
 
 test("demo: latch, pause toggles, orb, hide toggle", () => {
@@ -137,7 +148,8 @@ test("demo: latch, pause toggles, orb, hide toggle", () => {
   expect([flags(latch, "is-on"), flags(toggles, "is-on"), toggles.map((b) => b.lastChild.nodeValue).join(), orb.getAttribute("aria-pressed") + orb.getAttribute("aria-label"), hide.getAttribute("aria-pressed") + hide.textContent, subjects.map((s) => +s.hidden).join("")])
     .toEqual(["001", "01", "pause,resume", "truemicrophone muted", "trueshow them", "1111"]);
   hide.click();
-  expect([hide.textContent, subjects.map((s) => +s.hidden).join("")]).toEqual(["hide them", "0000"]);
+  orb.click();
+  expect([hide.textContent, subjects.map((s) => +s.hidden).join(""), orb.getAttribute("aria-label")]).toEqual(["hide them", "0000", "microphone open"]);
 });
 
 test("demo: the voice list's arrows step from the focused row, wrap, and skip disabled rows; clicks skip them too", () => {
@@ -152,8 +164,8 @@ test("demo: the voice list's arrows step from the focused row, wrap, and skip di
   expect(key("ArrowDown", 3)).toBe("true 0 true,false,false,false,false 10000");
   expect(key("ArrowUp", 0)).toBe("true 3 false,false,false,true,false 00010");
   expect(key("Enter", 1)).toBe("false 1 false,false,false,true,false 00010");
-  rows[4].click();
   rows[1].querySelector("span").click();
+  rows[4].click();
   expect(flags(rows, "is-current")).toBe("01000");
 });
 

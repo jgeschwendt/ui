@@ -28,17 +28,10 @@ for (const live of document.querySelectorAll("[data-live]")) {
   const source = dedent(live.innerHTML);
   const code = h("code", { textContent: source }); // textContent, so the markup is shown, not run
   const pre = h("pre", { hidden: true }, code);
-  const toggle = h("button", {
-    className: "btn btn-quiet btn-sm",
-    type: "button",
-    textContent: "markup",
-  });
+  const [toggle, copy] = ["markup", "copy"].map((textContent) =>
+    h("button", { className: "btn btn-quiet btn-sm", type: "button", textContent }),
+  );
   toggle.setAttribute("aria-expanded", "false");
-  const copy = h("button", {
-    className: "btn btn-quiet btn-sm",
-    type: "button",
-    textContent: "copy",
-  });
   const bar = h(
     "div",
     { className: "doc-src-bar" },
@@ -141,7 +134,7 @@ function tokenRows(css) {
   /* Comments can hold anything — braces, semicolons, a stray `--ui-` — so they
      come out before any structure is inferred from the text. */
   const clean = css.replace(/\/\*[\s\S]*?\*\//g, "");
-  const light = declarations(ruleBody(clean, /(?:^|[\s;}])(:root)\s*\{/));
+  const light = declarations(ruleBody(clean, /(?:^|[\s;}]):root\s*\{/));
   if (!light.size) throw new Error("no --ui-* declarations on :root");
   const dark = declarations(
     ruleBody(clean, /:root\[data-theme="dark"\]\s*\{/) ??
@@ -199,48 +192,39 @@ function tokenRows(css) {
   };
 }
 
-const tokref = document.querySelector("[data-token-reference]");
-if (tokref) {
-  const body = tokref.querySelector("tbody");
-  const count = document.getElementById("token-reference-count");
-  const sheet =
-    document.querySelector('link[rel="stylesheet"][href$="ui.css"]')?.getAttribute("href") ||
-    "../ui.css";
-  const errorRow = (text) =>
-    h("tr", { className: "doc-tokref-error" }, h("td", { colSpan: 3, textContent: text }));
+const body = document.querySelector("[data-token-reference] tbody");
+const count = document.getElementById("token-reference-count");
+const sheet = document.querySelector('link[rel="stylesheet"][href$="ui.css"]').getAttribute("href");
+const errorRow = (text) =>
+  h("tr", { className: "doc-tokref-error" }, h("td", { colSpan: 3, textContent: text }));
 
-  fetch(sheet, { cache: "no-store" })
-    .then((res) => {
-      if (!res.ok) throw new Error(`${res.status} ${res.statusText}`.trimEnd());
-      return res.text();
-    })
-    .then((css) => {
-      const { frag, reassigned, shown, declared, missing } = tokenRows(css);
-      body.replaceChildren(frag);
-      // The assertion, in the page: rows shown === --ui-* declared in ui.css.
-      if (missing.length) {
-        body.append(
-          errorRow(
-            `${missing.length} declared token(s) missing from this table: ` + missing.join(", "),
-          ),
-        );
-      }
-      if (count) {
-        count.textContent = missing.length
-          ? `${shown} of ${declared} tokens shown — see the row above.`
-          : `${shown} tokens — every --ui-* declared on :root in ${sheet}; ` +
-            `the dark blocks reassign ${reassigned} of them.`;
-      }
-    })
-    .catch((err) => {
-      body.replaceChildren(
+fetch(sheet, { cache: "no-store" })
+  .then((res) => {
+    if (!res.ok) throw new Error(`${res.status} ${res.statusText}`.trimEnd());
+    return res.text();
+  })
+  .then((css) => {
+    const { frag, reassigned, shown, declared, missing } = tokenRows(css);
+    body.replaceChildren(frag);
+    // The assertion, in the page: rows shown === --ui-* declared on :root and the dark blocks.
+    if (missing.length) {
+      body.append(
         errorRow(
-          `could not read ${sheet} — ${err.message}. ` + "The table is empty rather than wrong.",
+          `${missing.length} declared token(s) missing from this table: ` + missing.join(", "),
         ),
       );
-      if (count) count.textContent = "token count unavailable";
-    });
-}
+    }
+    count.textContent = missing.length
+      ? `${shown} of ${declared} tokens shown — see the row above.`
+      : `${shown} tokens — every --ui-* declared on :root in ${sheet}; ` +
+        `the dark blocks reassign ${reassigned} of them.`;
+  })
+  .catch((err) => {
+    body.replaceChildren(
+      errorRow(`could not read ${sheet} — ${err.message}. ` + "The table is empty rather than wrong."),
+    );
+    count.textContent = "token count unavailable";
+  });
 
 /* ────────────────────────────────────────────────────── the index rail ── */
 
@@ -304,7 +288,6 @@ for (const orb of document.querySelectorAll("[data-doc-orb] .orb")) {
 
 for (const host of document.querySelectorAll("[data-doc-meter]")) {
   const meter = host.querySelector(".meter");
-  if (!meter) continue;
   let n = 0;
   setInterval(
     () =>
@@ -319,20 +302,17 @@ for (const host of document.querySelectorAll("[data-doc-meter]")) {
 /* ─────────────────────────────────────────────────── the icon gallery ── */
 
 const grid = document.getElementById("icon-grid");
-if (grid) {
-  for (const sym of document.querySelectorAll("symbol[id^='ph-']")) {
-    grid.append(
-      h(
-        "div",
-        {
-          className: "doc-icon",
-          innerHTML:
-            '<svg class="icon" aria-hidden="true"><use href="#' + sym.id + '"></use></svg>',
-        },
-        sym.id.slice(3),
-      ),
-    );
-  }
+for (const sym of document.querySelectorAll("symbol[id^='ph-']")) {
+  grid.append(
+    h(
+      "div",
+      {
+        className: "doc-icon",
+        innerHTML: '<svg class="icon" aria-hidden="true"><use href="#' + sym.id + '"></use></svg>',
+      },
+      sym.id.slice(3),
+    ),
+  );
 }
 
 /* ──────────────────────────────────────────────────────────── wrapping ── */

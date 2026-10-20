@@ -3,12 +3,12 @@
   "landmarks": {
     "tailwind-compatibility": {
       "file": "docs/index.html",
-      "line": 1476,
+      "line": 1477,
       "node": "docs"
     },
     "theming-contract": {
       "file": "docs/index.html",
-      "line": 318,
+      "line": 319,
       "node": "docs"
     },
     "whole-library": {
@@ -26,11 +26,11 @@
           "enforced_by": "test/contract.test.ts",
           "id": "tailwind-compatibility",
           "kind": "invariant",
-          "resolved": "docs/index.html:1476",
+          "resolved": "docs/index.html:1477",
           "text": "every rule sits in ui.tokens, ui.base or ui.components, declared in that order before any rule",
           "verified": {
             "digest": null,
-            "sha": "0aeaae52cc0173b49860fabe7218fb826e0dd1ba"
+            "sha": "b7d294c0d7d3489b183a3a346cbae710ad720cbf"
           }
         },
         {
@@ -38,11 +38,11 @@
           "enforced_by": "test/contract.test.ts",
           "id": "theming-contract",
           "kind": "invariant",
-          "resolved": "docs/index.html:318",
+          "resolved": "docs/index.html:319",
           "text": ":root declares every token; theme blocks only reassign",
           "verified": {
             "digest": null,
-            "sha": "0aeaae52cc0173b49860fabe7218fb826e0dd1ba"
+            "sha": "b7d294c0d7d3489b183a3a346cbae710ad720cbf"
           }
         },
         {
@@ -54,7 +54,7 @@
           "text": "ui.css is the whole library — no build step, no framework dependency, no network requests",
           "verified": {
             "digest": null,
-            "sha": "0aeaae52cc0173b49860fabe7218fb826e0dd1ba"
+            "sha": "b7d294c0d7d3489b183a3a346cbae710ad720cbf"
           }
         }
       ],

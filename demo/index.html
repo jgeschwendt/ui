@@ -511,8 +511,6 @@
 </main>
 
 <script>
-"use strict";
-
 /* ── latched buttons ── */
 for (const group of document.querySelectorAll("[data-demo-latch]")) {
   group.addEventListener("click", (e) => {
@@ -566,7 +564,7 @@ list.addEventListener("keydown", (e) => {
   // and past any disabled row on the way.
   const rows = [...list.children];
   const step = e.key === "ArrowDown" ? 1 : rows.length - 1;
-  let i = rows.indexOf(document.activeElement.closest(".listrow"));
+  let i = rows.indexOf(document.activeElement);
   do i = (i + step) % rows.length;
   while (rows[i].getAttribute("aria-disabled") === "true");
   rows[i].focus();
