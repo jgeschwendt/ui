@@ -33,7 +33,9 @@ function applyTheme(mode) {
   if (mode === "auto") root.removeAttribute("data-theme");
   else root.dataset.theme = mode;
   stored(mode === "auto" ? "removeItem" : "setItem", mode);
-  for (const b of document.querySelectorAll("[data-theme-set]")) b.setAttribute("aria-pressed", b.dataset.themeSet === mode);
+  for (const b of document.querySelectorAll("[data-theme-set]")) {
+    b.setAttribute("aria-pressed", b.dataset.themeSet === mode);
+  }
 }
 
 for (const b of document.querySelectorAll("[data-theme-set]")) {
@@ -55,10 +57,25 @@ for (const live of document.querySelectorAll("[data-live]")) {
   const source = dedent(live.innerHTML);
   const code = h("code", { textContent: source }); // textContent, so the markup is shown, not run
   const pre = h("pre", { hidden: true }, code);
-  const toggle = h("button", { className: "btn btn-quiet btn-sm", type: "button", textContent: "markup" });
+  const toggle = h("button", {
+    className: "btn btn-quiet btn-sm",
+    type: "button",
+    textContent: "markup",
+  });
   toggle.setAttribute("aria-expanded", "false");
-  const copy = h("button", { className: "btn btn-quiet btn-sm", type: "button", textContent: "copy" });
-  const bar = h("div", { className: "doc-src-bar" }, toggle, copy, h("span", { className: "spacer" }), h("span", { textContent: example ? example.dataset.example : "" }));
+  const copy = h("button", {
+    className: "btn btn-quiet btn-sm",
+    type: "button",
+    textContent: "copy",
+  });
+  const bar = h(
+    "div",
+    { className: "doc-src-bar" },
+    toggle,
+    copy,
+    h("span", { className: "spacer" }),
+    h("span", { textContent: example?.dataset.example ?? "" }),
+  );
   const wrap = h("div", { className: "doc-src" }, bar, pre);
   if (example) wrap.dataset.codeFor = example.dataset.example;
   live.after(wrap);
@@ -75,11 +92,7 @@ for (const live of document.querySelectorAll("[data-live]")) {
     } catch {
       // A denied clipboard is the page's problem to say out loud, not to throw
       // over: select the block instead and let the keyboard finish the job.
-      const range = document.createRange();
-      range.selectNodeContents(code);
-      const sel = getSelection();
-      sel.removeAllRanges();
-      sel.addRange(range);
+      getSelection().selectAllChildren(code);
       pre.hidden = false;
       toggle.setAttribute("aria-expanded", "true");
       copy.textContent = "press ⌘C";
@@ -106,7 +119,11 @@ const TOKEN_FAMILIES = [
   { id: "token-semantic", label: "semantic", re: /^--ui-(danger|info|ok|warn)/ },
   { id: "token-spacing", label: "spacing", re: /^--ui-space-/ },
   { id: "token-type", label: "type", re: /^--ui-(font|leading|text|tracking|weight)-/ },
-  { id: "token-depth", label: "radius, shadow & motion", re: /^--ui-(radius|shadow|glow|ease|fast|slow)/ },
+  {
+    id: "token-depth",
+    label: "radius, shadow & motion",
+    re: /^--ui-(radius|shadow|glow|ease|fast|slow)/,
+  },
   { id: "token-other", label: "everything else", re: /^--ui-/ },
 ];
 
@@ -128,16 +145,23 @@ function ruleBody(css, selector) {
 }
 
 /** Declared custom properties, in source order, last write winning. */
-const declarations = (body) => new Map([...(body ?? "").matchAll(DECLARATION)].map(([, name, value]) => [name, value.trim()]));
+const declarations = (body) =>
+  new Map(
+    [...(body ?? "").matchAll(DECLARATION)].map(([, name, value]) => [name, value.trim()]),
+  );
 
 function swatchCell(value, ground) {
   const td = h("td", null, h("code", { className: "code", textContent: value }));
+  // Paint is the literal, never var() — see above; the chip wears the theme's
+  // ground so a translucent tint reads true.
   if (COLOR_VALUE.test(value)) {
-    const paint = h("i");
-    paint.style.background = value; // the literal, never var() — see above
-    const chip = h("span", { className: "doc-tokref-chip" }, paint);
-    if (ground) chip.style.background = ground; // so a translucent tint reads true
-    td.prepend(chip);
+    td.prepend(
+      h(
+        "span",
+        { className: "doc-tokref-chip", style: `background: ${ground}` },
+        h("i", { style: `background: ${value}` }),
+      ),
+    );
   }
   return td;
 }
@@ -169,19 +193,39 @@ function tokenRows(css) {
   for (const family of TOKEN_FAMILIES) {
     const names = [...light.keys()].filter((n) => !placed.has(n) && family.re.test(n));
     if (!names.length) continue;
-    frag.append(h("tr", { className: "doc-tokref-family", id: family.id }, h("th", { colSpan: 3, scope: "colgroup", textContent: family.label })));
+    frag.append(
+      h(
+        "tr",
+        { className: "doc-tokref-family", id: family.id },
+        h("th", { colSpan: 3, scope: "colgroup", textContent: family.label }),
+      ),
+    );
 
     for (const name of names) {
       placed.add(name);
       const darkCell = swatchCell(dark.get(name) ?? light.get(name), darkBg);
       if (dark.has(name)) reassigned += 1;
       else Object.assign(darkCell, { className: "is-same", title: "unchanged in dark" });
-      const tr = frag.appendChild(h("tr", null, h("td", { className: "table-mono", textContent: name }), swatchCell(light.get(name), lightBg), darkCell));
+      const tr = frag.appendChild(
+        h(
+          "tr",
+          null,
+          h("td", { className: "table-mono", textContent: name }),
+          swatchCell(light.get(name), lightBg),
+          darkCell,
+        ),
+      );
       Object.assign(tr.dataset, { token: name, tokenFamily: family.id });
     }
   }
 
-  return { frag, reassigned, shown: placed.size, declared: tokens.size, missing: [...tokens].filter((n) => !placed.has(n)) };
+  return {
+    frag,
+    reassigned,
+    shown: placed.size,
+    declared: tokens.size,
+    missing: [...tokens].filter((n) => !placed.has(n)),
+  };
 }
 
 const tokref = document.querySelector("[data-token-reference]");
@@ -191,7 +235,8 @@ if (tokref) {
   const sheet =
     document.querySelector('link[rel="stylesheet"][href$="ui.css"]')?.getAttribute("href") ||
     "../ui.css";
-  const errorRow = (text) => h("tr", { className: "doc-tokref-error" }, h("td", { colSpan: 3, textContent: text }));
+  const errorRow = (text) =>
+    h("tr", { className: "doc-tokref-error" }, h("td", { colSpan: 3, textContent: text }));
 
   fetch(sheet, { cache: "no-store" })
     .then((res) => {
@@ -202,7 +247,13 @@ if (tokref) {
       const { frag, reassigned, shown, declared, missing } = tokenRows(css);
       body.replaceChildren(frag);
       // The assertion, in the page: rows shown === --ui-* declared in ui.css.
-      if (missing.length) body.append(errorRow(`${missing.length} declared token(s) missing from this table: ${missing.join(", ")}`));
+      if (missing.length) {
+        body.append(
+          errorRow(
+            `${missing.length} declared token(s) missing from this table: ` + missing.join(", "),
+          ),
+        );
+      }
       if (count) {
         count.textContent = missing.length
           ? `${shown} of ${declared} tokens shown — see the row above.`
@@ -211,22 +262,26 @@ if (tokref) {
       }
     })
     .catch((err) => {
-      body.replaceChildren(errorRow(`could not read ${sheet} — ${err.message}. The table is empty rather than wrong.`));
+      body.replaceChildren(
+        errorRow(
+          `could not read ${sheet} — ${err.message}. ` + "The table is empty rather than wrong.",
+        ),
+      );
       if (count) count.textContent = "token count unavailable";
     });
 }
 
 /* ────────────────────────────────────────────────────── the index rail ── */
 
-const links = new Map([...document.querySelectorAll(".doc-nav a[href^='#']")].map((a) => [a.getAttribute("href").slice(1), a]));
+const links = new Map(
+  [...document.querySelectorAll(".doc-nav a[href^='#']")]
+    .map((a) => [a.getAttribute("href").slice(1), a]),
+);
 
 const seen = new Set();
 const spy = new IntersectionObserver(
   (entries) => {
-    for (const e of entries) {
-      if (e.isIntersecting) seen.add(e.target.id);
-      else seen.delete(e.target.id);
-    }
+    for (const e of entries) seen[e.isIntersecting ? "add" : "delete"](e.target.id);
     const current = [...links.keys()].find((id) => seen.has(id));
     for (const [id, a] of links) {
       if (id === current) a.setAttribute("aria-current", "true");
@@ -269,7 +324,10 @@ for (const orb of document.querySelectorAll("[data-doc-orb] .orb")) {
   orb.addEventListener("click", () => {
     const muted = orb.classList.toggle("is-muted");
     orb.setAttribute("aria-pressed", muted);
-    orb.setAttribute("aria-label", orb.getAttribute("aria-label").replace(/open|muted/, muted ? "muted" : "open"));
+    orb.setAttribute(
+      "aria-label",
+      orb.getAttribute("aria-label").replace(/open|muted/, muted ? "muted" : "open"),
+    );
   });
 }
 
@@ -277,13 +335,14 @@ for (const host of document.querySelectorAll("[data-doc-meter]")) {
   const meter = host.querySelector(".meter");
   if (!meter) continue;
   let n = 0;
-  setInterval(() => {
-    n += 1;
-    meter.style.setProperty(
-      "--ui-meter-value",
-      45 + Math.round(Math.abs(Math.sin(n / 5)) * 45) + "%",
-    );
-  }, 1200);
+  setInterval(
+    () =>
+      meter.style.setProperty(
+        "--ui-meter-value",
+        45 + Math.round(Math.abs(Math.sin(++n / 5)) * 45) + "%",
+      ),
+    1200,
+  );
 }
 
 /* ─────────────────────────────────────────────────── the icon gallery ── */
@@ -291,7 +350,17 @@ for (const host of document.querySelectorAll("[data-doc-meter]")) {
 const grid = document.getElementById("icon-grid");
 if (grid) {
   for (const sym of document.querySelectorAll("symbol[id^='ph-']")) {
-    grid.append(h("div", { className: "doc-icon", innerHTML: '<svg class="icon" aria-hidden="true"><use href="#' + sym.id + '"></use></svg>' }, sym.id.slice(3)));
+    grid.append(
+      h(
+        "div",
+        {
+          className: "doc-icon",
+          innerHTML:
+            '<svg class="icon" aria-hidden="true"><use href="#' + sym.id + '"></use></svg>',
+        },
+        sym.id.slice(3),
+      ),
+    );
   }
 }
 
@@ -306,9 +375,9 @@ function resolve(element) {
   const example = element.closest("[data-example]");
   if (!section && !example) return null;
   const out = {
-    component: section ? section.dataset.component : null,
-    example: example ? example.dataset.example : null,
-    section: section ? section.id || null : null,
+    component: section?.dataset.component ?? null,
+    example: example?.dataset.example ?? null,
+    section: section?.id || null,
   };
   for (const k of ["class", "token"]) {
     const carrier = element.closest(`[data-${k}]`);
