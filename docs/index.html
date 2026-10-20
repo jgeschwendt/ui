@@ -329,7 +329,7 @@ document.documentElement.removeAttribute("data-theme");  <span class="readout-ke
     in <code class="code">ui.tokens</code>, after <code class="code">ui.css</code>: an unlayered
     <code class="code">:root</code> beats both theme blocks and paints the light values into dark.</p>
   <pre class="readout">@layer ui.tokens {
-  :root, :root[data-theme="light"] { --ui-accent: #7c3aed; --ui-accent-soft: #f1eafe; /* …the other five */ }
+  :root { --ui-accent: #7c3aed; --ui-accent-soft: #f1eafe; /* …the other five */ }
   :root[data-theme="dark"] { /* the dark set */ }
   @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { /* the same */ } }
 }</pre>
@@ -1303,13 +1303,8 @@ strip.classList.add("strip-danger");</pre>
       <tr data-class="list"><td class="table-mono">.list</td><td>the container</td></tr>
       <tr data-class="listrow"><td class="table-mono">.listrow</td><td>a row: name, meta, actions</td></tr>
       <tr data-class="is-current"><td class="table-mono">.is-current</td><td>fills the row and promotes the meta from faint to muted ink — faint loses AA against a tint</td></tr>
-<<<<<<< HEAD
       <tr data-class="is-busy"><td class="table-mono">.is-busy</td><td>pulses; stops under <code class="code">prefers-reduced-motion</code> inside <code class="code">.ui</code></td></tr>
       <tr data-class="is-warned"><td class="table-mono">.is-warned</td><td>rail and name only — it deliberately does <em>not</em> fill, because two tints in one list read as one muddled emphasis and selection owns the tint. The split was forced when warn and accent were the same brass in dark; warn is orange now, and the split is kept because it was right on its own terms</td></tr>
-=======
-      <tr data-class="is-busy"><td class="table-mono">.is-busy</td><td>pulses; stops under <code class="code">prefers-reduced-motion</code> inside <code class="code">.ui</code></td></tr>
-      <tr data-class="is-warned"><td class="table-mono">.is-warned</td><td>rail and name only — it deliberately does <em>not</em> fill, because two tints in one list read as one muddled emphasis and selection owns the tint</td></tr>
->>>>>>> 97eb10a (docs(docs, demo): claims match ui.css — panel accent, flex panel, reduced motion, retheming)
     </tbody>
   </table>
 </section>

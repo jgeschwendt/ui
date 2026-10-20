@@ -41,12 +41,12 @@ invariants:
 
 ## Map
 
-| node  | kind      | purpose                                                                                                                                                                                 | unfold                                           |
-| ----- | --------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
-| demo  | container | index.html — the kitchen sink: every component at once under fake telemetry, opens off disk; its inline script carries the shared theme toggle.                                         | `stele unfold demo` · or read `demo/AGENTS.md`   |
-| docs  | container | the reference page (index.html, page.css, docs.js — its token table reads ui.css live; its open section is what is unsettled) and figures/, its Claude Design boards with their source. | `stele unfold docs` · or read `docs/AGENTS.md`   |
-| icons | container | the vendored Phosphor regular subset — sprite.svg and svg/NAME.svg, MIT in LICENSE; each page inlines the sprite.                                                                       | `stele unfold icons` · or read `icons/AGENTS.md` |
-| test  | container | contract.test.ts — the external contract end to end: class/token snapshot, layers and :root, docs.css shell, glyphs, figures, the docs page's Tailwind import compiled, serve.py live.  | `stele unfold test` · or read `test/AGENTS.md`   |
+| node  | kind      | purpose                                                                                                                                                                                               | unfold                                           |
+| ----- | --------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
+| demo  | container | index.html — the kitchen sink: every component at once under fake telemetry, opens off disk; its inline script carries the shared theme toggle.                                                       | `stele unfold demo` · or read `demo/AGENTS.md`   |
+| docs  | container | the reference page (index.html, page.css, docs.js — its token table reads ui.css live; its open section is what is unsettled) and figures/, its Claude Design boards with their source.               | `stele unfold docs` · or read `docs/AGENTS.md`   |
+| icons | container | the vendored Phosphor regular subset — sprite.svg and svg/NAME.svg, MIT in LICENSE; each page inlines the sprite.                                                                                     | `stele unfold icons` · or read `icons/AGENTS.md` |
+| test  | container | contract.test.ts — the external contract end to end: class/token snapshot, layers and :root, cascade traps, docs.css shell, glyphs, figures, the docs page's Tailwind import compiled, serve.py live. | `stele unfold test` · or read `test/AGENTS.md`   |
 
 ## Indexes
 
