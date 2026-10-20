@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="../ui.css" />
 <link rel="stylesheet" href="../docs.css" />
 <link rel="stylesheet" href="page.css" />
+<script src="theme.js"></script>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%23476349'/%3E%3Cpath d='M4 11.5 L8 4.5 L12 11.5' stroke='white' fill='none' stroke-width='1.6'/%3E%3C/svg%3E" />
 </head>
 <body data-page="docs">
@@ -1726,12 +1727,7 @@ visor -- python3 serve.py <span class="readout-key"># or let visor own the port 
       <code class="code">icons/svg/</code>, inlined in <code class="code">demo/</code> and <code class="code">docs/</code>),
       kept equal by the suite but edited by hand. A stdlib <code class="code">icons/sprite.py</code> that writes the
       sprite and splices it into both pages would make the svg files the only source.</li>
-    <li><strong>One theme toggle.</strong> The demo's inline script and <code class="code">docs/docs.js</code> each carry
-      <code class="code">applyTheme</code> and the <code class="code">ui-theme</code> key; a shared
-      <code class="code">theme.js</code> beside <code class="code">ui.css</code> would load off disk too, and should
-      apply the stored theme from <code class="code">&lt;head&gt;</code> — both pages now apply it at the end of
-      <code class="code">&lt;body&gt;</code>, so a stored choice that differs from the system flashes on first paint.</li>
-    <li><strong>Browser coverage.</strong> <code class="code">test/scripts.test.ts</code> runs <code class="code">docs.js</code>
+    <li><strong>Browser coverage.</strong> <code class="code">test/scripts.test.ts</code> runs <code class="code">theme.js</code>, <code class="code">docs.js</code>
       and the demo script over each page in happy-dom, which has no layout: scrollspy's callback is fed by
       hand and nothing is painted. A headless agent-browser probe over <code class="code">serve.py</code> would
       cover real intersection and the cascade traps as rendered.</li>
