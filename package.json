@@ -1,6 +1,7 @@
 {
   "private": true,
   "devDependencies": {
+    "happy-dom": "21.0.3",
     "tailwindcss": "4.3.3"
   }
 }

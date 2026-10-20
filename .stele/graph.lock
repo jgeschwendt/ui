@@ -30,7 +30,7 @@
           "text": "every rule sits in ui.tokens, ui.base or ui.components, declared in that order before any rule",
           "verified": {
             "digest": null,
-            "sha": "7d2d421a74406e7929646cec57f8d7cf10f0543d"
+            "sha": "e80aac33b90d8e3a3f487a6e5df3629eaa6e16b5"
           }
         },
         {
@@ -42,7 +42,7 @@
           "text": ":root declares every token; theme blocks only reassign",
           "verified": {
             "digest": null,
-            "sha": "7d2d421a74406e7929646cec57f8d7cf10f0543d"
+            "sha": "e80aac33b90d8e3a3f487a6e5df3629eaa6e16b5"
           }
         },
         {
@@ -54,7 +54,7 @@
           "text": "ui.css is the whole library — no build step, no framework dependency, no network requests",
           "verified": {
             "digest": null,
-            "sha": "7d2d421a74406e7929646cec57f8d7cf10f0543d"
+            "sha": "e80aac33b90d8e3a3f487a6e5df3629eaa6e16b5"
           }
         }
       ],
@@ -146,7 +146,7 @@
       },
       "id": "test",
       "kind": "container",
-      "purpose": "contract.test.ts — the external contract end to end: class/token snapshot, layers and :root, cascade traps, docs.css shell, glyphs, figures, the docs page's Tailwind import compiled, serve.py live."
+      "purpose": "contract.test.ts — class/token snapshot, layers and :root, cascade traps, docs.css shell, glyphs, figures, Tailwind import, serve.py live; scripts.test.ts — both page scripts in happy-dom."
     }
   },
   "version": 2
