@@ -1,5 +1,5 @@
 // The external contract, end to end: the stylesheet's public surface, the docs
-// shell, the glyphs every page inlines, the figures, README's Tailwind import,
+// shell, the glyphs every page inlines, the figures, the docs page's Tailwind import,
 // and the dev server's corrections. Nothing here imports ui — it ships as
 // files, so the tests read the files.
 import { expect, test } from "bun:test";
@@ -38,7 +38,7 @@ test("the sprite, the standalone glyphs and each page's inlined copy are one set
   expect(sprite).toEqual(
     files.map((f, i) => f.trim().replace(/^<svg xmlns="[^"]*"/, `<symbol id="ph-${names[i]}"`).replace(/<\/svg>$/, "</symbol>")).sort(),
   );
-  expect(await read("README.md")).toContain(`A ${names.length}-glyph subset`);
+  expect(pages[1]).toContain(`A ${names.length}-glyph `);
   for (const page of pages) {
     expect(symbols(page)).toEqual(sprite);
     expect(all(page, /href="#ph-([^"]*)"/g).filter((n) => !names.includes(n))).toEqual([]);
@@ -54,7 +54,7 @@ test("docs.css — the shared docs shell — is additive: its own layer, ui's to
   const library = classes(all(css, /([^{};]+)\{/g).join());
   expect(own.filter((c) => library.includes(c))).toEqual([]);
   expect({ classes: own, tokens: set(docs, /(--ui-[a-z0-9-]+)/g) }).toMatchSnapshot();
-  const shell = (await read("README.md")).split("## The docs shell")[1].split("\n## ")[0];
+  const shell = pages[1].split('id="docs-shell"')[1].split("</section>")[0];
   expect(own.filter((c) => !shell.includes(`.${c}`))).toEqual([]);
 });
 
@@ -114,10 +114,10 @@ test("serve.py: / redirects to the docs over keep-alive, files carry charset and
   expect(await child.exited).toBe(0);
 });
 
-test("README's Tailwind import nests ui in components: after Preflight's base, before utilities", async () => {
+test("the docs page's Tailwind import nests ui in components: after Preflight's base, before utilities", async () => {
   const { compile } = await import("tailwindcss");
-  const imports = all(await read("README.md"), /```css\n([^`]*@import "tailwindcss"[^`]*)```/g);
-  expect(new Set(imports)).toEqual(new Set(['@import "tailwindcss";\n@import "./ui.css" layer(components);\n']));
+  const imports = all(pages[1], /<pre class="readout">(@import "tailwindcss";[^<]*)<\/pre>/g);
+  expect(imports).toEqual(['@import "tailwindcss";\n@import "./ui.css" layer(components);']);
   const files: Record<string, string> = { "./ui.css": "ui.css", tailwindcss: "node_modules/tailwindcss/index.css" };
   const loadStylesheet = async (id: string) => ({ path: id, base: root, content: await read(files[id]) });
   const out = (await compile(imports[0], { base: root, loadStylesheet })).build(["btn", "p-0"]);

@@ -74,9 +74,11 @@
 
 <nav class="doc-nav" aria-label="components">
   <h2>foundation</h2>
+  <a href="#use">use</a>
   <a href="#tokens">tokens</a>
   <a href="#token-reference">token reference</a>
   <a href="#theming">theming</a>
+  <a href="#reset">reset</a>
   <a href="#type">type</a>
   <a href="#layout">layout</a>
   <h2>controls</h2>
@@ -101,13 +103,60 @@
   <h2>details</h2>
   <a href="#icon">icon</a>
   <a href="#misc">code · kbd · tip · empty</a>
+  <h2>alongside</h2>
+  <a href="#tailwind">tailwind</a>
+  <a href="#docs-shell">docs shell</a>
+  <a href="#non-goals">non-goals</a>
   <h2>the page itself</h2>
   <a href="#layers">layers</a>
+  <a href="#serving">two pages, a server</a>
   <a href="#wrapping">wrapping (visor)</a>
   <a href="#open">open</a>
 </nav>
 
 <main>
+
+<!-- ═════════════════════════════════════════════════════════════ use ── -->
+<section class="doc-section" id="use" data-component="use">
+  <header class="stack">
+    <p class="eyebrow">foundation</p>
+    <h2 class="h1">Use</h2>
+    <!-- ※ whole-library -->
+    <p class="lead">A semantic component stylesheet in the spirit of DaisyUI, but pure CSS on custom
+      properties. <code class="code">ui.css</code> is the whole library: no build step, no framework
+      dependency, no network requests.</p>
+  </header>
+
+  <pre class="readout">&lt;html class="ui"&gt;
+  &lt;link rel="stylesheet" href="https://gigantic.dev/ui/ui.css" /&gt;</pre>
+
+  <p class="doc-note"><code class="code">.ui</code> is the opt-in base layer: page background, ink,
+    font stack, <code class="code">box-sizing</code>, focus ring. Omit it and only the components
+    style themselves — safe for dropping the library into a page that already has opinions.
+    Put it on <code class="code">&lt;body&gt;</code> rather than <code class="code">&lt;html&gt;</code>
+    when anything reads <code class="code">body</code>'s background — see
+    <a class="link" href="#theming">two rules that bite</a>.</p>
+
+  <p class="doc-note"><strong>State is <code class="code">.is-*</code> or an ARIA attribute, never
+    both for the same fact.</strong> The classes are <code class="code">.is-active</code>,
+    <code class="code">.is-busy</code>, <code class="code">.is-collapsed</code>,
+    <code class="code">.is-current</code>, <code class="code">.is-down</code>,
+    <code class="code">.is-muted</code>, <code class="code">.is-on</code>,
+    <code class="code">.is-paused</code> and <code class="code">.is-warned</code>; the attributes,
+    where one exists, are <code class="code">[aria-pressed]</code>,
+    <code class="code">[aria-current]</code>, <code class="code">[aria-invalid]</code> and
+    <code class="code">:disabled</code>.</p>
+
+  <p class="doc-note">The component names are the documentation; everything else is discoverable by
+    reading <code class="code">ui.css</code>: layout and type sit in its base layer, every other
+    family in its components layer under a <code class="code">/* ── name ── */</code> banner —
+    related families share one (chip with the status dot; code, kbd and metric with the
+    readout).</p>
+
+  <p class="doc-note">MIT © 2026 Joshua Geschwendt — full text in <code class="code">LICENSE</code>.
+    The vendored Phosphor glyphs carry their own MIT notice in <code class="code">icons/LICENSE</code>;
+    both travel with the files.</p>
+</section>
 
 <!-- ══════════════════════════════════════════════════════════ tokens ── -->
 <section class="doc-section" id="tokens" data-component="tokens">
@@ -263,6 +312,7 @@
     <figcaption>The two themes token by token, and the order that picks one: <code class="code">:root</code> is Sage, the system's dark is Brass, and <code class="code">data-theme</code> overrides both. Source: Claude Design canvas <a href="https://claude.ai/artifact/9SNgMFS1dsMhmN8zarPh2s">ui figures</a>, board Themes.</figcaption>
   </figure>
 
+  <!-- ※ theming-contract -->
   <p class="doc-note">That is the whole contract. The toggle in this page's appbar is exactly it —
     three buttons writing (or removing) one attribute:</p>
   <pre class="readout">document.documentElement.dataset.theme = "dark";   <span class="readout-key">// explicit</span>
@@ -305,6 +355,41 @@ document.documentElement.removeAttribute("data-theme");  <span class="readout-ke
     in <em>both</em> themes — the library's contrast measurements say nothing about colours it has
     never seen.</p>
 
+  <h3 class="doc-h3">Sage and brass</h3>
+  <p class="doc-note">Two voices, one per theme. <strong>Sage</strong> carries light mode:
+    grey-leaning and dried-herb, hue 124 at 28% saturation, nothing like emerald.
+    <code class="code">#476349</code> is the accent and <code class="code">--ui-ok</code> both;
+    <code class="code">#eaefe9</code> is its tint. The light neutrals carry the same faint sage cast,
+    a hair warmer and greyer than before, so the surfaces sit underneath the accent instead of arguing
+    with it.</p>
+  <p class="doc-note"><strong>Brass</strong> carries dark mode, taken from the orrery atlas:
+    <code class="code">#cfa14d</code>. It is the accent and nothing else. Warn used to be brass too —
+    gold was that theme's whole voice and a warning read as emphasis — but a warning that is
+    indistinguishable from the accent cannot warn, so warn moved to <strong>orange</strong>:
+    <code class="code">#f5893a</code> in dark, <code class="code">#c86a17</code> in light. Hue 25–28
+    against brass's 39, at 90% saturation against brass's 58, and far enough from danger's red (hue 4
+    dark, 358 light) to stay its own signal. Dark <code class="code">--ui-ok</code> is the sage lifted
+    to <code class="code">#8fae94</code> and luminance-matched to brass (8.2 vs 8.4 on
+    <code class="code">--ui-bg</code>), so the green and the gold never fight for the eye.</p>
+  <p class="doc-note">Measured: sage on white 6.7:1, on its own tint 5.7:1, white-on-sage 6.7:1;
+    brass on <code class="code">--ui-bg</code> 8.4:1, <code class="code">#ddb56b</code> (hover, and
+    the ink for soft-tinted pills) 10.3:1, ink-on-brass 8.0:1. Every accent pairing clears AA.</p>
+  <p class="doc-note">Light-mode <code class="code">#c86a17</code> reads 3.8:1 on white (3.4:1 on its
+    tint, 3.7:1 on <code class="code">--ui-surface</code>, 3.4:1 on <code class="code">--ui-sunken</code>)
+    — sound for borders, dots and meter fills, under AA for small text. That is what
+    <code class="code">--ui-warn-ink</code> is for: <code class="code">#9c500f</code>, the same orange
+    darkened, at <strong>5.9:1 on white</strong> and <strong>5.3:1 on
+    <code class="code">--ui-warn-soft</code></strong> (5.7:1 on <code class="code">--ui-surface</code>,
+    5.3:1 on <code class="code">--ui-sunken</code>). Every light-mode warn <em>text</em> colour —
+    <code class="code">.pill-warn</code>, <code class="code">.badge-warn</code>,
+    <code class="code">.chip-warn b</code>, <code class="code">.strip-warn</code>, and
+    <code class="code">.is-warned</code>'s row name — is drawn in the ink, while backgrounds, borders
+    and fills keep <code class="code">--ui-warn</code>. In dark mode the ink aliases straight back to
+    warn: <code class="code">#f5893a</code> is 8.1:1 on <code class="code">--ui-bg</code>, 7.7:1 on
+    <code class="code">--ui-surface</code>, and 6.8:1 on its own tint, so one value carries fill and
+    sentence both. A light-mode warn can carry a sentence, and the standing contrast exception stays
+    closed.</p>
+
   <h3 class="doc-h3">Two rules that bite</h3>
   <p class="doc-note"><strong>On <code class="code">&lt;html&gt;</code>, <code class="code">&lt;body&gt;</code>
     stays transparent.</strong> CSS propagates the root element's background to the canvas, which
@@ -318,6 +403,74 @@ document.documentElement.removeAttribute("data-theme");  <span class="readout-ke
     — because components set <code class="code">display</code> and a component class beats the UA's
     rule. Without the guard, <code class="code">el.hidden = true</code> silently does nothing on a
     pill, a panel or a strip.</p>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════ reset ── -->
+<section class="doc-section" id="reset" data-component="reset">
+  <header class="stack">
+    <p class="eyebrow">foundation</p>
+    <h2 class="h1">The reset</h2>
+    <p class="lead"><code class="code">.ui</code> carries a small modern reset — the Andy Bell / Josh
+      Comeau line, adapted. It corrects the UA where the UA is wrong for a layout engine, and
+      stops.</p>
+  </header>
+
+  <table data-table>
+    <thead><tr><th>rule</th><th>why</th></tr></thead>
+    <tbody>
+      <tr><td><code class="code">margin: 0</code> on <code class="code">blockquote</code>, <code class="code">body</code>, <code class="code">dd</code>, <code class="code">dl</code>, <code class="code">figure</code>, <code class="code">h1</code>–<code class="code">h6</code>, <code class="code">p</code>, <code class="code">pre</code></td><td>UA margins are vertical rhythm from a document engine; here spacing belongs to <code class="code">.stack</code>, <code class="code">.row</code>, <code class="code">[data-grid]</code> and the components' own padding</td></tr>
+      <tr><td><code class="code">list-style: none; padding-left: 0</code> on <code class="code">ol[role="list"]</code>, <code class="code">ul[role="list"]</code></td><td>lists opt <strong>out</strong> by saying so</td></tr>
+      <tr><td><code class="code">display: block; max-width: 100%</code> on <code class="code">canvas</code>, <code class="code">img</code>, <code class="code">picture</code>, <code class="code">svg</code>, <code class="code">video</code></td><td>replaced elements are boxes, not letters — no baseline gap, no overflow</td></tr>
+      <tr><td><code class="code">font: inherit</code> on <code class="code">button</code>, <code class="code">input</code>, <code class="code">select</code>, <code class="code">textarea</code></td><td>controls opt out of inheritance for historical reasons only</td></tr>
+      <tr><td><code class="code">cursor: pointer</code> on <code class="code">button</code></td><td></td></tr>
+      <tr><td><code class="code">overflow-wrap: break-word</code> on <code class="code">h1</code>–<code class="code">h6</code>, <code class="code">p</code></td><td>a URL or a device id must not widen the page</td></tr>
+      <tr><td><code class="code">prefers-reduced-motion: reduce</code> → near-zero animation and transition durations, <code class="code">scroll-behavior: auto</code></td><td>the preference is a request to stop moving, not to stop three named animations. Near-zero rather than <code class="code">none</code>, so <code class="code">transitionend</code> still fires and code awaiting one does not hang</td></tr>
+    </tbody>
+  </table>
+
+  <p class="doc-note">Every rule is wrapped in <code class="code">:where(.ui …)</code>, so it carries
+    <strong>specificity zero</strong>: components override it by living in a later layer, and a
+    consumer overrides it with any selector at all. Two consequences worth knowing:</p>
+  <ul class="claims" role="list">
+    <li><strong>A component must own its own leading if it sizes off it.</strong>
+      <code class="code">font: inherit</code> hands a control the body's
+      <code class="code">line-height</code>, not the UA's <code class="code">normal</code> — which is why
+      <code class="code">.btn</code>, <code class="code">.segmented &gt; button</code>,
+      <code class="code">.input</code>, <code class="code">.select</code> and
+      <code class="code">.textarea</code> each declare a <code class="code">line-height</code>. A new
+      control that does not will be about four pixels taller than its neighbours.</li>
+    <li><strong>A percentage <code class="code">max-width</code> contributes nothing to a flex parent's
+      max-content width.</strong> An inline sparkline <code class="code">&lt;canvas&gt;</code> with a
+      fixed pixel width inside a content-sized flex row needs <code class="code">max-width: none</code>
+      back, or the row sizes short.</li>
+  </ul>
+
+  <h3 class="doc-h3">Why not Preflight</h3>
+  <p class="doc-note">Tailwind's Preflight is a <em>global</em> reset for a utility-first world where
+    every element is expected to be dressed by classes. This library is semantic and opt-in, and
+    three things follow:</p>
+  <ul class="claims" role="list">
+    <li><strong>Scoped, not global.</strong> Nothing here applies without <code class="code">.ui</code>
+      on an ancestor. Drop the class and the page gets the UA back whole — which is the same promise
+      the rest of the base layer makes.</li>
+    <li><strong>Semantic elements keep their meaning.</strong> Preflight unstyles
+      <code class="code">&lt;ul&gt;</code>, <code class="code">&lt;ol&gt;</code>,
+      <code class="code">&lt;h1&gt;</code> and <code class="code">&lt;button&gt;</code> down to nothing.
+      A bare <code class="code">&lt;ul&gt;</code> here keeps its indent and its bullets, a bare
+      <code class="code">&lt;button&gt;</code> still looks like a button, and headings keep their size
+      — a semantic library whose bare markup lies is worse than no library. Removing list markers is
+      a decision the markup makes with <code class="code">role="list"</code>.</li>
+    <li><strong>No double reset.</strong> Loading <code class="code">ui.css</code> next to Tailwind
+      gives you Preflight <em>and</em> this, and the two disagree about
+      <code class="code">&lt;ul&gt;</code> and <code class="code">&lt;button&gt;</code>. Imported into
+      Tailwind's <code class="code">components</code> layer, every <code class="code">ui</code> layer
+      sorts after Preflight's <code class="code">base</code>, so the classed components keep their
+      padding, margins and borders. Bare markup is another matter: the scoped reset leaves lists,
+      heading sizes and <code class="code">&lt;button&gt;</code> chrome to the UA rather than restating
+      them, so Preflight still strips those, inside <code class="code">.ui</code> too. If you own the
+      Tailwind config, disabling Preflight leaves the scoped reset as the only one. See
+      <a class="link" href="#tailwind">Tailwind</a>.</li>
+  </ul>
 </section>
 
 <!-- ════════════════════════════════════════════════════════════ type ── -->
@@ -418,6 +571,16 @@ document.documentElement.removeAttribute("data-theme");  <span class="readout-ke
       <tr data-class="[data-table]"><td class="table-mono">[data-table]</td><td>the table skin — documented under <a class="link" href="#table">Table</a></td></tr>
     </tbody>
   </table>
+
+  <pre class="readout">&lt;main data-container&gt;
+  &lt;div data-grid style="--ui-grid-min: 340px"&gt;…&lt;/div&gt;
+  &lt;table data-table class="table-hover"&gt;…&lt;/table&gt;
+&lt;/main&gt;</pre>
+  <p class="doc-note">The <code class="code">--ui-container</code> / <code class="code">--ui-grid-min</code>
+    hooks keep working. Every other component stays a class, including the table modifiers
+    (<code class="code">.table-hover</code>, <code class="code">.table-mono</code>,
+    <code class="code">.table-num</code>, <code class="code">.table-wrap</code>), which Tailwind does not
+    claim.</p>
 </section>
 
 <!-- ══════════════════════════════════════════════════════════ button ── -->
@@ -584,6 +747,26 @@ document.documentElement.removeAttribute("data-theme");  <span class="readout-ke
       <tr data-class="aria-invalid"><td class="table-mono">[aria-invalid]</td><td>the danger ring — prefer it to <code class="code">.input-invalid</code></td></tr>
     </tbody>
   </table>
+
+  <h3 class="doc-h3">The iOS floor</h3>
+  <p class="doc-note">Safari on iOS zooms the viewport in whenever it focuses a form control computing
+    under 16px, and it does not zoom back out — one tap on a toolbar filter leaves the page magnified.
+    The compact scale is entirely under that line: with <code class="code">.ui</code> on the root the
+    rem tokens resolve against <code class="code">--ui-text-md</code>, so the controls measure 10.5px
+    (<code class="code">-sm</code>), 11.375px (<code class="code">.input</code>,
+    <code class="code">.select</code>, <code class="code">.textarea</code>) and 14px
+    (<code class="code">.input-lg</code>). So <code class="code">ui.css</code> carries an iOS-only
+    floor:</p>
+  <pre class="readout">@supports (-webkit-touch-callout: none) {
+  .input, .input-lg, .input-sm, .select, .select-sm, .textarea { font-size: 16px; }
+}</pre>
+  <p class="doc-note"><code class="code">-webkit-touch-callout</code> is WebKit-on-iOS and nothing
+    else, which is the point: the compact scale is untouched everywhere the zoom cannot happen. The two
+    usual fixes are worse — <code class="code">maximum-scale=1</code> in the viewport meta buys it by
+    taking pinch-zoom away from everyone, and a blanket 16px inflates every toolbar on desktop. The
+    <code class="code">-sm</code> widths are <code class="code">ch</code>-based, so they grow with the
+    text on iOS instead of clipping it. A new control with its own font-size belongs in that block
+    too.</p>
 </section>
 
 <!-- ══════════════════════════════════════════════════════════ toggle ── -->
@@ -1112,7 +1295,7 @@ strip.classList.add("strip-danger");</pre>
       <tr data-class="listrow"><td class="table-mono">.listrow</td><td>a row: name, meta, actions</td></tr>
       <tr data-class="is-current"><td class="table-mono">.is-current</td><td>fills the row and promotes the meta from faint to muted ink — faint loses AA against a tint</td></tr>
       <tr data-class="is-busy"><td class="table-mono">.is-busy</td><td>pulses; stops under <code class="code">prefers-reduced-motion</code></td></tr>
-      <tr data-class="is-warned"><td class="table-mono">.is-warned</td><td>rail and name only — it deliberately does <em>not</em> fill, because two tints in one list read as one muddled emphasis and selection owns the tint</td></tr>
+      <tr data-class="is-warned"><td class="table-mono">.is-warned</td><td>rail and name only — it deliberately does <em>not</em> fill, because two tints in one list read as one muddled emphasis and selection owns the tint. The split was forced when warn and accent were the same brass in dark; warn is orange now, and the split is kept because it was right on its own terms</td></tr>
     </tbody>
   </table>
 </section>
@@ -1275,6 +1458,127 @@ strip.classList.add("strip-danger");</pre>
   </table>
 </section>
 
+<!-- ════════════════════════════════════════════════════════ tailwind ── -->
+<section class="doc-section" id="tailwind" data-component="tailwind">
+  <header class="stack">
+    <p class="eyebrow">alongside</p>
+    <h2 class="h1">Tailwind</h2>
+    <!-- ※ tailwind-compatibility -->
+    <p class="lead"><code class="code">ui.css</code> declares
+      <code class="code">@layer ui.tokens, ui.base, ui.components</code> and puts every rule inside
+      one of them. Under Tailwind v4, import <code class="code">tailwindcss</code> first, then
+      <code class="code">ui.css</code> <strong>into its <code class="code">components</code>
+      layer</strong>, so <code class="code">class="btn px-6"</code> works with no
+      <code class="code">!important</code> and no arbitrary specificity war:</p>
+  </header>
+
+  <pre class="readout">@import "tailwindcss";
+@import "./ui.css" layer(components);</pre>
+
+  <p class="doc-note">Tailwind v4 declares <code class="code">@layer theme, base, components, utilities</code>,
+    and <code class="code">ui.*</code> nests as <code class="code">components.ui.*</code>: after
+    Preflight in <code class="code">base</code>, before <code class="code">utilities</code>. So a
+    <code class="code">.btn</code> keeps its padding against Preflight's <code class="code">button</code>
+    reset, and a utility wins any residual tie — a <code class="code">p-0</code> next to a
+    <code class="code">.card</code> removes the padding, no <code class="code">!important</code>
+    needed. Imported bare before Tailwind, <code class="code">ui.*</code> declares first and sorts
+    below <code class="code">base</code>, and Preflight strips every component.</p>
+
+  <p class="doc-note">Tailwind v3 leaves Preflight and the utilities unlayered, and unlayered rules
+    beat every layer: there, disable Preflight
+    (<code class="code">corePlugins: { preflight: false }</code>).</p>
+
+  <p class="doc-note">The components use no Tailwind-reserved class prefix, so there is nothing to
+    purge or safelist; the three layout names Tailwind does claim are
+    <a class="link" href="#layout-attributes">attributes</a>. Point Tailwind's theme at the same
+    tokens if you want the utilities to share the palette:</p>
+  <pre class="readout">@theme inline { --color-accent: var(--ui-accent); --color-fg: var(--ui-fg); }</pre>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ docs shell ── -->
+<section class="doc-section" id="docs-shell" data-component="docs-shell">
+  <header class="stack">
+    <p class="eyebrow">alongside</p>
+    <h2 class="h1">The docs shell</h2>
+    <p class="lead"><code class="code">docs.css</code> sits beside <code class="code">ui.css</code>:
+      the layout shell every project docs page under gigantic.dev shares — container, prose measure,
+      section rhythm, and the furniture those pages all carry.</p>
+  </header>
+
+  <p class="doc-note">The furniture: <code class="code">.docs-shell</code>,
+    <code class="code">.docs-lead</code>, <code class="code">.docs-flavor</code>,
+    <code class="code">.docs-note</code>, <code class="code">.docs-toc</code>,
+    <code class="code">.docs-section</code>, <code class="code">.docs-foot</code>,
+    <code class="code">pre.snippet</code> / <code class="code">pre.tree</code>,
+    <code class="code">.snippet-note</code>, <code class="code">ul.claims</code>,
+    <code class="code">ol.steps</code>, <code class="code">figure.figure</code> with
+    <code class="code">.figure-light</code> / <code class="code">.figure-dark</code>. Consumers link
+    both from the CDN, then their own <code class="code">page.css</code> for what is truly theirs:</p>
+  <pre class="readout">&lt;link rel="stylesheet" href="https://gigantic.dev/ui/ui.css" /&gt;
+&lt;link rel="stylesheet" href="https://gigantic.dev/ui/docs.css" /&gt;
+&lt;link rel="stylesheet" href="page.css" /&gt;</pre>
+
+  <p class="doc-note">Its tokens join <code class="code">ui.tokens</code> —
+    <code class="code">--ui-measure</code> (52rem, the one prose measure) and
+    <code class="code">--ui-measure-wide</code> (60rem, lists and steps) — and its rules sit in
+    <code class="code">ui.docs</code>, a layer after <code class="code">ui.components</code>, so a
+    page's unlayered rules override any of it. The breakpoints are constants stated once in its header
+    comment, because a media query cannot read a custom property: <strong>900px</strong> (the
+    gigantic.dev rail docks and offsets the page by 224px; below it, a 48px strip) and
+    <strong>640px</strong> (phone).</p>
+
+  <h3 class="doc-h3">Figures</h3>
+  <p class="doc-note">A figure is a board from the project's Claude Design canvas
+    (<code class="code">&lt;project&gt; figures</code>), rendered to
+    <code class="code">docs/figures/&lt;name&gt;.png</code> at 2× with its source read back into
+    <code class="code">docs/figures/project/</code>. <code class="code">figure.figure</code> frames it —
+    <code class="code">ui-bg</code> behind the image, a <code class="code">ui-border</code> hairline,
+    <code class="code">ui-radius-lg</code> corners — and sets the caption in
+    <code class="code">ui-fg-faint</code> at the prose measure. Each board renders twice,
+    <code class="code">&lt;name&gt;.png</code> and <code class="code">&lt;name&gt;-dark.png</code> — the
+    dark one derived at export by swapping every gigantic colour token's light value for its dark one,
+    never drawn twice — and the figure carries both: <code class="code">.figure-light</code> shows by
+    default, <code class="code">.figure-dark</code> wherever ui.css resolves Brass
+    (<code class="code">prefers-color-scheme: dark</code> unless
+    <code class="code">data-theme="light"</code>, or <code class="code">data-theme="dark"</code>). The
+    caption names its source:</p>
+  <pre class="readout">&lt;figure class="figure"&gt;
+  &lt;img class="figure-light" src="figures/&lt;name&gt;.png" alt="…" /&gt;
+  &lt;img class="figure-dark" src="figures/&lt;name&gt;-dark.png" alt="" aria-hidden="true" loading="lazy" /&gt;
+  &lt;figcaption&gt;… Source: Claude Design canvas &lt;a href="&lt;canvas url&gt;"&gt;&lt;project&gt; figures&lt;/a&gt;, board &lt;name&gt;.&lt;/figcaption&gt;
+&lt;/figure&gt;</pre>
+
+  <p class="doc-note">Consumers link latest, so every change to <code class="code">ui.css</code> or
+    <code class="code">docs.css</code> is <strong>additive</strong> or ships together with the consumer
+    updates it needs — a renamed class or a removed token breaks every docs page at once.</p>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════ non-goals ── -->
+<section class="doc-section" id="non-goals" data-component="non-goals">
+  <header class="stack">
+    <p class="eyebrow">alongside</p>
+    <h2 class="h1">Non-goals</h2>
+    <p class="lead">These stay consumer-local. Each one is a <em>chart</em>, not a component: it needs
+      a time base, a data range, or a pointer model that only the page owning the data can supply, and
+      a version parameterised enough to be general is worse than twenty lines written against the
+      actual numbers.</p>
+  </header>
+
+  <ul class="claims" role="list">
+    <li><strong>Time rulers</strong> — tick density is a function of the visible span.</li>
+    <li><strong>Scrub timelines</strong> — playhead, seek and drag belong to a media element.</li>
+    <li><strong>Event-lane rows</strong> — lane assignment is a layout of the data, not of the DOM.</li>
+    <li><strong>Pointer-following tooltips</strong> — <code class="code">.tip</code> is a static hint
+      on a static anchor; a crosshair that tracks the cursor and reads the nearest datum is plotting
+      code.</li>
+    <li><strong>Fixed-height plot rows</strong> — the height is chosen against the value range.</li>
+  </ul>
+
+  <p class="doc-note">Build them on top: <code class="code">.panel</code> for the frame,
+    <code class="code">.readout</code> for the values, <code class="code">--ui-panel-accent</code> and
+    your own hue tokens for the colour.</p>
+</section>
+
 <!-- ══════════════════════════════════════════════════════════ layers ── -->
 <section class="doc-section" id="layers" data-component="layers">
   <header class="stack">
@@ -1291,6 +1595,38 @@ strip.classList.add("strip-danger");</pre>
     <img class="figure-dark" src="figures/layers-dark.png" alt="" aria-hidden="true" loading="lazy" />
     <figcaption>Weakest on the left. <code class="code">ui.base</code> paints the page only under <code class="code">.ui</code>; the one rule that needs no class is <code class="code">[hidden]</code>, whose <code class="code">!important</code> runs the layer order backwards. Source: Claude Design canvas <a href="https://claude.ai/artifact/9SNgMFS1dsMhmN8zarPh2s">ui figures</a>, board Layers.</figcaption>
   </figure>
+</section>
+
+<!-- ═════════════════════════════════════════════════════════ serving ── -->
+<section class="doc-section" id="serving" data-component="serving">
+  <header class="stack">
+    <p class="eyebrow">the page itself</p>
+    <h2 class="h1">Two pages, and a server</h2>
+    <p class="lead">This page is the <strong>reference</strong>: one section per component family,
+      each with live examples, the markup that produced them, the class table and the token contract.
+      <a class="link" href="../demo/">The kitchen sink</a> is every component at once, under load,
+      with a little fake telemetry moving. The sink is for seeing whether the library holds together,
+      the reference for looking one thing up.</p>
+  </header>
+
+  <p class="doc-note">Both make zero network requests beyond their own files, and both carry the same
+    three-way theme toggle (<code class="code">sun</code> / <code class="code">circle-half</code> /
+    <code class="code">moon</code>) writing the same <code class="code">localStorage</code> key — a
+    theme chosen on one is the theme the other opens in.</p>
+
+  <pre class="readout">./serve.py             <span class="readout-key"># http://127.0.0.1:8080/docs/ (and /demo/)</span>
+./serve.py --port 4321</pre>
+
+  <p class="doc-note"><code class="code">serve.py</code> is Python's standard-library
+    <code class="code">http.server</code> and nothing else: no install, no dependency, no build. It
+    threads its handler, speaks HTTP/1.1, sends <code class="code">Cache-Control: no-store</code> so an
+    edit to <code class="code">ui.css</code> shows on reload, and redirects <code class="code">/</code>
+    to the docs.</p>
+
+  <p class="doc-note">The demo still opens straight off disk. This page does not, quite — its
+    <a class="link" href="#token-reference">token reference</a> fetches <code class="code">ui.css</code>,
+    which <code class="code">file://</code> refuses, so that table renders empty — and neither page can
+    be <em>wrapped</em> off disk, which is the real reason the server exists.</p>
 </section>
 
 <!-- ════════════════════════════════════════════════════════ wrapping ── -->
@@ -1349,6 +1685,10 @@ visor -- python3 serve.py <span class="readout-key"># or let visor own the port 
     the sprite are not serialised behind each other; and it sends no
     <code class="code">Content-Security-Policy</code> at all — a blocking CSP fails <em>silently</em>
     under visor, with no console error and no network request, just chrome that never appears.</p>
+
+  <p class="doc-note">Spawn names the interpreter because visor resolves the command through
+    <code class="code">$PATH</code> only, so <code class="code">./serve.py</code> is not found. visor
+    writes <code class="code">.visor/</code> into the directory it runs from; it is gitignored here.</p>
 </section>
 
 <!-- ════════════════════════════════════════════════════════════ open ── -->

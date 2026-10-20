@@ -1,6 +1,6 @@
 [tools]
 # bun runs the contract suite (test/) and installs its one dev dependency,
-# tailwindcss, which compiles README's import; nothing ships through it.
+# tailwindcss, which compiles the docs page's import; nothing ships through it.
 bun = "1.4.0"
 # hk runs the pre-push gate (hk.pkl); `hk install --mise` wires it per clone.
 hk = "2.5.0"
