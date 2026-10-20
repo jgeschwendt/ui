@@ -3,12 +3,12 @@
   "landmarks": {
     "tailwind-compatibility": {
       "file": "docs/index.html",
-      "line": 1466,
+      "line": 1475,
       "node": "docs"
     },
     "theming-contract": {
       "file": "docs/index.html",
-      "line": 315,
+      "line": 317,
       "node": "docs"
     },
     "whole-library": {
@@ -26,11 +26,11 @@
           "enforced_by": "test/contract.test.ts",
           "id": "tailwind-compatibility",
           "kind": "invariant",
-          "resolved": "docs/index.html:1466",
+          "resolved": "docs/index.html:1475",
           "text": "every rule sits in ui.tokens, ui.base or ui.components, declared in that order before any rule",
           "verified": {
             "digest": null,
-            "sha": "51f9ab7d2504549e79bedbb0031d50c861dc519b"
+            "sha": "7d2d421a74406e7929646cec57f8d7cf10f0543d"
           }
         },
         {
@@ -38,11 +38,11 @@
           "enforced_by": "test/contract.test.ts",
           "id": "theming-contract",
           "kind": "invariant",
-          "resolved": "docs/index.html:315",
+          "resolved": "docs/index.html:317",
           "text": ":root declares every token; theme blocks only reassign",
           "verified": {
             "digest": null,
-            "sha": "51f9ab7d2504549e79bedbb0031d50c861dc519b"
+            "sha": "7d2d421a74406e7929646cec57f8d7cf10f0543d"
           }
         },
         {
@@ -54,7 +54,7 @@
           "text": "ui.css is the whole library — no build step, no framework dependency, no network requests",
           "verified": {
             "digest": null,
-            "sha": "51f9ab7d2504549e79bedbb0031d50c861dc519b"
+            "sha": "7d2d421a74406e7929646cec57f8d7cf10f0543d"
           }
         }
       ],
@@ -146,7 +146,7 @@
       },
       "id": "test",
       "kind": "container",
-      "purpose": "contract.test.ts — the external contract end to end: class/token snapshot, layers and :root, docs.css shell, glyphs, figures, the docs page's Tailwind import compiled, serve.py live."
+      "purpose": "contract.test.ts — the external contract end to end: class/token snapshot, layers and :root, cascade traps, docs.css shell, glyphs, figures, the docs page's Tailwind import compiled, serve.py live."
     }
   },
   "version": 2
