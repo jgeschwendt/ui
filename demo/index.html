@@ -602,11 +602,11 @@ setInterval(() => {
 /* ── icon gallery, read straight out of the inline sprite ── */
 const grid = document.getElementById("icon-grid");
 for (const sym of document.querySelectorAll("symbol[id^='ph-']")) {
-  const innerHTML = '<svg class="icon" aria-hidden="true"><use href="#' + sym.id + '"></use></svg>';
   grid
-    .appendChild(
-      Object.assign(document.createElement("div"), { className: "demo-icon", innerHTML }),
-    )
+    .appendChild(Object.assign(document.createElement("div"), {
+      className: "demo-icon",
+      innerHTML: '<svg class="icon" aria-hidden="true"><use href="#' + sym.id + '"></use></svg>',
+    }))
     .append(sym.id.slice(3));
 }
 </script>
