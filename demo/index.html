@@ -528,7 +528,9 @@ function applyTheme(mode) {
   if (mode === "auto") document.documentElement.removeAttribute("data-theme");
   else document.documentElement.dataset.theme = mode;
   stored(mode === "auto" ? "removeItem" : "setItem", mode);
-  for (const b of document.querySelectorAll("[data-theme-set]")) b.setAttribute("aria-pressed", b.dataset.themeSet === mode);
+  for (const b of document.querySelectorAll("[data-theme-set]")) {
+    b.setAttribute("aria-pressed", b.dataset.themeSet === mode);
+  }
 }
 
 for (const b of document.querySelectorAll("[data-theme-set]")) {
@@ -540,8 +542,7 @@ applyTheme(stored("getItem") || "auto");
 for (const group of document.querySelectorAll("[data-demo-latch]")) {
   group.addEventListener("click", (e) => {
     const btn = e.target.closest(".btn");
-    if (!btn) return;
-    for (const b of group.children) b.classList.toggle("is-on", b === btn);
+    if (btn) for (const b of group.children) b.classList.toggle("is-on", b === btn);
   });
 }
 
@@ -560,11 +561,11 @@ orb.addEventListener("click", () => {
 });
 
 /* ── a little live data so the panels are not still lifes ── */
-const [tick, seq, metric, buf] = ["tick", "seq", "orb-metric", "d-buf"].map((id) => document.getElementById(id));
+const [tick, seq, metric, buf] = ["tick", "seq", "orb-metric", "d-buf"]
+  .map((id) => document.getElementById(id));
 let n = 0;
 setInterval(() => {
-  n += 1;
-  tick.textContent = n;
+  tick.textContent = ++n;
   seq.textContent = 1041 + n;
   metric.textContent = 165 + Math.round(Math.sin(n / 3) * 9);
   buf.style.setProperty("--ui-meter-value", 45 + Math.round(Math.abs(Math.sin(n / 5)) * 45) + "%");
@@ -599,11 +600,7 @@ list.addEventListener("keydown", (e) => {
 
 /* ── [hidden] beats a component's own display, with nothing but the attribute ── */
 const hideToggle = document.getElementById("hide-toggle");
-const hideSubjects = [
-  ...document.getElementById("hide-subjects").children,
-  document.getElementById("hide-panel"),
-  document.getElementById("hide-strip"),
-];
+const hideSubjects = document.querySelectorAll("#hide-subjects > *, #hide-panel, #hide-strip");
 hideToggle.addEventListener("click", () => {
   const on = hideToggle.getAttribute("aria-pressed") !== "true";
   hideToggle.setAttribute("aria-pressed", on);
@@ -612,7 +609,8 @@ hideToggle.addEventListener("click", () => {
 });
 
 /* ── the strip cycles its moods, since a mood is the whole point ── */
-const [strip, stripMsg, stripBadge] = ["live-strip", "live-strip-msg", "live-strip-badge"].map((id) => document.getElementById(id));
+const [strip, stripMsg, stripBadge] = ["live-strip", "live-strip-msg", "live-strip-badge"]
+  .map((id) => document.getElementById(id));
 const MOODS = [
   ["ok", "connected · 8 channels"],
   ["info", "replaying fixture kitchen-evening.jsonl"],
@@ -621,8 +619,7 @@ const MOODS = [
 ];
 let mood = 0;
 setInterval(() => {
-  mood = (mood + 1) % MOODS.length;
-  const [hue, msg] = MOODS[mood];
+  const [hue, msg] = MOODS[++mood % MOODS.length];
   strip.className = "strip strip-" + hue;
   stripBadge.className = "badge badge-" + hue;
   stripBadge.textContent = hue;
@@ -632,10 +629,12 @@ setInterval(() => {
 /* ── icon gallery, read straight out of the inline sprite ── */
 const grid = document.getElementById("icon-grid");
 for (const sym of document.querySelectorAll("symbol[id^='ph-']")) {
-  const cell = grid.appendChild(document.createElement("div"));
-  cell.className = "demo-icon";
-  cell.innerHTML = '<svg class="icon" aria-hidden="true"><use href="#' + sym.id + '"></use></svg>';
-  cell.append(sym.id.slice(3));
+  const innerHTML = '<svg class="icon" aria-hidden="true"><use href="#' + sym.id + '"></use></svg>';
+  grid
+    .appendChild(
+      Object.assign(document.createElement("div"), { className: "demo-icon", innerHTML }),
+    )
+    .append(sym.id.slice(3));
 }
 </script>
 </body>
