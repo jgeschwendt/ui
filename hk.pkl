@@ -1,5 +1,5 @@
 amends "package://github.com/jdx/hk/releases/download/v2.5.0/hk@2.5.0#/Config.pkl"
-// The pre-push gate: stele and the contract suite, as ci.yaml runs them.
+// The pre-push gate: stele and the suite (contract + page scripts), as ci.yaml runs them.
 // `mise run test` installs, then runs the suite under CI=true, which makes a
 // missing snapshot fail instead of being written, so renaming the surface test
 // cannot re-record the surface. The `unset` keeps git's hook env out of

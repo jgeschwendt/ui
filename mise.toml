@@ -14,5 +14,5 @@ description = "Serve the docs and the demo (http://127.0.0.1:8080/docs/)"
 run = "python3 serve.py"
 
 [tasks.test]
-description = "The contract suite"
+description = "The suite — the stylesheet contract and both page scripts in happy-dom"
 run = ["bun install --frozen-lockfile", "CI=true bun test"]

@@ -6,8 +6,8 @@ import { Window } from "happy-dom";
 const read = (path: string) => Bun.file(`${import.meta.dir}/../${path}`).text();
 const settle = () => new Promise(setImmediate);
 const css = await read("ui.css");
-const load = async (page: string, store: string | null = null, sheet = css, status = 200) => {
-  const html = await read(`${page}/index.html`);
+const load = async (page: string, store: string | null = null, sheet = css, status = 200, bust = "") => {
+  const html = (await read(`${page}/index.html`)).replace('href="../ui.css"', `href="../ui.css${bust}"`);
   const w: any = new Window({ url: `http://ui.test/${page}/` });
   const fake: any = { observed: [] };
   w.addEventListener("error", (e: any) => (fake.error = e.error));
@@ -19,24 +19,30 @@ const load = async (page: string, store: string | null = null, sheet = css, stat
   });
   if (store === null) Object.defineProperty(w, "localStorage", { get: () => { throw new Error("SecurityError"); } });
   else w.localStorage.setItem("ui-theme", store);
-  // theme.js runs where <head> loads it, before <body> is parsed — so before the buttons exist.
+  // Two classic <script>s share one global scope: a top-level name declared twice is a SyntaxError.
+  const theme = await read("docs/theme.js");
+  const script = page === "docs" ? await read("docs/docs.js") : html.match(/<script>([\s\S]*?)<\/script>/)![1];
+  new Function(`${theme}\n${script}`);
+  // theme.js runs where <head> loads it, before the page's body markup and any page script — so
+  // before the buttons exist.
   const [top, rest] = html.replace(/<script[\s\S]*?<\/script>/g, "").split("</head>");
   w.document.write(top);
-  w.eval(await read("docs/theme.js"));
+  w.eval(theme);
   // What <head> leaves on <html> before any page script: the stored theme, or no attribute.
   const head = w.document.documentElement.getAttribute("data-theme");
   w.document.write(rest);
-  w.eval(page === "docs" ? await read("docs/docs.js") : html.match(/<script>([\s\S]*?)<\/script>/)![1]);
+  w.eval(script);
   w.document.dispatchEvent(new w.Event("DOMContentLoaded"));
   await settle();
   return Object.assign(w, { $: (s: string) => [...w.document.querySelectorAll(s)], fake, head });
 };
 const pages: Record<string, any> = { demo: await load("demo"), docs: await load("docs") };
 const { docs, demo } = pages;
-// Stored dark, and a ui.css with no attribute dark block (the media twin must stand in) and one dark-only token.
+// Stored dark, a cache-busted ui.css link, and a ui.css with no attribute dark block (the media twin
+// must stand in) and one dark-only token.
 const stored: Record<string, any> = {
   demo: await load("demo", "dark"),
-  docs: await load("docs", "dark", "/* :root { --ui-cc: 0 } */ .x:root { --ui-cc: 0 }" + css.replace(':root[data-theme="dark"]', ":root[data-x]").replace('[data-theme="light"]) {', '[data-theme="light"]) { --ui-zz: 1px;')),
+  docs: await load("docs", "dark", "/* :root { --ui-cc: 0 } */ .x:root { --ui-cc: 0 }" + css.replace(':root[data-theme="dark"]', ":root[data-x]").replace('[data-theme="light"]) {', '[data-theme="light"]) { --ui-zz: 1px;'), 200, "?v=1"),
 };
 const attrs = (els: any[], k: string) => els.map((e) => e.getAttribute(k)).join();
 const flags = (els: any[], c: string) => els.map((e) => +e.classList.contains(c)).join("");
@@ -96,7 +102,7 @@ test("docs: the token reference is built from ui.css — every :root token a row
     spaceSame: docs.$("tr[data-token='--ui-space-1'] td.is-same").length,
   }).toEqual({ chips: 2, onOwnGround: true, bgSame: 0, spaceChips: 0, spaceSame: 1 });
   const twin = stored.docs;
-  expect([twin.$("[data-token-reference] td.is-same").length, twin.$(".doc-tokref-error").map((r) => r.textContent).join(), twin.document.getElementById("token-reference-count").textContent]).toEqual([same.length, "1 declared token(s) missing from this table: --ui-zz", `${root.size} of ${root.size + 1} tokens shown — see the row above.`]);
+  expect([twin.$("[data-token-reference] td.is-same").length, twin.$(".doc-tokref-error").map((r) => r.textContent).join(), twin.document.getElementById("token-reference-count").textContent, twin.fake.fetched, !!twin.__uiDocs]).toEqual([same.length, "1 declared token(s) missing from this table: --ui-zz", `${root.size} of ${root.size + 1} tokens shown — see the row above.`, "../ui.css no-store", true]);
   for (const [sheet, status, why] of [[css, 404, "404"], ["", 200, "no --ui-* declarations on :root"]] as const) {
     const failed = await load("docs", "", sheet, status);
     expect([failed.$("[data-token-reference] tbody")[0].innerHTML, failed.document.getElementById("token-reference-count").textContent])

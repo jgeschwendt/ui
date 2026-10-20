@@ -25,7 +25,7 @@ invariants:
 | index.html | GitHub Pages redirect to `docs/` (`.nojekyll` beside it) |
 | package.json | two dev dependencies: happy-dom runs the page scripts, tailwindcss compiles the docs page's Tailwind import; ui.css needs nothing |
 | serve.py | stdlib dev server: `/` → `/docs/`, `no-store`, HTTP/1.1, threaded, `--port` › `$PORT` › 8080 |
-| test/ | the contract suite |
+| test/ | the suite — contract.test.ts (the stylesheet's contract), scripts.test.ts (the page scripts in happy-dom) |
 | ui.css | the library — tokens, base (reset, type, layout), components; both pages load it as `../ui.css` |
 
 ## Working here
