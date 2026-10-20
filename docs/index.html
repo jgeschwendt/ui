@@ -395,8 +395,9 @@ document.documentElement.removeAttribute("data-theme");  <span class="readout-ke
   <h3 class="doc-h3">Two rules that bite</h3>
   <p class="doc-note"><strong>On <code class="code">&lt;html&gt;</code>, <code class="code">&lt;body&gt;</code>
     stays transparent.</strong> CSS propagates the root element's background to the canvas, which
-    paints the viewport correctly but leaves the computed background of <em>both</em> elements at
-    <code class="code">rgba(0, 0, 0, 0)</code>. Anything reading <code class="code">body</code>'s
+    paints the viewport correctly, but <code class="code">body</code>'s computed background stays
+    <code class="code">rgba(0, 0, 0, 0)</code> (<code class="code">html</code> still reports
+    <code class="code">--ui-bg</code>; only where it paints moves). Anything reading <code class="code">body</code>'s
     background — a nested scroll container, a screenshot tool, an embedded widget — sees nothing. Put
     <code class="code">.ui</code> on <code class="code">&lt;body&gt;</code> instead, or set
     <code class="code">body { background: var(--ui-bg); }</code> alongside it.</p>
