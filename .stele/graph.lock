@@ -30,7 +30,7 @@
           "text": "every rule sits in ui.tokens, ui.base or ui.components, declared in that order before any rule",
           "verified": {
             "digest": null,
-            "sha": "e80aac33b90d8e3a3f487a6e5df3629eaa6e16b5"
+            "sha": "49910d7ff5fa4661a7b2ae5203e908342822f649"
           }
         },
         {
@@ -42,7 +42,7 @@
           "text": ":root declares every token; theme blocks only reassign",
           "verified": {
             "digest": null,
-            "sha": "e80aac33b90d8e3a3f487a6e5df3629eaa6e16b5"
+            "sha": "49910d7ff5fa4661a7b2ae5203e908342822f649"
           }
         },
         {
@@ -54,7 +54,7 @@
           "text": "ui.css is the whole library — no build step, no framework dependency, no network requests",
           "verified": {
             "digest": null,
-            "sha": "e80aac33b90d8e3a3f487a6e5df3629eaa6e16b5"
+            "sha": "49910d7ff5fa4661a7b2ae5203e908342822f649"
           }
         }
       ],

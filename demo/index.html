@@ -528,9 +528,7 @@ function applyTheme(mode) {
   if (mode === "auto") document.documentElement.removeAttribute("data-theme");
   else document.documentElement.dataset.theme = mode;
   stored(mode === "auto" ? "removeItem" : "setItem", mode);
-  for (const b of document.querySelectorAll("[data-theme-set]")) {
-    b.setAttribute("aria-pressed", String(b.dataset.themeSet === mode));
-  }
+  for (const b of document.querySelectorAll("[data-theme-set]")) b.setAttribute("aria-pressed", b.dataset.themeSet === mode);
 }
 
 for (const b of document.querySelectorAll("[data-theme-set]")) {
@@ -549,25 +547,20 @@ for (const group of document.querySelectorAll("[data-demo-latch]")) {
 
 for (const b of document.querySelectorAll("[data-demo-toggle-on]")) {
   b.addEventListener("click", () => {
-    const on = b.classList.toggle("is-on");
-    const label = b.lastChild;
-    if (label && label.nodeType === Node.TEXT_NODE) label.nodeValue = on ? "resume" : "pause";
+    b.lastChild.nodeValue = b.classList.toggle("is-on") ? "resume" : "pause";
   });
 }
 
-/* ── the orb: one click, three states (open → muted → open) ── */
+/* ── the orb: one click, two states (open ⇄ muted) ── */
 const orb = document.getElementById("orb");
 orb.addEventListener("click", () => {
   const muted = orb.classList.toggle("is-muted");
-  orb.setAttribute("aria-pressed", String(muted));
+  orb.setAttribute("aria-pressed", muted);
   orb.setAttribute("aria-label", muted ? "microphone muted" : "microphone open");
 });
 
 /* ── a little live data so the panels are not still lifes ── */
-const tick = document.getElementById("tick");
-const seq = document.getElementById("seq");
-const metric = document.getElementById("orb-metric");
-const buf = document.getElementById("d-buf");
+const [tick, seq, metric, buf] = ["tick", "seq", "orb-metric", "d-buf"].map((id) => document.getElementById(id));
 let n = 0;
 setInterval(() => {
   n += 1;
@@ -583,12 +576,12 @@ function selectRow(row) {
   for (const r of list.children) {
     const on = r === row;
     r.classList.toggle("is-current", on);
-    r.setAttribute("aria-selected", String(on));
+    r.setAttribute("aria-selected", on);
   }
 }
 list.addEventListener("click", (e) => {
-  const row = e.target.closest(".listrow");
-  if (row && row.getAttribute("aria-disabled") !== "true") selectRow(row);
+  const row = e.target.closest(".listrow:not([aria-disabled=true])");
+  if (row) selectRow(row);
 });
 list.addEventListener("keydown", (e) => {
   if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
@@ -613,15 +606,13 @@ const hideSubjects = [
 ];
 hideToggle.addEventListener("click", () => {
   const on = hideToggle.getAttribute("aria-pressed") !== "true";
-  hideToggle.setAttribute("aria-pressed", String(on));
+  hideToggle.setAttribute("aria-pressed", on);
   hideToggle.textContent = on ? "show them" : "hide them";
   for (const el of hideSubjects) el.hidden = on;
 });
 
 /* ── the strip cycles its moods, since a mood is the whole point ── */
-const strip = document.getElementById("live-strip");
-const stripMsg = document.getElementById("live-strip-msg");
-const stripBadge = document.getElementById("live-strip-badge");
+const [strip, stripMsg, stripBadge] = ["live-strip", "live-strip-msg", "live-strip-badge"].map((id) => document.getElementById(id));
 const MOODS = [
   ["ok", "connected · 8 channels"],
   ["info", "replaying fixture kitchen-evening.jsonl"],
@@ -641,12 +632,10 @@ setInterval(() => {
 /* ── icon gallery, read straight out of the inline sprite ── */
 const grid = document.getElementById("icon-grid");
 for (const sym of document.querySelectorAll("symbol[id^='ph-']")) {
-  const name = sym.id.slice(3);
-  const cell = document.createElement("div");
+  const cell = grid.appendChild(document.createElement("div"));
   cell.className = "demo-icon";
   cell.innerHTML = '<svg class="icon" aria-hidden="true"><use href="#' + sym.id + '"></use></svg>';
-  cell.appendChild(document.createTextNode(name));
-  grid.appendChild(cell);
+  cell.append(sym.id.slice(3));
 }
 </script>
 </body>
