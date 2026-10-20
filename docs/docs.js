@@ -116,8 +116,7 @@ const declarations = (body) =>
 
 function swatchCell(value, ground) {
   const td = h("td", null, h("code", { className: "code", textContent: value }));
-  // Paint is the literal, never var() — see above; the chip wears the theme's
-  // ground so a translucent tint reads true.
+  // The chip wears the theme's ground so a translucent tint reads true.
   if (COLOR_VALUE.test(value)) {
     td.prepend(
       h(

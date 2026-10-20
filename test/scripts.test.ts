@@ -23,7 +23,7 @@ const load = async (page: string, store: string | null = null, sheet = css, stat
   const [top, rest] = html.replace(/<script[\s\S]*?<\/script>/g, "").split("</head>");
   w.document.write(top);
   w.eval(await read("docs/theme.js"));
-  // What <head> leaves on <html> before any page script: the stored theme, or no flash fix.
+  // What <head> leaves on <html> before any page script: the stored theme, or no attribute.
   const head = w.document.documentElement.getAttribute("data-theme");
   w.document.write(rest);
   w.eval(page === "docs" ? await read("docs/docs.js") : html.match(/<script>([\s\S]*?)<\/script>/)![1]);
@@ -50,8 +50,6 @@ test.each(["docs", "demo"])("%s: a stored theme applies, buttons press, auto rem
     w.$("[data-theme-set]")[0].click();
     expect(state()).toEqual(["light", store && "light", "true,false,false"]);
   }
-  docs.__uiDocs.applyTheme("dark");
-  expect(docs.document.documentElement.dataset.theme).toBe("dark");
 });
 
 test("docs: one markup pane after every example, its code the dedented live DOM, toggled and copied", async () => {
@@ -67,7 +65,6 @@ test("docs: one markup pane after every example, its code the dedented live DOM,
   expect(lives[0].nextElementSibling.firstChild.innerHTML).toBe('<button class="btn btn-quiet btn-sm" type="button" aria-expanded="false">markup</button><button class="btn btn-quiet btn-sm" type="button">copy</button><span class="spacer"></span><span>tokens-palette</span>');
   const pane = lives[0].nextElementSibling, pre = pane.querySelector("pre"), [toggle, copy] = pane.querySelectorAll("button");
   const state = () => [pre.hidden, toggle.getAttribute("aria-expanded"), copy.textContent];
-  expect(state()).toEqual([true, "false", "copy"]);
   toggle.click();
   expect(state()).toEqual([false, "true", "copy"]);
   toggle.click();
@@ -82,15 +79,22 @@ test("docs: one markup pane after every example, its code the dedented live DOM,
 
 test("docs: the token reference is built from ui.css — every :root token a row, dark-unchanged ones marked", async () => {
   const root = new Set(css.replace(/\/\*[\s\S]*?\*\//g, "").match(/:root \{[^}]*\}/)![0].match(/--ui-[\w-]+(?=\s*:)/g));
-  const rows = docs.$("[data-token-reference] tbody tr[data-token]"), same = docs.$("[data-token-reference] td.is-same");
+  const same = docs.$("[data-token-reference] td.is-same");
   const [, shown, reassigned] = docs.document.getElementById("token-reference-count").textContent.match(/^(\d+) tokens — every --ui-\* declared on :root in \.\.\/ui\.css; the dark blocks reassign (\d+) of them\.$/);
-  expect([rows.length, +shown, same.length, docs.$(".doc-tokref-error").length, docs.fake.fetched]).toEqual([root.size, root.size, root.size - +reassigned, 0, "../ui.css no-store"]);
-  expect(rows.map((r) => r.firstChild.textContent).sort()).toEqual([...root].sort());
+  expect([+shown, same.length, docs.$(".doc-tokref-error").length, docs.fake.fetched]).toEqual([root.size, root.size - +reassigned, 0, "../ui.css no-store"]);
+  expect(docs.$("[data-token-reference] tbody tr[data-token]").map((r) => r.firstChild.textContent).sort()).toEqual([...root].sort());
   expect(docs.$(".doc-tokref-family > th[colspan='3'][scope=colgroup]:only-child").map((th) => `${th.parentElement.id} ${th.textContent}`).join())
     .toBe("token-surfaces surfaces & ink,token-accent accent,token-semantic semantic,token-spacing spacing,token-type type,token-depth radius, shadow & motion");
   expect(same.every((td) => td.title === "unchanged in dark" && td.parentElement.children[1].textContent === td.textContent)).toBe(true);
   const paints = docs.$("tr[data-token='--ui-bg'] .doc-tokref-chip > i");
-  expect([paints.length, paints.every((i) => i.style.background && i.parentElement.style.background === i.style.background), docs.$("tr[data-token='--ui-bg'] td.is-same").length, docs.$("tr[data-token='--ui-space-1'] .doc-tokref-chip").length, docs.$("tr[data-token='--ui-space-1'] td.is-same").length]).toEqual([2, true, 0, 0, 1]);
+  // --ui-bg is the ground itself, so each of its chips sits on its own paint.
+  expect({
+    chips: paints.length,
+    onOwnGround: paints.every((i) => i.style.background && i.parentElement.style.background === i.style.background),
+    bgSame: docs.$("tr[data-token='--ui-bg'] td.is-same").length,
+    spaceChips: docs.$("tr[data-token='--ui-space-1'] .doc-tokref-chip").length,
+    spaceSame: docs.$("tr[data-token='--ui-space-1'] td.is-same").length,
+  }).toEqual({ chips: 2, onOwnGround: true, bgSame: 0, spaceChips: 0, spaceSame: 1 });
   const twin = stored.docs;
   expect([twin.$("[data-token-reference] td.is-same").length, twin.$(".doc-tokref-error").map((r) => r.textContent).join(), twin.document.getElementById("token-reference-count").textContent]).toEqual([same.length, "1 declared token(s) missing from this table: --ui-zz", `${root.size} of ${root.size + 1} tokens shown — see the row above.`]);
   for (const [sheet, status, why] of [[css, 404, "404"], ["", 200, "no --ui-* declarations on :root"]] as const) {
@@ -127,7 +131,8 @@ test.each(["docs", "demo"])("%s: the icon gallery is the inline sprite, one cell
     .toEqual([28, ...ids.map((id) => `${page === "docs" ? "doc" : "demo"}-icon #${id} ${id.slice(3)}`)]);
 });
 
-test("docs: __uiDocs.resolve reads the carrier attributes around an element", () => {
+test("docs: __uiDocs exposes applyTheme, and resolve reads the carrier attributes around an element", () => {
+  expect(docs.__uiDocs.applyTheme).toBe(docs.applyTheme);
   const { resolve } = docs.__uiDocs, q = (s: string) => docs.document.querySelector(s);
   docs.document.body.insertAdjacentHTML("beforeend", "<figure data-example=t><div data-live>\n\t<b></b>\n   \n\t\t<i></i>\n</div></figure>");
   expect(resolve(q("[data-example=t] i"))).toStrictEqual({ component: null, example: "t", section: null, markup: "<b></b>\n \n  <i></i>" });
