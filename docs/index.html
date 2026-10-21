@@ -779,8 +779,9 @@ document.documentElement.removeAttribute("data-theme");  <span class="readout-ke
     else, which is the point: the compact scale is untouched everywhere the zoom cannot happen. The two
     usual fixes are worse — <code class="code">maximum-scale=1</code> in the viewport meta buys it by
     taking pinch-zoom away from everyone, and a blanket 16px inflates every toolbar on desktop. The
-    <code class="code">-sm</code> widths are <code class="code">ch</code>-based, so they grow with the
-    text on iOS instead of clipping it. A new control with its own font-size belongs in that block
+    content-sized widths (<code class="code">.input-num</code>'s <code class="code">8ch</code>,
+    <code class="code">.select-sm</code>'s <code class="code">auto</code>) grow with the text on iOS
+    instead of clipping it. A new control with its own font-size belongs in that block
     too.</p>
 </section>
 
