@@ -175,8 +175,9 @@
 }
 
 /* ══════════════════════════════════════════════════════════════════════════
-   BASE — the .ui-scoped reset (opt-in: skip by leaving .ui off <html>/<body>),
-   then type and layout helpers that apply wherever their class does.
+   BASE — [hidden], the .ui-scoped reset (opt-in: skip by leaving .ui off
+   <html>/<body>), type and layout helpers that apply wherever their class or
+   attribute does, and .ui-scoped reduced motion.
    ══════════════════════════════════════════════════════════════════════════ */
 @layer ui.base {
   /* !important inverts layer order, so [hidden] beats ui.components' display
@@ -506,7 +507,7 @@
     transform: translateY(0.5px);
   }
 
-  :is(.btn, .listrow):is(:disabled, [aria-disabled="true"]) {
+  .btn:is(:disabled, [aria-disabled="true"]) {
     opacity: 0.45;
     pointer-events: none;
   }
@@ -600,9 +601,8 @@
     color: var(--ui-fg);
   }
 
-  /* selected: a latched toggle button (pause, live, follow), the current pill */
-  .btn.is-on,
-  .pill:is(.is-active, [aria-current]) {
+  /* on = a latched toggle button (pause, live, follow) */
+  .btn.is-on {
     background: var(--ui-accent-soft);
     border-color: var(--ui-accent);
     color: var(--ui-accent-soft-fg);
@@ -668,6 +668,12 @@
   a.pill:hover {
     border-color: var(--ui-border-strong);
     color: var(--ui-fg);
+  }
+
+  .pill:is(.is-active, [aria-current]) {
+    background: var(--ui-accent-soft);
+    border-color: var(--ui-accent);
+    color: var(--ui-accent-soft-fg);
   }
 
   .pill-accent {
@@ -1003,6 +1009,11 @@
   .listrow.is-busy {
     animation: ui-pulse 1.4s var(--ui-ease) infinite;
     cursor: progress;
+  }
+
+  .listrow:is(:disabled, [aria-disabled="true"]) {
+    opacity: 0.45;
+    pointer-events: none;
   }
 
   /* ── mono readout / kbd / code ─────────────────────────────────────────── */

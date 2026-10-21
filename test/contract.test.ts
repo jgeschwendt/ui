@@ -33,7 +33,7 @@ test("cascade traps: no modifier, tone or state is undone by a stronger selector
   expect([
     /@media \(prefers-color-scheme: dark\) \{\s*:root:not\(\[data-theme="light"\]\)/,
     /:where\([^)]*\bbody\.ui\b[^)]*\)\s*\{\s*margin: 0/,
-    /:where\(\.ui \*\)::before,\s*:where\(\.ui \*\)::after \{\s*animation-duration/,
+    /:where\(\.ui, \.ui \*\),\s*:where\(\.ui \*\)::before,\s*:where\(\.ui \*\)::after \{[^}]*animation-duration: 0\.01ms !important[^}]*transition-duration: 0\.01ms !important/,
     /\[data-table\] th\.table-num[^{]*\{[^}]*text-align: right/,
     ...["danger", "ok", "warn"].map((t) => new RegExp(`\\.chip-${t} [^{]*\\.chip-value`)),
     ...["input", "select", "textarea"].map((c) => new RegExp(`\\.${c}\\[aria-invalid="true"\\]`)),
