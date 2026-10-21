@@ -9,8 +9,7 @@ const root = `${import.meta.dir}/..`;
 const read = (path: string) => Bun.file(`${root}/${path}`).text();
 const all = (text: string, re: RegExp) => [...text.matchAll(re)].map((m) => m[1]);
 const set = (text: string, re: RegExp) => [...new Set(all(text, re))].sort();
-const [css, docs] = await Promise.all(["ui.css", "docs.css"].map(async (p) => (await read(p)).replace(/\/\*[\s\S]*?\*\//g, "")));
-const pages = await Promise.all(["demo/index.html", "docs/index.html"].map(read));
+const [css, docs, ...pages] = (await Promise.all(["ui.css", "docs.css", "demo/index.html", "docs/index.html"].map(read))).map((t, i) => (i < 2 ? t.replace(/\/\*[\s\S]*?\*\//g, "") : t));
 const top = (sheet: string, d = 0) => [...sheet].filter((c) => !(c === "}" ? --d : c === "{" ? d++ : d)).join("").replace(/\s+/g, " ").trim();
 const ground = (sheet: string) => all(sheet.match(/\n {2}:root \{([^}]*)\}/)![1], /(--ui-[a-z0-9-]+)\s*:/g);
 const bare = (sheet: string) => set(sheet, /var\(\s*(--ui-[a-z0-9-]+)\s*\)/g);
@@ -19,7 +18,7 @@ const classes = (text: string) => set(text, /\.([a-z][a-z0-9-]*)/g);
 
 test("the public surface — every class, attribute and token — changes only on purpose", () => {
   expect({
-    attributes: set(`${preludes(css)} ${all(css, /attr\(([a-z-]+)/g).map((a) => `[${a}`)}`, /\[([a-z-]+)/g),
+    attributes: set(css, /(?:\[|attr\()([a-z-]+)/g),
     classes: classes(preludes(css)),
     tokens: set(css, /(--ui-[a-z0-9-]+)/g),
   }).toMatchSnapshot();
@@ -63,8 +62,7 @@ test("docs.css — the shared docs shell — is additive: its own layer, ui's to
   expect(bare(docs).filter((t) => ![...ground(css), ...ground(docs)].includes(t))).toEqual([]);
   expect(docs.match(/#[0-9a-f]{3,8}\b|\b(?:rgba?|hsla?|oklch|oklab|lab|lch|color)\(/gi)).toBeNull();
   const own = classes(preludes(docs));
-  const library = classes(all(css, /([^{};]+)\{/g).join());
-  expect(own.filter((c) => library.includes(c))).toEqual([]);
+  expect(own.filter((c) => classes(css).includes(c))).toEqual([]);
   expect({ classes: own, tokens: set(docs, /(--ui-[a-z0-9-]+)/g) }).toMatchSnapshot();
   const shell = pages[1].split('id="docs-shell"')[1].split("</section>")[0];
   expect(own.filter((c) => !shell.includes(`.${c}`))).toEqual([]);
@@ -73,18 +71,16 @@ test("docs.css — the shared docs shell — is additive: its own layer, ui's to
 test("figures: every <figure class=figure> on the docs page shows a rendered board from its canvas source", async () => {
   const shown = all(pages[1], /<figure class="figure">([\s\S]*?)<\/figure>/g).flatMap((f) => {
     const m = f.match(/^\s*<img class="figure-light" src="figures\/([a-z0-9-]+)\.png" alt="[^"]+" \/>\s*<img class="figure-dark" src="figures\/\1-dark\.png" alt="" aria-hidden="true" loading="lazy" \/>/);
-    expect(m?.[1]).toBeDefined();
     expect(f).toMatch(/<figcaption>[\s\S]*?Source: Claude Design canvas <a href="https:\/\/claude\.ai\/artifact\/[A-Za-z0-9]+">ui figures<\/a>, board [A-Z][A-Za-z]+\.<\/figcaption>/);
     return [`${m![1]}.png`, `${m![1]}-dark.png`];
   });
   const pngs = readdirSync(`${root}/docs/figures`).filter((f) => f.endsWith(".png")).sort();
   expect(shown.sort()).toEqual(pngs);
-  const exporter = await read("docs/figures/export.sh");
-  for (const board of Object.keys(JSON.parse(await read("docs/figures/project/canvas.json")).boards)) {
-    expect(await Bun.file(`${root}/docs/figures/project/${board}`).exists()).toBe(true);
-    expect(exporter).toMatch(new RegExp(`shoot ${board.replace(".", "\\.")} ([a-z0-9-]+)\\.png \\1-dark\\.png`));
-  }
-  expect(all(exporter, /^shoot \S+ (\S+\.png \S+\.png)$/gm).flatMap((p) => p.split(" ")).sort()).toEqual(pngs);
+  const shoots = all(await read("docs/figures/export.sh"), /^shoot (.+)$/gm);
+  const boards = Object.keys(JSON.parse(await read("docs/figures/project/canvas.json")).boards);
+  await Promise.all(boards.map((b) => read(`docs/figures/project/${b}`)));
+  expect(shoots.map((s) => s.replace(/ ([a-z0-9-]+)\.png \1-dark\.png$/, "")).sort()).toEqual(boards.sort());
+  expect(shoots.flatMap((s) => s.split(" ").slice(1)).sort()).toEqual(pngs);
 });
 
 const serve = async (args: string[], env: Record<string, string> = {}) => {

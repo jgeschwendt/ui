@@ -1,17 +1,13 @@
-/* ui.css — Joshua Geschwendt's semantic component library.
-   Pure CSS on custom properties. No build step, no framework dependency.
-   Layers: tokens → base → components. Cascade layers keep Tailwind (or anything
-   else) able to override components without !important. */
+/* ui.css — Joshua Geschwendt's semantic component library: pure CSS on custom
+   properties, no build. Layered so Tailwind (or anything else) overrides
+   components without !important. */
 
 @layer ui.tokens, ui.base, ui.components;
 
 /* ══════════════════════════════════════════════════════════════════════════
-   TOKENS
-   Light is the ground truth on :root. Dark arrives two ways:
-     1. @media (prefers-color-scheme: dark) — guarded by :not([data-theme="light"]),
-        so a manual light toggle wins over a dark system with no block of its own
-     2. [data-theme="dark"] — a manual toggle wins over a light system
-   Every color has its definition on bare :root; the blocks below only reassign.
+   TOKENS — light on bare :root defines every token; the dark blocks only
+   reassign. The media block's :not([data-theme="light"]) lets a manual light
+   toggle beat a dark system without a light block of its own.
    ══════════════════════════════════════════════════════════════════════════ */
 @layer ui.tokens {
   :root {
@@ -179,14 +175,13 @@
 }
 
 /* ══════════════════════════════════════════════════════════════════════════
-   BASE — opt-in page reset. Skip by not putting .ui on <html>/<body>.
+   BASE — the .ui-scoped reset (opt-in: skip by leaving .ui off <html>/<body>),
+   then type and layout helpers that apply wherever their class does.
    ══════════════════════════════════════════════════════════════════════════ */
 @layer ui.base {
-  /* the hidden attribute outranks any component display rule.
-     zero specificity via :where, and !important inverts the layer order so a
-     base-layer declaration beats ui.components — otherwise .pill's
-     `display: inline-flex` quietly wins and [hidden] does nothing.
-     hidden="until-found" is exempt: the UA needs it findable to reveal it. */
+  /* !important inverts layer order, so [hidden] beats ui.components' display
+     (else .pill's inline-flex wins); :where keeps it at specificity 0.
+     until-found is exempt: the UA must find it to reveal it. */
   :where([hidden]:not([hidden="until-found"])) {
     display: none !important;
   }
@@ -207,32 +202,15 @@
   }
 
   /* ── reset ─────────────────────────────────────────────────────────────────
-     A modern reset in the Andy Bell / Josh Comeau line, adapted: it corrects the
-     UA where the UA is wrong for a layout engine, and stops. It is NOT Preflight
-     — nothing here strips an element's meaning, because .ui is opt-in and a
-     semantic library that unstyles <ul> and <button> makes bare markup lie.
-     Every rule is :where(), so specificity 0: components and consumers override
-     without a fight, and a page dropping .ui gets the UA back whole. */
+     Not Preflight: nothing strips an element's meaning, since a semantic library
+     that unstyles <ul> and <button> makes bare markup lie. Each element rule is
+     :where(), specificity 0, so components and consumers override it freely. */
 
   /* UA margins are vertical rhythm from a document engine; layout owns spacing
      here. Lists are absent on purpose — a bare <ul> keeps its indent and its
      bullets, and drops them by SAYING so with role="list". */
-  :where(
-    .ui blockquote,
-    .ui body,
-    body.ui,
-    .ui dd,
-    .ui dl,
-    .ui figure,
-    .ui h1,
-    .ui h2,
-    .ui h3,
-    .ui h4,
-    .ui h5,
-    .ui h6,
-    .ui p,
-    .ui pre
-  ) {
+  :where(.ui) :where(blockquote, body, dd, dl, figure, h1, h2, h3, h4, h5, h6, p, pre),
+  :where(body.ui) {
     margin: 0;
   }
 
@@ -271,22 +249,21 @@
     background: var(--ui-accent-soft);
   }
 
-  /* typographic scale — restrained, tight, hex-like */
+  /* type scale */
   .h1,
   .h2,
   .h3 {
     color: var(--ui-fg);
+    font-weight: var(--ui-weight-bold);
     letter-spacing: var(--ui-tracking-tight);
     line-height: var(--ui-leading-tight);
   }
 
   .h1 {
     font-size: var(--ui-text-2xl);
-    font-weight: var(--ui-weight-bold);
   }
   .h2 {
     font-size: var(--ui-text-xl);
-    font-weight: var(--ui-weight-bold);
   }
   .h3 {
     font-size: var(--ui-text-lg);
@@ -367,13 +344,11 @@
     width: 100%;
   }
 
-  /* The preference is a request to stop moving, not to stop three animations,
-     so it is answered once here rather than per-component. !important inverts
-     the layer order so ui.components cannot re-animate underneath it.
-     Near-zero rather than `none`: a 0.01ms transition still fires
-     transitionend, so code that awaits one does not hang forever. */
+  /* Answered once, not per component; !important (layer inversion, as [hidden])
+     stops ui.components re-animating. 0.01ms, not none: transitionend still
+     fires, so code awaiting it does not hang. The pseudo-elements sit outside
+     :where(), where they would be invalid and silently dropped. */
   @media (prefers-reduced-motion: reduce) {
-    /* A pseudo-element inside :where() is invalid and silently dropped. */
     :where(.ui, .ui *),
     :where(.ui *)::before,
     :where(.ui *)::after {
@@ -385,9 +360,6 @@
   }
 }
 
-/* ══════════════════════════════════════════════════════════════════════════
-   COMPONENTS
-   ══════════════════════════════════════════════════════════════════════════ */
 @layer ui.components {
   /* ── icon ──────────────────────────────────────────────────────────────── */
   .icon {
@@ -496,11 +468,7 @@
     color: var(--ui-warn-ink);
   }
 
-  .strip-accent .strip-tag,
-  .strip-danger .strip-tag,
-  .strip-info .strip-tag,
-  .strip-ok .strip-tag,
-  .strip-warn .strip-tag {
+  :is(.strip-accent, .strip-danger, .strip-info, .strip-ok, .strip-warn) .strip-tag {
     color: inherit;
   }
 
@@ -538,8 +506,7 @@
     transform: translateY(0.5px);
   }
 
-  .btn:disabled,
-  .btn[aria-disabled="true"] {
+  :is(.btn, .listrow):is(:disabled, [aria-disabled="true"]) {
     opacity: 0.45;
     pointer-events: none;
   }
@@ -569,8 +536,7 @@
     border-color: var(--ui-danger);
   }
 
-  /* outline: transparent fill, the colour carried by border and text. .btn-danger
-     is the destructive member of this family and predates the name. */
+  /* .btn-danger is this family's destructive member; it predates the name */
   .btn-outline {
     background: transparent;
     border-color: var(--ui-border-strong);
@@ -634,8 +600,9 @@
     color: var(--ui-fg);
   }
 
-  /* on = a latched toggle button (pause, live, follow) */
-  .btn.is-on {
+  /* selected: a latched toggle button (pause, live, follow), the current pill */
+  .btn.is-on,
+  .pill:is(.is-active, [aria-current]) {
     background: var(--ui-accent-soft);
     border-color: var(--ui-accent);
     color: var(--ui-accent-soft-fg);
@@ -672,8 +639,8 @@
     border-bottom-right-radius: var(--ui-radius-md);
     border-top-right-radius: var(--ui-radius-md);
   }
-  .btn-group > .btn:hover,
-  .btn-group > .btn.is-on {
+  /* lift the engaged button so its border paints over the -1px overlap */
+  .btn-group > .btn:is(:hover, .is-on) {
     position: relative;
     z-index: 1;
   }
@@ -701,13 +668,6 @@
   a.pill:hover {
     border-color: var(--ui-border-strong);
     color: var(--ui-fg);
-  }
-
-  .pill.is-active,
-  .pill[aria-current] {
-    background: var(--ui-accent-soft);
-    border-color: var(--ui-accent);
-    color: var(--ui-accent-soft-fg);
   }
 
   .pill-accent {
@@ -753,29 +713,28 @@
     padding: 3px 6px;
   }
 
+  :is(.badge-accent, .badge-danger, .badge-info, .badge-ok, .badge-warn) {
+    border-color: transparent;
+  }
+
   .badge-accent {
     background: var(--ui-accent-soft);
-    border-color: transparent;
     color: var(--ui-accent-soft-fg);
   }
   .badge-danger {
     background: var(--ui-danger-soft);
-    border-color: transparent;
     color: var(--ui-danger);
   }
   .badge-info {
     background: var(--ui-info-soft);
-    border-color: transparent;
     color: var(--ui-info);
   }
   .badge-ok {
     background: var(--ui-ok-soft);
-    border-color: transparent;
     color: var(--ui-ok);
   }
   .badge-warn {
     background: var(--ui-warn-soft);
-    border-color: transparent;
     color: var(--ui-warn-ink);
   }
 
@@ -931,6 +890,12 @@
   .panel.is-collapsed .panel-body {
     display: none;
   }
+  .panel.is-paused .panel-head {
+    box-shadow: inset 0 2px 0 var(--ui-warn);
+  }
+  .panel-wide {
+    grid-column: 1 / -1;
+  }
 
   /* ── list / listrow ────────────────────────────────────────────────────────
      A dense selectable row, sized for the inside of a panel: a mono name, some
@@ -1005,10 +970,7 @@
   }
 
   /* actions stay hidden until the row is engaged — a wall of buttons reads as noise */
-  .listrow.is-current .listrow-actions,
-  .listrow:focus-visible .listrow-actions,
-  .listrow:focus-within .listrow-actions,
-  .listrow:hover .listrow-actions {
+  .listrow:is(.is-current, :focus-within, :hover) .listrow-actions {
     opacity: 1;
   }
 
@@ -1028,11 +990,8 @@
     color: var(--ui-fg-muted);
   }
 
-  /* Warning is a condition, selection is a state, and two tints in one list read
-     as one muddled emphasis whichever hues they are. Selection keeps the fill;
-     a warned row is marked by its rail and its name alone. (This split predates
-     the orange — warn was the accent's brass in dark and the two could not both
-     be a tint. The collision is gone; the split is kept because it was right.) */
+  /* Warning is a condition, selection a state; two tints in one list read as one
+     muddled emphasis. Selection keeps the fill; a warned row gets rail and name. */
   .listrow.is-warned {
     border-left-color: var(--ui-warn);
   }
@@ -1044,18 +1003,6 @@
   .listrow.is-busy {
     animation: ui-pulse 1.4s var(--ui-ease) infinite;
     cursor: progress;
-  }
-
-  .listrow:disabled,
-  .listrow[aria-disabled="true"] {
-    opacity: 0.45;
-    pointer-events: none;
-  }
-  .panel.is-paused .panel-head {
-    box-shadow: inset 0 2px 0 var(--ui-warn);
-  }
-  .panel-wide {
-    grid-column: 1 / -1;
   }
 
   /* ── mono readout / kbd / code ─────────────────────────────────────────── */
@@ -1302,8 +1249,8 @@
     border-radius: var(--ui-radius-md);
     color: var(--ui-fg);
     font-size: var(--ui-text-sm);
-    /* the field owns its leading: `font: inherit` in the reset would otherwise
-       hand it the body's 1.55 and grow every control by four pixels */
+    /* owns its leading, like .segmented > button: the reset's font: inherit
+       would hand it 1.55 */
     line-height: normal;
     padding: var(--ui-space-2) var(--ui-space-3);
     transition:
@@ -1312,14 +1259,11 @@
     width: 100%;
   }
 
-  .input::placeholder,
-  .textarea::placeholder {
+  :is(.input, .textarea)::placeholder {
     color: var(--ui-fg-faint);
   }
 
-  .input:focus,
-  .select:focus,
-  .textarea:focus {
+  :is(.input, .select, .textarea):focus {
     border-color: var(--ui-accent);
     box-shadow: 0 0 0 3px var(--ui-accent-ring);
     outline: none;
@@ -1398,24 +1342,13 @@
     resize: vertical;
   }
 
-  /* iOS auto-zoom floor. Safari on iOS scales the whole viewport up when it
-     focuses a form control computing under 16px — and never scales back out, so
-     one tap on a filter field leaves the page magnified. Every control here
-     trips it, including the large one: with `.ui` on the root the rem tokens
-     resolve against --ui-text-md, so measured the controls run 10.5px for the
-     -sm variants, 11.375px for .input/.select/.textarea, and 14px for .input-lg
-     — not one of them clears 16px, so the floor covers all three sizes.
-     `@supports (-webkit-touch-callout: none)` is the narrowest honest fence — it
-     matches WebKit on iOS and nothing else — so the compact scale survives
-     intact on every platform where the zoom cannot happen. The alternatives are
-     both worse: `maximum-scale=1` in the viewport meta stops the zoom by taking
-     pinch-zoom away from everyone, including the people who need it; a blanket
-     16px floor inflates the toolbar and legend scale on desktop, where the whole
-     point of -sm is that it is small. 16px is spelled literally, not as a token
-     — the trigger is a computed pixel threshold, and every token here is
-     rem-relative to a root the page is free to move. The -sm widths are
-     ch-based (.input-num, .select-sm's `width: auto`), so they grow with the
-     text and keep their content fit rather than clipping it. */
+  /* iOS auto-zoom floor: Safari zooms the viewport, and never back out, on
+     focusing a control computed under 16px — and under .ui every size here is
+     (10.5px -sm, 11.375px, 14px -lg). The touch-callout fence matches iOS WebKit
+     only, so the compact scale survives everywhere else; `maximum-scale=1` would
+     take pinch-zoom from everyone instead. 16px is literal, not a token: the
+     trigger is a computed pixel threshold. Content-sized widths (.input-num's
+     8ch, .select-sm's auto) grow with the text rather than clip it. */
   @supports (-webkit-touch-callout: none) {
     .input,
     .input-lg,
@@ -1631,8 +1564,7 @@
     z-index: 20;
   }
 
-  .tip:focus-visible::after,
-  .tip:hover::after {
+  .tip:is(:focus-visible, :hover)::after {
     opacity: 1;
   }
 
