@@ -443,7 +443,7 @@ document.documentElement.removeAttribute("data-theme");  <span class="readout-ke
     </tbody>
   </table>
 
-  <p class="doc-note">Every rule is wrapped in <code class="code">:where(.ui …)</code>, so it carries
+  <p class="doc-note">Every element rule is wrapped in <code class="code">:where()</code>, so it carries
     <strong>specificity zero</strong>: components override it by living in a later layer, and a
     consumer overrides it with any selector at all. Two consequences worth knowing:</p>
   <ul class="claims" role="list">
