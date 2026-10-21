@@ -215,20 +215,20 @@
     margin: 0;
   }
 
-  :where(.ui ol[role="list"], .ui ul[role="list"]) {
+  :where(.ui :is(ol, ul)[role="list"]) {
     list-style: none;
     padding-left: 0;
   }
 
   /* replaced elements are boxes, not letters: the inline baseline gap under an
      unwrapped <img> is a bug in every layout that has ever met it */
-  :where(.ui canvas, .ui img, .ui picture, .ui svg, .ui video) {
+  :where(.ui) :where(canvas, img, picture, svg, video) {
     display: block;
     max-width: 100%;
   }
 
   /* form controls opt out of inheritance for historical reasons only */
-  :where(.ui button, .ui input, .ui select, .ui textarea) {
+  :where(.ui) :where(button, input, select, textarea) {
     font: inherit;
   }
 
@@ -237,7 +237,7 @@
   }
 
   /* a long token — a URL, a hash, a device id — must not widen the page */
-  :where(.ui h1, .ui h2, .ui h3, .ui h4, .ui h5, .ui h6, .ui p) {
+  :where(.ui) :where(h1, h2, h3, h4, h5, h6, p) {
     overflow-wrap: break-word;
   }
 
@@ -1260,8 +1260,7 @@
     border-radius: var(--ui-radius-md);
     color: var(--ui-fg);
     font-size: var(--ui-text-sm);
-    /* owns its leading, like .segmented > button: the reset's font: inherit
-       would hand it 1.55 */
+    /* owns its leading, as .segmented > button does */
     line-height: normal;
     padding: var(--ui-space-2) var(--ui-space-3);
     transition:
