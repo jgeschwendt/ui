@@ -373,7 +373,10 @@
      Near-zero rather than `none`: a 0.01ms transition still fires
      transitionend, so code that awaits one does not hang forever. */
   @media (prefers-reduced-motion: reduce) {
-    :where(.ui, .ui *, .ui *::before, .ui *::after) {
+    /* A pseudo-element inside :where() is invalid and silently dropped. */
+    :where(.ui, .ui *),
+    :where(.ui *)::before,
+    :where(.ui *)::after {
       animation-duration: 0.01ms !important;
       animation-iteration-count: 1 !important;
       scroll-behavior: auto !important;
